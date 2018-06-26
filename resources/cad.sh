@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+python $1 \
+HKLIN1 $2 \
+HKLOUT $3 \
+<< EOF
+LABIN FILE_NUMBER 1 ALL
+XNAME FILE_NUMBER 1 ALL=xtal1
+DNAME FILE_NUMBER 1 ALL=dataset1
+DWAVE FILE_NUMBER 1 xtal1 dataset1 2.5
+END
+EOF

@@ -1,0 +1,48 @@
+-	This a comparison script between seven protein building pipelines, 
+1- Phenix  
+2- ArpWArp 
+3- Buccaneeri1 
+4- Buccaneeri2 
+5- Buccaneeri2 with fit water 
+6- Crank 
+7-ArpWArp After Buccaneeri1 
+-	This script is designed to run on cluster server, but you can run on a local machine. 
+
+ ####### Requirements  #######
+
+-	The requirements to run this script
+1-	CCP4
+2-	Phenix
+3-	Cstat (The code is attached. You need to compile it)
+
+####### Pre-processing  #######
+-	Your data needs a pre-processing by few tools before running it.
+1-	Phases should be modified by parrot 
+2-	You should convert HL coefficients to phase and figure-of-merit by using chltofom
+3-	Use CAD tool to add fake wavelength in case the mtz does not has.
+4-	You need to Convert F/sig to fake anom. Use cfakeanom tool(The code is attached. You need to compile it)
+5-	Your data folder has to be in this structure
+-mtz, deposited pdb and seq for each case. The name of these files should be exactly same.  
+example, 1o6a.mtz 1o6a.pdb 1o6a.seq and so on. 
+
+####### Run  ####### 
+The steps to run the script:
+1-	Run the preparer by using this command:
+java –jar RunComparsion Pareparer 
+This command will create some shell scripts that we will need them to run the comparison. 
+
+The parameters for the preparer:
+Pipelines= the pipelines that you want to run separated by a comma (Ex Pipelines=Phenix,ArpWArp,Buccaneeri1,Buccaneeri2,Buccaneeri2W,Crank,ArpWArpAfterBuccaneeri1)
+FOMDataPath= the data folder after converting to figure-of-merit
+DataPath= the data folder with parrot phases
+ccp4i2Core= path for ccp4i2 core folder
+DatafakeAnomalous= path for fake Anomalou folder 
+cstat2= path for cstat2 folder
+
+2-	The Pareparer will create two folders for each pipelines. One folder has a script to run the pipeline and the another to run the analyser after the pipeline is completed. The script folder has two scripts, one called manager to run the whole data set and the another to run only one case each time that picks from the data folder. The analyser will write  the results  in an excel file. 
+    
+   
+####### Compiling  c++ code  #######
+In order to compile the c++ code on cluster server, you need to 
+- modify make file and add   -L "../ccp4/7.0.052/1/default/ccp4-7.0/lib"
+- modify subdir.mk file and add  -I"ccp4/7.0.052/1/default/ccp4-7.0/include"
