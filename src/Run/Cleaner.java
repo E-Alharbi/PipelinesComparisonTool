@@ -11,14 +11,16 @@ public class Cleaner {
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		LoadExcel e = new LoadExcel();
-		Vector<DataContainer> Container = e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets3/Phenixhancs.xlsx");
+		Vector<DataContainer> Container = e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets14/hancs/Phenix.xlsx");
 		int count=0;
 		String Script="";
 		String PDB="";
 		
 		for(int i=0; i < Container.size();++i ) {
 			
-			if(Container.get(i).BuiltPDB.equals("F") || Container.get(i).Intermediate.equals("T")) {
+			//if(Container.get(i).BuiltPDB.equals("F") || (Container.get(i).Intermediate.equals("T") && Math.round(Double.valueOf(Container.get(i).TimeTaking)/60) < 48 )) {
+				if(Container.get(i).BuiltPDB.equals("F") || Container.get(i).Intermediate.equals("T")) {
+
 				count++;
 				//Script+="rm -r project"+Container.get(i).PDB_ID+" \n";
 				//Script+="rm -r "+Container.get(i).PDB_ID+" \n";
@@ -65,7 +67,7 @@ public class Cleaner {
 				*/
 			}
 		new Preparer().WriteTxtFile("RemoverScript.sh",Script);
-		new Preparer().WriteTxtFile(" ProcessedFilesNamesPhenix.txt",PDB);
+		new Preparer().WriteTxtFile("ProcessedFilesNamesPhenix.txt",PDB);
 	}
 
 }

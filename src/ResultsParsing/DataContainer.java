@@ -9,7 +9,7 @@ public class DataContainer implements Comparable<DataContainer> {
 	public String PDB_ID;
 	public String Resolution="None";
 	
-	String TimeTaking="-1";
+	public String TimeTaking="-1";
 	
 	String R_factor="None";
 	
@@ -35,7 +35,7 @@ public class DataContainer implements Comparable<DataContainer> {
 			public  String n1m2="None";
 
 			public String n2m1="None";
-			String Completeness="None";
+			public String Completeness="None";
 			public String F_mapCorrelation="None";
 			public String E_mapCorrelation="None";
 			public String BuiltPDB;

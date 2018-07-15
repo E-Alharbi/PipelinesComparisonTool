@@ -189,7 +189,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 	
 	
      File[] processedfiles = new File(PATHLogs).listFiles();
-		
+     
 	 for (File file : processedfiles) {
 		 FilesNames.add(file.getName().replaceAll("."+FilenameUtils.getExtension(file.getName()),""));
 		 System.out.println(file.getName().replaceAll("."+FilenameUtils.getExtension(file.getName()),""));
@@ -242,7 +242,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 	
 String mtzin=FilePathAndName+".mtz";
 String seqin=FilePathAndName+".seq";
-
+//String seqin=FilePathAndName+".fa";
 String[]ArpParm;
 if(RunningPram.UseBuccModels.trim().equals("T")) {
 	String[]callAndArgs= {
@@ -284,7 +284,7 @@ else {
 	"sigfp","SIGFP",
 	"jobId",FileName,
 	"seqin",seqin,
-	
+	"fakedata","0.33;0.75;1"
 	};
 	 ArpParm=callAndArgs;
 }

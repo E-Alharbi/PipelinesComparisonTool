@@ -35,17 +35,19 @@ public class ResultsInLatex {
 		 */
 		
 		//GroupedByPhases=true;
-		 String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets5";
-		//String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/GAResults/Ex4";
+		 String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets14";
+		//String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/GAResults/Ex6";
 		
 		// new ResultsInCSV().PDBTable(Container);
 		 
-		 new ResultsInLatex().OverallResults(ExcelDir);
-		 new ResultsInLatex().PDBList(ExcelDir);
-		 new ResultsInLatex().BestAndWorstCases(ExcelDir);
-		 new ResultsInLatex().PrepareExcelForSpss(ExcelDir);
-		 new ResultsInLatex().SpssBootstraping("SpssExcel");
-		 new ResultsInLatex().ReadingSpssBootstraping("SpssExcelResults");
+		// new ResultsInLatex().OverallResults(ExcelDir);
+		 //new ResultsInLatex().PDBList(ExcelDir);
+		 //new ResultsInLatex().BestAndWorstCases(ExcelDir);
+		 //new ResultsInLatex().PrepareExcelForSpss(ExcelDir);
+		 //new ResultsInLatex().SpssBootstraping("SpssExcel");
+		 //new ResultsInLatex().ReadingSpssBootstraping("SpssExcelResults");
+		 new ResultsInLatex().MatrixOfResults(ExcelDir);
+		 
 		 //new  ResultsInCSV().GroupByPhases(ExcelDir);
 	}
 	void PDBTable(Vector<Vector<DataContainer>> Container) throws IOException {
@@ -757,6 +759,56 @@ public class ResultsInLatex {
 		
 		 System.out.println(ResoTable);
 		 return Reso;
+	}
+	void MatrixOfResults(String ResultsDir) throws IOException {
+		File[] Folders = new File(ResultsDir).listFiles();
+		
+		 for (File Folder : Folders) {
+			 if (Folder.isDirectory()) {
+					Vector<Vector<DataContainer>> Container = new Vector<Vector<DataContainer>>();
+					LoadExcel e = new LoadExcel();
+			 
+				 for (File Excel : Folder.listFiles()) {
+					 Container.add(e.ReadExcel(Excel.getAbsolutePath()));
+					 e.ToolsNames.add(Excel.getName()+Folder.getName());
+				 }
+				 String Col="";
+				 String Row="";
+				 for(int i=0 ; i < Container.size() ; ++i) {
+					 Col="";// avoiding repetition  
+				  Row+="\\tiny "+e.ToolsNames.get(i);
+					 for(int m=0 ; m <Container.size() ; ++m ) {
+						
+						 if(Col.length()==0) {
+							 Col+="\\tiny "+e.ToolsNames.get(m);
+						 }
+						 else {
+							 Col+=" & \\tiny "+e.ToolsNames.get(m); 
+						 }
+						int count=0;
+						for(int model=0 ; model < Container.get(i).size(); ++model ) {
+							for(int modeComTo=0 ; modeComTo < Container.get(m).size(); ++modeComTo ) {
+							if(Container.get(i).get(model).PDB_ID.equals(Container.get(m).get(modeComTo).PDB_ID)){
+								if(!Container.get(i).get(model).Completeness.equals("None") && !Container.get(m).get(modeComTo).Completeness.equals("None")&& Integer.valueOf(Container.get(i).get(model).Completeness) - Integer.valueOf(Container.get(m).get(modeComTo).Completeness) >=5) {
+								count++;	
+							}
+							}
+							}
+						}
+						if(Row.length()==0)
+							Row+=count;
+						else
+							Row+="& \\tiny "+count;	
+					 }
+					 Row+="\\\\ \n ";
+					
+				 }
+				 System.out.println(Col);
+				 System.out.println(Row);
+			 }
+			
+		
+		 }
 	}
 }
 

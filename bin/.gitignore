@@ -1,14 +1,3 @@
-/Analyser.sh
-/PluginUtils.py
-/ReadMe
-/ResultsParsing/
 /Run/
+/ResultsParsing/
 /ToolsExecation/
-/ToolsExecution/
-/Utilities/
-/bucrefi2.py
-/cad.sh
-/crank.sh
-/fakeheavy.pdb
-/refmacscript.sh
-/table/

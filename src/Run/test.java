@@ -37,6 +37,99 @@ public class test {
 	public static void main(String[] args) throws IOException, InterruptedException, StatsException {
 	
 		
+		/*
+		LoadExcel e = new LoadExcel();
+		Vector<DataContainer> Arp =e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets11/mrncs/ARPwARP.xlsx");
+		Vector<DataContainer> Bucc =e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets11/mrncs/Buccaneer5C.xlsx");
+	int HowManyModel=0;
+	int Models=0;
+		for(int i=0 ; i < Arp.size() ; ++i) {
+			for(int m=0 ; m < Bucc.size() ; ++m) {
+		if(Arp.get(i).PDB_ID.equals(Bucc.get(m).PDB_ID) && Arp.get(i).BuiltPDB.equals("T") &&Bucc.get(m).BuiltPDB.equals("T") ) {
+			Models++;
+			if(Integer.valueOf(Arp.get(i).Completeness) < Integer.valueOf(Bucc.get(m).Completeness) ) {
+				HowManyModel++;	
+			}
+		}
+			}
+		}
+		System.out.println(Models);
+		System.out.println(HowManyModel);
+		*/
+		
+		LoadExcel e = new LoadExcel();
+		Vector<DataContainer> Arp =e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets12/mrncs/Buccaneer5C.xlsx");
+		Vector<DataContainer> ArpSeq =e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets12/mrncs/BuccaneerNewSeqR1.xlsx");
+int count = 0 ;
+Vector<DataContainer> NewCon= new Vector<DataContainer>();
+		for(int i=0 ; i < Arp.size() ; ++i) {
+			for(int m=0 ; m < ArpSeq.size() ; ++m) {
+				if(ArpSeq.get(m).BuiltPDB.equals("T"))
+				if(Arp.get(i).PDB_ID.equals(ArpSeq.get(m).PDB_ID) && Integer.valueOf(Arp.get(i).Completeness) < Integer.valueOf(ArpSeq.get(m).Completeness)) {
+					if((Integer.valueOf(ArpSeq.get(m).Completeness) - Integer.valueOf(Arp.get(i).Completeness)) > 5) {
+					//System.out.print("PDB "+Arp.get(i).PDB_ID  );
+					///System.out.print(" (ResSeq="+Arp.get(i).n1m2  );
+					//System.out.print(" "+Arp.get(i).Completeness + "%)"  );
+					//System.out.print(" Arp seq PDB "+ArpSeq.get(m).PDB_ID  );
+					//System.out.print(" (ResSeq="+ArpSeq.get(m).n1m2  );
+					//System.out.println(" "+ArpSeq.get(m).Completeness +"% )"   );
+					count++;
+					NewCon.add(Arp.get(i));
+					NewCon.add(ArpSeq.get(m));
+					System.out.println(Arp.get(i).PDB_ID+","+Arp.get(i).n1m2+","+Arp.get(i).Completeness +"%,"+ArpSeq.get(m).n1m2+","+ArpSeq.get(m).Completeness+"%");
+					}
+					
+				}
+			}
+		}
+		System.out.println(count);
+		
+		/*
+		String SeqDir="/Volumes/PhDHardDrive/jcsg1200/Seq";
+		String Jscg202="/Volumes/PhDHardDrive/jcsg1200/mrncs";
+		File[] Seq = new File(SeqDir).listFiles();
+		File[] Jscg = new File(Jscg202).listFiles();
+		Vector<String> Names= new Vector<String>();
+		 for (File PDB : Jscg) {
+			 String PDBid=PDB.getName().substring(0, 4);
+			 String PDBWithNoEx=PDB.getName().replaceAll("."+FilenameUtils.getExtension(PDB.getName()),"");
+			 boolean Found=false;
+			 if(!Names.contains(PDBWithNoEx)) {
+			 for (File seq : Seq) {
+				 
+				 if(PDBid.contains(seq.getName().substring(0, seq.getName().length()-10).toLowerCase())) {
+					// System.out.println(seq.getName().substring(0, seq.getName().length()-10).toLowerCase());
+					 //System.out.println(seq.getName());
+		 //FileUtils.copyFile(new File(Jscg202+"/"+PDBWithNoEx+".mtz"),  new File("/Volumes/PhDHardDrive/jcsg1200/mrncsWithFa/"+PDBWithNoEx+".mtz"));
+		 //FileUtils.copyFile(new File(Jscg202+"/"+PDBWithNoEx+".pdb"),  new File("/Volumes/PhDHardDrive/jcsg1200/mrncsWithFa/"+PDBWithNoEx+".pdb"));
+		 //FileUtils.copyFile(new File(SeqDir+"/"+seq.getName()),  new File("/Volumes/PhDHardDrive/jcsg1200/mrncsWithFa/"+PDBWithNoEx+".fasta"));
+					 Found=true;
+				 }
+				 Names.add(PDBWithNoEx) ;
+			 }
+			 if(Found==false) {
+				 System.out.println(PDB.getName());
+			 }
+		 }
+		 }
+*/
+				/*
+			LoadExcel e = new LoadExcel();
+			
+			 for (File PDB : Jscg) {
+				 boolean Found=false;
+				 for (File seq : Seq) {
+					if(PDB.getName().substring(0, 4).equals(seq.getName().substring(0, 4).toLowerCase()))
+					{
+						Found=true;
+						break;
+				     }
+				 }
+				 if(Found==false) {
+					 System.out.println(PDB.getName());
+				 }
+			 }
+		
 		 String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets4";
 		File[] Folders = new File(ExcelDir).listFiles();
 		LoadExcel e = new LoadExcel();
@@ -80,7 +173,7 @@ public class test {
 			
 		
 		 }
-		
+		*/
 		/*
 		LoadExcel e = new LoadExcel();
 		Vector<DataContainer> Container = e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets2/mrncs/Buccaneer.xlsx");
@@ -126,7 +219,7 @@ public class test {
 		 //System.out.println("TestingDataSet "+TestingDataSet.size());
 		 //new ExcelSheet().FillInExcel(TestingDataSet, ("TestingDataSet"));
 		// System.out.println(" Created TestingDataSet ");
-		StatsUtil.start(); 
+		//StatsUtil.start(); 
 		/*
 		String[] command={"GET FILE='//Applications/IBM/SPSS/Statistics/25/Samples/English/Employee data.sav'.",
 				"OMS SELECT TABLES ",
@@ -135,7 +228,7 @@ public class test {
 				"OMSEND TAG='desc_out'.",
 				 "ONEWAY salary BY educ" ," /STATISTICS DESCRIPTIVES"," /MISSING ANALYSIS."};
 			*/
-		
+		/*
 		String[] command={"GET DATA " , 
 				"  /TYPE=XLSX " , 
 				"  /FILE='/Volumes/PhDHardDrive/jcsg1200Results/spss/hancs/Reso3.xlsx' " , 
@@ -172,7 +265,7 @@ public class test {
 	//System.out.println("desc_out "+StatsUtil.getXMLUTF16("desc_out"));
 	
 	 StatsUtil.stop();
-	
+	*/
 				//String handle = "desc_table";
 				//String context = "/outputTree";
 				//String xpath = "//pivotTable[@subType='Descriptive Statistics']" +
