@@ -68,9 +68,16 @@ public class chltofom {
 			                 System.out.println(st);
 
 			             }
+		             
 		             FileUtils.copyFile(new File(DataPath+"/"+FileName+".pdb"),  new File(mtzoutpath+FileName+".pdb"));
+		             if(new File(DataPath+"/"+FileName+".seq").exists())
 		             FileUtils.copyFile(new File(DataPath+"/"+FileName+".seq"),  new File(mtzoutpath+FileName+".seq"));
-		             }
+		             if(new File(DataPath+"/"+FileName+".fasta").exists())
+			         FileUtils.copyFile(new File(DataPath+"/"+FileName+".fasta"),  new File(mtzoutpath+FileName+".fasta"));
+		             if(new File(DataPath+"/"+FileName+".fa").exists())
+				     FileUtils.copyFile(new File(DataPath+"/"+FileName+".fa"),  new File(mtzoutpath+FileName+".fa"));
+			        
+		         }
 		         catch (IOException e) {
 
 		             System.out.println("exception occured");

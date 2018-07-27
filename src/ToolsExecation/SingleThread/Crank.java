@@ -216,9 +216,15 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 
 	
 String mtzin=FilePathAndName+".mtz";
-String seqin=FilePathAndName+".seq";
-
-
+//String seqin=FilePathAndName+".seq";
+//String seqin=FilePathAndName+".fasta";
+String seqin="";
+if(new File(FilePathAndName+".fasta").exists())	        	 
+seqin=FilePathAndName+".fasta";
+if(new File(FilePathAndName+".fa").exists())	        	 
+seqin=FilePathAndName+".fa";
+if(new File(FilePathAndName+".seq").exists())	        	 
+seqin=FilePathAndName+".seq";
 
 
 //Users/emadalharbi/devel/pipelines/crank2/crank2/crank2.py

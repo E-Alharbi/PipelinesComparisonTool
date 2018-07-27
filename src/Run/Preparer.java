@@ -92,7 +92,7 @@ return false;
 	Vector<String> PhenixScript = new Vector<String>();
 	PhenixScript.add("#$ -cwd");
 	PhenixScript.add("#$ -V");
-	PhenixScript.add("#$ -l h_vmem=6G");
+	PhenixScript.add("#$ -l h_vmem=2G");
 	PhenixScript.add("#$ -l h_rt=48:00:00");
 	PhenixScript.add("export MALLOC_ARENA_MAX=4");
 	PhenixScript.add("vmArgs=\"-Xmx100m -XX:ParallelGCThreads=1\"");
@@ -136,7 +136,7 @@ boolean ArpwArpPrepare(boolean Bucc) throws IOException {
 	Vector<String> Script = new Vector<String>();
 	Script.add("#$ -cwd");
 	Script.add("#$ -V");
-	Script.add("#$ -l h_vmem=6G");
+	Script.add("#$ -l h_vmem=2G");
 	Script.add("#$ -l h_rt=48:00:00");
 	Script.add("export MALLOC_ARENA_MAX=4");
 	Script.add("vmArgs=\"-Xmx100m -XX:ParallelGCThreads=1\"");
@@ -198,7 +198,7 @@ boolean Bucci1Prepare() throws IOException {
 	Vector<String> Script = new Vector<String>();
 	Script.add("#$ -cwd");
 	Script.add("#$ -V");
-	Script.add("#$ -l h_vmem=6G");
+	Script.add("#$ -l h_vmem=2G");
 	Script.add("#$ -l h_rt=48:00:00");
 	Script.add("export MALLOC_ARENA_MAX=4");
 	Script.add("vmArgs=\"-Xmx100m -XX:ParallelGCThreads=1\"");
@@ -240,7 +240,7 @@ boolean Crank() throws IOException {
 	Vector<String> Script = new Vector<String>();
 	Script.add("#$ -cwd");
 	Script.add("#$ -V");
-	Script.add("#$ -l h_vmem=6G");
+	Script.add("#$ -l h_vmem=2G");
 	Script.add("#$ -l h_rt=48:00:00");
 	Script.add("export MALLOC_ARENA_MAX=4");
 	Script.add("vmArgs=\"-Xmx100m -XX:ParallelGCThreads=1\"");
@@ -295,7 +295,7 @@ boolean Bucci2Prepare(boolean Water) throws IOException {
 	Vector<String> Script = new Vector<String>();
 	Script.add("#$ -cwd");
 	Script.add("#$ -V");
-	Script.add("#$ -l h_vmem=6G");
+	Script.add("#$ -l h_vmem=2G");
 	Script.add("#$ -l h_rt=48:00:00");
 	Script.add("export MALLOC_ARENA_MAX=4");
 	Script.add("vmArgs=\"-Xmx100m -XX:ParallelGCThreads=1\"");

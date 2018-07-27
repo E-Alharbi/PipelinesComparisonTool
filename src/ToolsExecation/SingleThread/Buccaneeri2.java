@@ -235,7 +235,15 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 		 StartTime = new java.util.Date();
 		 Results res= new Results();
 		         try {
-	String seqin=FilePathAndName+".seq";
+	//String seqin=FilePathAndName+".seq";
+	String seqin="";
+	if(new File(FilePathAndName+".fasta").exists())	        	 
+	seqin=FilePathAndName+".fasta";
+	if(new File(FilePathAndName+".fa").exists())	        	 
+	seqin=FilePathAndName+".fa";
+	if(new File(FilePathAndName+".seq").exists())	        	 
+	seqin=FilePathAndName+".seq";
+	
 	String mtzin=FilePathAndName+".mtz";
 	// add water option is set in bucrefi2.py not here!!!
 	 String[]callAndArgs= {

@@ -241,8 +241,16 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 
 	
 String mtzin=FilePathAndName+".mtz";
-String seqin=FilePathAndName+".seq";
+//String seqin=FilePathAndName+".seq";
 //String seqin=FilePathAndName+".fa";
+//String seqin=FilePathAndName+".fasta";
+String seqin="";
+if(new File(FilePathAndName+".fasta").exists())	        	 
+seqin=FilePathAndName+".fasta";
+if(new File(FilePathAndName+".fa").exists())	        	 
+seqin=FilePathAndName+".fa";
+if(new File(FilePathAndName+".seq").exists())	        	 
+seqin=FilePathAndName+".seq";
 String[]ArpParm;
 if(RunningPram.UseBuccModels.trim().equals("T")) {
 	String[]callAndArgs= {
@@ -284,7 +292,7 @@ else {
 	"sigfp","SIGFP",
 	"jobId",FileName,
 	"seqin",seqin,
-	"fakedata","0.33;0.75;1"
+	//"fakedata","0.33;0.75;1"
 	};
 	 ArpParm=callAndArgs;
 }

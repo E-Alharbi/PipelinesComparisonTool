@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jfree.chart.*;
 import org.jfree.chart.axis.CategoryAxis;
@@ -136,7 +138,79 @@ public class Plot {
 	
    public static void main( String[ ] args )throws Exception {
 	 
+	   String line = "nnnnThis order was placed for QT3000! OK? \nThis";
+	      String pattern = "R free*";
+
+	      // Create a Pattern object
+	      XYSeriesCollection dataset = new XYSeriesCollection();
+		 String FileNamesTxt=new ARPResultsAnalysis().readFileAsString("/Volumes/PhDHardDrive/jcsg1200Results/Results20:7:2018/hancsBuccaneeri125C/Buccaneeri1/BuccaneerResults/BuccaneerLogs/1vl0-4.0-parrot-hancs.txt");
+
+		
+
+		 Matcher m = Pattern.compile(".*R free.*").matcher(FileNamesTxt);
+		 Matcher R = Pattern.compile("\\sR factor.*").matcher(FileNamesTxt);
+		 System.out.println(m.groupCount());
+		 XYSeries series = new XYSeries("R free");
+		 XYSeries seriesOp = new XYSeries("R factor");
+		 double Cycle=1.0;
+		 
+	        while (m.find()) {
+	            System.out.println("line = " + m.group());
+	            String[] splited = m.group().split("\\s+");
+	           
+	            
+	            series.add(Cycle , Double.parseDouble(splited[4]));	
+	            Cycle++;
+	        }
+	        Cycle=1.0;
+	        String [] Lines= FileNamesTxt.split("\n");
+	        for(int i =0 ; i < Lines.length ; ++i) {
+	        	if(Lines[i].contains("           R factor")) {
+	        		 System.out.println("line R = " +Lines[i]);
+	        		 String[] splited = Lines[i].split("\\s+");
+	        		 seriesOp.add(Cycle , Double.parseDouble(splited[4]));	
+	        		 System.out.println(splited[4]);
+	 	            Cycle++;
+	        	}
+	        }
+	        /*
+	        while (R.find()) {
+	            System.out.println("line R = " + R.group());
+	            String[] splited = R.group().split("\\s+");
+	            System.out.println(splited[4]);
+	            
+	            seriesOp.add(Cycle , Double.parseDouble(splited[4]));	
+	            Cycle++;
+	        }
+		 */
+		
 	   
+	//DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+			
+			
+				 //String series1 = ToolsNames.get(i);
+				
+				
+					
+					//DataContainer.AddElemnet(BestModelInEachReso, Container.get(i).get(m));
+				
+						// System.out.println(Container.get(i).get(m).Resolution);
+						
+						
+
+						 //dataset.addValue(Double.valueOf(Container.get(i).get(m).molProbityData.MolProbityScore), series1, Double.valueOf(Container.get(i).get(m).Resolution));
+					 
+				 
+				 dataset.addSeries(series);
+				
+				 dataset.addSeries(seriesOp);
+			 
+			
+			
+			new Plot().CreateLinePlot("MolScore", "Resolution",
+					"MolProbity Score",dataset);
+	   
+	   /*
 	   final int seriesCount = 3;
        final int categoryCount = 3;
        final int entityCount = 22;
@@ -169,20 +243,15 @@ public class Plot {
       
        JFreeChart ScatterPlot = ChartFactory.createBoxAndWhiskerChart("", "tt", "", dataset, true);
 		 Shape cross = ShapeUtilities.createDiamond(4);
-		 /*
-	        XYPlot xyPlot = (XYPlot) ScatterPlot.getPlot();
-	        xyPlot.setDomainCrosshairVisible(true);
-	        xyPlot.setRangeCrosshairVisible(true);
-	        XYItemRenderer renderer = xyPlot.getRenderer();
-	        renderer.setSeriesShape(0, cross);
-	        renderer.setSeriesPaint(0, Color.BLUE);
-	      */
+		
 	       
 	        
-		      int width = 1000;   /* Width of the image */
-		      int height = 800;  /* Height of the image */ 
+		      int width = 1000;  
+		      int height = 800;  
 		      File XYChart = new File( "box"+".jpeg" ); 
 		      ChartUtilities.saveChartAsJPEG( XYChart,1.0f, ScatterPlot, width, height);
+		      
+		      */
    }
    
    

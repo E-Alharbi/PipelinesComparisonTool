@@ -35,17 +35,17 @@ public class ResultsInLatex {
 		 */
 		
 		//GroupedByPhases=true;
-		 String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets14";
-		//String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/GAResults/Ex6";
+		 String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets17";
+		//String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/GAResults/Ex5";
 		
 		// new ResultsInCSV().PDBTable(Container);
 		 
-		// new ResultsInLatex().OverallResults(ExcelDir);
-		 //new ResultsInLatex().PDBList(ExcelDir);
-		 //new ResultsInLatex().BestAndWorstCases(ExcelDir);
-		 //new ResultsInLatex().PrepareExcelForSpss(ExcelDir);
-		 //new ResultsInLatex().SpssBootstraping("SpssExcel");
-		 //new ResultsInLatex().ReadingSpssBootstraping("SpssExcelResults");
+		 new ResultsInLatex().OverallResults(ExcelDir);
+		 new ResultsInLatex().PDBList(ExcelDir);
+		 new ResultsInLatex().BestAndWorstCases(ExcelDir);
+		 new ResultsInLatex().PrepareExcelForSpss(ExcelDir);
+		 new ResultsInLatex().SpssBootstraping("SpssExcel");
+		 new ResultsInLatex().ReadingSpssBootstraping("SpssExcelResults");
 		 new ResultsInLatex().MatrixOfResults(ExcelDir);
 		 
 		 //new  ResultsInCSV().GroupByPhases(ExcelDir);
@@ -556,16 +556,17 @@ public class ResultsInLatex {
 						"alter type Completeness(f3)." , 
 						"alter type Rfactor0Cycle(f3)." , 
 						"alter type TimeTaking(f6)." , 
+						"alter type Rfree0Cycle(f3)." ,  // New Line was added
 						"OMS SELECT TABLES ",
 						"/IF COMMANDS = ['ONEWAY'] ",
 						"SUBTYPES = ['Descriptives']",
 						Des,
 						" BOOTSTRAP" ,
 						"  /SAMPLING METHOD=SIMPLE" , 
-						"  /VARIABLES TARGET=Completeness Rfactor0Cycle TimeTaking INPUT=Tool" , 
+						"  /VARIABLES TARGET=Completeness Rfactor0Cycle Rfree0Cycle TimeTaking  INPUT=Tool" , 
 						"  /CRITERIA CILEVEL=95 CITYPE=PERCENTILE  NSAMPLES=1000" , 
 						"  /MISSING USERMISSING=EXCLUDE." , 
-						"   ONEWAY Completeness Rfactor0Cycle TimeTaking BY Tool" , 
+						"   ONEWAY Completeness Rfactor0Cycle Rfree0Cycle TimeTaking  BY Tool" , 
 						"  /STATISTICS DESCRIPTIVES" , 
 						"  /MISSING ANALYSIS." ,
 						
@@ -628,17 +629,19 @@ public class ResultsInLatex {
 			
 			Pipelines.add(table.get(i).Pipeline);
 			if(RowHancs.trim().equals(""))
-			RowHancs="&-&-&-&";
+			RowHancs="&-&-&-&-&";
 			if(RowMrncs.trim().equals(""))
-			RowMrncs="&-&-&-&";
+			RowMrncs="&-&-&-&-&";
 			if(RowNoncs.trim().equals(""))
-			RowNoncs="&-&-&-";
+			RowNoncs="&-&-&-&-";
 			else
 			RowNoncs=RowNoncs.substring(0,RowNoncs.length()-2); // to remove the last &
 			System.out.println("$ \\tiny"+table.get(i).Pipeline +" & \\tiny From "+(Integer.valueOf(Reso)+1) +"To less than "+(Integer.valueOf(Reso)+2)+" "+ RowHancs +" "+ RowMrncs +" "+ RowNoncs);
-			String ResoRow=" \\footnotesize \\parbox[t]{-10mm}{\\multirow{PipelinesNum}{2.3cm}{\\rotatebox[origin=c]{90}{From R1 \\r{A}  to less than R2 \\r{A}}}}";
+		//	String ResoRow=" \\footnotesize \\parbox[t]{-10mm}{\\multirow{PipelinesNum}{2.3cm}{\\rotatebox[origin=c]{90}{From R1 \\r{A}  to less than R2 \\r{A}}}}";
+			String ResoRow=" \\footnotesize \\parbox[t]{-10mm}{\\multirow{PipelinesNum}{2.3cm}{\\rotatebox[origin=c]{90}{Group R1 \\r{A}}}}";
+
 			ResoRow=ResoRow.replace("R1", String.valueOf((Integer.valueOf(Reso)+1)));
-			ResoRow=ResoRow.replace("R2", String.valueOf((Integer.valueOf(Reso)+2)));
+			//ResoRow=ResoRow.replace("R2", String.valueOf((Integer.valueOf(Reso)+2)));
 			if(TheFullTable.contains(ResoRow)) {
 			TheFullTable+="& "+" \\tiny "+table.get(i).Pipeline +" &"+ RowHancs +" "+ RowMrncs +" "+ RowNoncs+" \\\\ \n"; ;
 			}else {
@@ -762,7 +765,7 @@ public class ResultsInLatex {
 	}
 	void MatrixOfResults(String ResultsDir) throws IOException {
 		File[] Folders = new File(ResultsDir).listFiles();
-		
+		String Table="";
 		 for (File Folder : Folders) {
 			 if (Folder.isDirectory()) {
 					Vector<Vector<DataContainer>> Container = new Vector<Vector<DataContainer>>();
@@ -774,10 +777,20 @@ public class ResultsInLatex {
 				 }
 				 String Col="";
 				 String Row="";
+				 Vector<Vector<DataContainer>> Container2 = new Vector<Vector<DataContainer>>();
 				 for(int i=0 ; i < Container.size() ; ++i) {
-					 Col="";// avoiding repetition  
+					
+					 System.out.println(" "+i + " out of "+Container.size());
+					 Container2.addElement(e.CheckPDBexists(Container,Container.get(i))); 
+					 System.out.println(Container2.get(Container2.size()-1).size());
+				 } 
+				
+				 Container.removeAllElements();
+				 Container.addAll(Container2); // only the cases that built by all tools
+				 for(int i=0 ; i < Container.size() ; ++i) {
+					 Col="\\tiny Pipeline ";// avoiding repetition  
 				  Row+="\\tiny "+e.ToolsNames.get(i);
-					 for(int m=0 ; m <Container.size() ; ++m ) {
+					 for(int m=0 ; m < Container.size() ; ++m ) {
 						
 						 if(Col.length()==0) {
 							 Col+="\\tiny "+e.ToolsNames.get(m);
@@ -790,7 +803,9 @@ public class ResultsInLatex {
 							for(int modeComTo=0 ; modeComTo < Container.get(m).size(); ++modeComTo ) {
 							if(Container.get(i).get(model).PDB_ID.equals(Container.get(m).get(modeComTo).PDB_ID)){
 								if(!Container.get(i).get(model).Completeness.equals("None") && !Container.get(m).get(modeComTo).Completeness.equals("None")&& Integer.valueOf(Container.get(i).get(model).Completeness) - Integer.valueOf(Container.get(m).get(modeComTo).Completeness) >=5) {
-								count++;	
+									//if(Integer.valueOf(Container.get(i).get(model).Completeness) - Integer.valueOf(Container.get(m).get(modeComTo).Completeness) >=5) {
+
+									count++;	
 							}
 							}
 							}
@@ -798,17 +813,21 @@ public class ResultsInLatex {
 						if(Row.length()==0)
 							Row+=count;
 						else
-							Row+="& \\tiny "+count;	
+							Row+="& \\tiny "+((count *100)/Container.get(i).size()) +"\\%" ;	
 					 }
-					 Row+="\\\\ \n ";
+					 Row+="\\\\ \\hline \n ";
 					
 				 }
 				 System.out.println(Col);
 				 System.out.println(Row);
+				 Table+=Col + "\\\\ \\hline \n ";
+				 Table+=Row;
+				 new Preparer().WriteTxtFile("Latex/MatrixOfResults"+Folder.getName()+".tex",Table);
 			 }
 			
 		
 		 }
+		
 	}
 }
 

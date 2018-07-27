@@ -56,7 +56,7 @@ public class test {
 		System.out.println(Models);
 		System.out.println(HowManyModel);
 		*/
-		
+		/*
 		LoadExcel e = new LoadExcel();
 		Vector<DataContainer> Arp =e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets12/mrncs/Buccaneer5C.xlsx");
 		Vector<DataContainer> ArpSeq =e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets12/mrncs/BuccaneerNewSeqR1.xlsx");
@@ -83,10 +83,10 @@ Vector<DataContainer> NewCon= new Vector<DataContainer>();
 			}
 		}
 		System.out.println(count);
+		*/
 		
-		/*
 		String SeqDir="/Volumes/PhDHardDrive/jcsg1200/Seq";
-		String Jscg202="/Volumes/PhDHardDrive/jcsg1200/mrncs";
+		String Jscg202="/Volumes/PhDHardDrive/jcsg1200/noncsWithMissingCases";
 		File[] Seq = new File(SeqDir).listFiles();
 		File[] Jscg = new File(Jscg202).listFiles();
 		Vector<String> Names= new Vector<String>();
@@ -100,9 +100,9 @@ Vector<DataContainer> NewCon= new Vector<DataContainer>();
 				 if(PDBid.contains(seq.getName().substring(0, seq.getName().length()-10).toLowerCase())) {
 					// System.out.println(seq.getName().substring(0, seq.getName().length()-10).toLowerCase());
 					 //System.out.println(seq.getName());
-		 //FileUtils.copyFile(new File(Jscg202+"/"+PDBWithNoEx+".mtz"),  new File("/Volumes/PhDHardDrive/jcsg1200/mrncsWithFa/"+PDBWithNoEx+".mtz"));
-		 //FileUtils.copyFile(new File(Jscg202+"/"+PDBWithNoEx+".pdb"),  new File("/Volumes/PhDHardDrive/jcsg1200/mrncsWithFa/"+PDBWithNoEx+".pdb"));
-		 //FileUtils.copyFile(new File(SeqDir+"/"+seq.getName()),  new File("/Volumes/PhDHardDrive/jcsg1200/mrncsWithFa/"+PDBWithNoEx+".fasta"));
+		 FileUtils.copyFile(new File(Jscg202+"/"+PDBWithNoEx+".mtz"),  new File("/Volumes/PhDHardDrive/jcsg1200/noncsWithMissingCasesFasta/"+PDBWithNoEx+".mtz"));
+		 FileUtils.copyFile(new File(Jscg202+"/"+PDBWithNoEx+".pdb"),  new File("/Volumes/PhDHardDrive/jcsg1200/noncsWithMissingCasesFasta/"+PDBWithNoEx+".pdb"));
+		 FileUtils.copyFile(new File(SeqDir+"/"+seq.getName()),  new File("/Volumes/PhDHardDrive/jcsg1200/noncsWithMissingCasesFasta/"+PDBWithNoEx+".fasta"));
 					 Found=true;
 				 }
 				 Names.add(PDBWithNoEx) ;
@@ -112,7 +112,7 @@ Vector<DataContainer> NewCon= new Vector<DataContainer>();
 			 }
 		 }
 		 }
-*/
+
 				/*
 			LoadExcel e = new LoadExcel();
 			

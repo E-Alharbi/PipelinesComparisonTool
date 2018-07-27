@@ -169,8 +169,15 @@ public class RunCBuccaneer {
 		  StartTime= new java.util.Date();
 		 Results res= new Results();
 	try {
-	String seqin=FilePathAndName+".seq";
+	//String seqin=FilePathAndName+".seq";
 	//String seqin=FilePathAndName+".fasta";
+	String seqin="";
+	if(new File(FilePathAndName+".fasta").exists())	        	 
+	seqin=FilePathAndName+".fasta";
+	if(new File(FilePathAndName+".fa").exists())	        	 
+	seqin=FilePathAndName+".fa";
+	if(new File(FilePathAndName+".seq").exists())	        	 
+	seqin=FilePathAndName+".seq";
 	//String seqin=FilePathAndName+".fa";
 	String mtzin=FilePathAndName+".mtz";
 	String colinhl="parrot.ABCD.A,parrot.ABCD.B,parrot.ABCD.C,parrot.ABCD.D";
@@ -236,7 +243,7 @@ public class RunCBuccaneer {
 		              RunningPram.RefmacPath=System.getenv("CCP4")+"/bin/refmac5";
 			        Factors F=  new Refmac().RunRefmac(FilePathAndName+".mtz", WorkingDir+"/build.pdb",  RunningPram.RefmacPath, "CBuccaneer", WorkingDir+"/"+FileName,LIBINRefMac);
 			        res.LogFile+=F.Log;
-			            for (int i =1 ; i< 5 ; ++i ) {
+			            for (int i =1 ; i< 25 ; ++i ) {
 			            	System.out.println("########## Cycle "+i+" ##########");
 			            	mtzin=WorkingDir+"/"+FileName+"Ref.mtz";
 			            	cycles="2";

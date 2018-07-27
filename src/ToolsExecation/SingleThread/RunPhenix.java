@@ -233,7 +233,15 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 		         try {
 	
 String mtzin=FilePathAndName+".mtz";
-String seqin=FilePathAndName+".seq";
+//String seqin=FilePathAndName+".seq";
+//String seqin=FilePathAndName+".fasta";
+String seqin="";
+if(new File(FilePathAndName+".fasta").exists())	        	 
+seqin=FilePathAndName+".fasta";
+if(new File(FilePathAndName+".fa").exists())	        	 
+seqin=FilePathAndName+".fa";
+if(new File(FilePathAndName+".seq").exists())	        	 
+seqin=FilePathAndName+".seq";
 //String[]callAndArgss= {"source","/Applications/ccp4-7.0/setup-scripts/ccp4.setup-sh"};
 //Process pp = Runtime.getRuntime().exec(callAndArgss);
 

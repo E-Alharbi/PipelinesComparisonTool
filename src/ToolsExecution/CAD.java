@@ -91,6 +91,14 @@ String st="";
 			 //FileUtils.copyFile(new File("/Volumes/PhDHardDrive/jcsg1200/hancs1/"+PDBid+".seq"),  new File("/Volumes/PhDHardDrive/jcsg1200/hancs1Fakewave/"+PDBid+".seq"));
 
 			 FileUtils.copyFile(new File(DataPath+PDBid+".pdb"),  new File(OutputPath+PDBid+".pdb"));
-             FileUtils.copyFile(new File(DataPath+PDBid+".seq"),  new File(OutputPath+PDBid+".seq"));
+            // FileUtils.copyFile(new File(DataPath+PDBid+".seq"),  new File(OutputPath+PDBid+".seq"));
+             
+             if(new File(DataPath+PDBid+".seq").exists())
+	          FileUtils.copyFile(new File(DataPath+PDBid+".seq"),  new File(OutputPath+PDBid+".seq"));
+	          if(new File(DataPath+PDBid+".fasta").exists())
+		      FileUtils.copyFile(new File(DataPath+PDBid+".fasta"),  new File(OutputPath+PDBid+".fasta"));
+	           if(new File(DataPath+"/"+PDBid+".fa").exists())
+			   FileUtils.copyFile(new File(DataPath+"/"+PDBid+".fa"),  new File(OutputPath+PDBid+".fa"));
+		        
 	}
 }
