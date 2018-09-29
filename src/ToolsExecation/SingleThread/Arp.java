@@ -27,13 +27,13 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import ResultsParsing.ARPResultsAnalysis;
-import ResultsParsing.ExcelSheet;
-import ResultsParsing.Results;
+import Analyser.ExcelSheet;
+import Analyser.Results;
+import NotUsed.ARPResultsAnalysis;
 import Run.RunComparison;
 import Run.RunningPram;
 
-public class RunArp {
+public class Arp {
 	//static String JobDirectory="";// to use for IntermediateResults
 	//static String PDBID="";
 	static boolean FinshedBuilding=false;
@@ -50,7 +50,7 @@ public class RunArp {
 		
 		RunningPram.DataPath=args[0];
 		RunningPram.wArpAutotracing=args[1];
-		new RunArp().RunwArpTool();
+		new Arp().RunwArpTool();
 	}
 	boolean SaveIntermediateResults(String JobDirectory , String PDBID) throws InterruptedException, IOException {
 		
@@ -194,7 +194,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 		 FilesNames.add(file.getName().replaceAll("."+FilenameUtils.getExtension(file.getName()),""));
 		 System.out.println(file.getName().replaceAll("."+FilenameUtils.getExtension(file.getName()),""));
 	 }
-	 RunArp RunArp=new RunArp();
+	 Arp RunArp=new Arp();
 	 FilesNames=RunArp.AddFileNameToList(FilesNames);
 		 for (File file : files) {
 	String CaseName=file.getName().replaceAll("."+FilenameUtils.getExtension(file.getName()),"");
@@ -206,7 +206,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
    FilesNames.add(CaseName);
    System.out.println(CaseName);
    //Results res= new RunArp().RunArpTool(FileName,file.getName().substring(0,file.getName().indexOf('.')));
-   Results res= new RunArp().RunArpTool(FileName,CaseName);
+   Results res= new Arp().RunArpTool(FileName,CaseName);
 
 	
    long afterUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();

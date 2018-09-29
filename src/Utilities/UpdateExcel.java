@@ -4,9 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Vector;
 
-import ResultsParsing.DataContainer;
-import ResultsParsing.ExcelSheet;
-import ResultsParsing.LoadExcel;
+import Analyser.DataContainer;
+import Analyser.ExcelSheet;
+import Analyser.LoadExcel;
 import Run.RunningPram;
 
 public class UpdateExcel {

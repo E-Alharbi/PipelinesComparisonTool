@@ -6,12 +6,12 @@ import java.util.Vector;
 
 import org.apache.commons.io.FilenameUtils;
 
-import ResultsParsing.DataContainer;
-import ResultsParsing.Factors;
-import ResultsParsing.ResultsAnalyserMultiThreads;
+import Analyser.DataContainer;
+import Analyser.Factors;
+import Analyser.ResultsAnalyserMultiThreads;
 import Run.RunningPram;
-import ToolsExecution.CphasesMatch;
-import ToolsExecution.Refmac;
+import ToolsExecation.SingleThread.CphasesMatch;
+import ToolsExecation.SingleThread.Refmac;
 
 public class DataSetChecking {
 

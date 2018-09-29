@@ -1,4 +1,4 @@
-package ResultsParsing;
+package NotUsed;
 import java.io.File;
 import java.io.IOException;
 
@@ -6,6 +6,8 @@ import org.apache.commons.io.FileUtils;
 
 public class PhenixPDBsShearcher {
 
+	//Not Used.
+	
 	public static void main(String[] args) throws IOException {
 		
 		 

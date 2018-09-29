@@ -1,7 +1,8 @@
-package ResultsParsing;
+package Analyser;
 
 public class SPSSDescriptivesTable {
-
+ // structure of descriptives table in SPSS
+	
 	public String Pipeline;
 	public String Dataset;
 	public String NumberOfCases;

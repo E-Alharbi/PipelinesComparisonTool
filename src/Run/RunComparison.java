@@ -4,20 +4,24 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Vector;
 
-import ResultsParsing.ArpResultsAnalysis2;
-import ResultsParsing.BuccaneerResultsAnalysis;
-import ResultsParsing.PhenixResultsAnalysis2;
-import ResultsParsing.ResultsAnalyserMultiThreads;
+import Analyser.ResultsAnalyserMultiThreads;
+import NotUsed.ArpResultsAnalysis2;
+import NotUsed.BuccaneerResultsAnalysis;
+import NotUsed.PhenixResultsAnalysis2;
+import ToolsExecation.SingleThread.Buccaneeri1;
 import ToolsExecation.SingleThread.Buccaneeri2;
+import ToolsExecation.SingleThread.CAD;
 import ToolsExecation.SingleThread.Crank;
-import ToolsExecation.SingleThread.RunArp;
+import ToolsExecation.SingleThread.MolProbity;
+import ToolsExecation.SingleThread.Arp;
 import ToolsExecation.SingleThread.RunCBuccaneer;
 import ToolsExecation.SingleThread.RunCBuccaneerGA;
-import ToolsExecation.SingleThread.RunPhenix;
+import ToolsExecation.SingleThread.RunnerManager;
+import ToolsExecation.SingleThread.cfakeAnom;
+import ToolsExecation.SingleThread.chltofom;
+import ToolsExecation.SingleThread.Phenix;
 import ToolsExecution.Buccaneeri2Runner;
-import ToolsExecution.CAD;
 import ToolsExecution.CrankRunner;
-import ToolsExecution.MolProbity;
 import ToolsExecution.ArpRunner;
 import ToolsExecution.RunArpTesting;
 import ToolsExecution.RunBuccaneerMulti;
@@ -27,14 +31,15 @@ import ToolsExecution.RunPhenix2;
 import ToolsExecution.RunPhenixHLA;
 import ToolsExecution.RunPhenixMultiThreads;
 import ToolsExecution.PhenixRunner;
-import ToolsExecution.RunnerManager;
 import ToolsExecution.ThreadsRunner;
-import ToolsExecution.cfakeAnom;
-import ToolsExecution.chltofom;
 import Utilities.PhenixTempCleaner;
 
 public class RunComparison {
 
+	/*
+	 * Main class of the comparison script 
+	 */
+	
 	public static void main(String[] args) throws IOException, InterruptedException, InstantiationException, IllegalAccessException {
 		// TODO Auto-generated method stub
 		if(System.getenv("PHENIX")==null) {
@@ -72,60 +77,8 @@ public class RunComparison {
 				 }
 				 
 			 }
-			 /*
-			 if(args[0].equals("all") || args[0].equals("All")){
-				
-				 boolean IsAllRequiredParmEntered=false;
-				
-				 Parm.addAll(Arrays.asList(args));
-			
-				if(checkArg(Parm,"data")==null || checkArg(Parm,"PhenixAutobuild")==null || checkArg(Parm,"wArpAutotracing")==null || checkArg(Parm,"castat2Path")==null){
-					System.out.println("One or more of the required parameters is missing! ");
-					System.out.println("The required parameters are : ");
-					System.out.println("data= the path for data folder");
-					System.out.println("wArpAutotracing= the path for autotracing.sh");
-					System.out.println("PhenixAutobuild= the path for Phenix.autobuild");
-					System.out.println("castat2Path= the path for castat2");
-					System.exit(-1);
-				}
-					 if(checkArg(Parm,"data")!=null){
-						 RunningPram.DataPath=checkArg(Parm,"data");
-						
-					 }
-					 if(checkArg(Parm,"wArpAutotracing")!=null){
-						 RunningPram.wArpAutotracing=checkArg(Parm,"wArpAutotracing");
-						
-					 }
-					 if(checkArg(Parm,"PhenixAutobuild")!=null){
-						 RunningPram.PhenixAutobuild=checkArg(Parm,"PhenixAutobuild");
-						
-					 }
-					 if(checkArg(Parm,"castat2Path")!=null){
-						 RunningPram.castat2Path=checkArg(Parm,"castat2Path");
-						
-					 }
-					
-					 
-					 RunningPram.LogsDirBuccaneer="./BuccaneerResults/BuccaneerLogs";
-					 RunningPram.PDBsDirBuccaneer="./BuccaneerResults/PDBs";
-					 
-					 RunningPram.LogsDirwArp="./wArpResults/ArpLogs";
-					 RunningPram.PDBsDirwArp="./wArpResults/PDBs";
-					 
-					 RunningPram.LogsDirPhenix="./PhenixResults/PhinexLogs";
-					 RunningPram.PDBsDirPhenix="./PhenixResults/PDBs";
-					 
-					 new RunBuccaneerMulti().RunBuccaneerTool();	
-					 new RunArp().RunwArpTool();
-					 new RunPhenix().RunPhenixTool();
-					 
-						new BuccaneerResultsAnalysis().AnalysingBuccaneerResults();
-						new ArpResultsAnalysis2().AnalysingwArpResults();
-						new PhenixResultsAnalysis2().AnalysingPhenixResults();
-					 
-					 
-			 }
-			 */
+			 
+			 
 			  if(args[0].equals("chltofom")){
 					
 				 
@@ -147,13 +100,7 @@ public class RunComparison {
 			 
 			 
 			 
-			 else if(args[0].equals("threads")){
-					
-				 
-				
-					new test();
-					//test.main(null);
-			 }
+			
 			 
 			 else if(args[0].equals("CAD")){
 					
@@ -162,10 +109,12 @@ public class RunComparison {
 				 Parm.addAll(Arrays.asList(args));
 			
 				if(checkArg(Parm,"data")==null){
+					
 					System.out.println("One or more of the required parameters is missing! ");
 					System.out.println("The required parameters are : ");
 					System.out.println("data= the path for data folder");
 					System.exit(-1);
+					
 				}
 				if(checkArg(Parm,"data")!=null){
 					DataPath=checkArg(Parm,"data");
@@ -197,6 +146,11 @@ public class RunComparison {
 				 }
 					new cfakeAnom().Run(DataPath);
 			 }
+			  
+			  
+			  
+			  
+			  
 			 else if(args[0].equals("PhenixTempCleaner")){
 					
 				 
@@ -291,7 +245,7 @@ public class RunComparison {
 			 else if(args[0].equals("Preparer")){
 					
 				 
-					
+					 
 				 Parm.addAll(Arrays.asList(args));
 			
 				if(checkArg(Parm,"Pipelines")==null){
@@ -377,7 +331,9 @@ public class RunComparison {
 					 }
 					//new RunCBuccaneer().RunBuccaneerTool(	new RunCBuccaneer().PickACase());
 					// new ThreadsRunner().Threads(new RunCBuccaneer());
-					 new RunCBuccaneer().RunBuccaneerTool();
+					 
+					// new RunCBuccaneer().RunBuccaneerTool();
+					 new Buccaneeri1().RunBuccaneerTool();
 			 }
 			 else if(args[0].equals("RunCBuccaneerGA")){
 					
@@ -456,7 +412,7 @@ public class RunComparison {
 
 					// new RunArp().RunwArpTool(new RunArp().PickACase());
 					// new ThreadsRunner().Threads(new ArpRunner());
-					 new RunArp().RunwArpTool();
+					 new Arp().RunwArpTool();
 			 }
 			 else if(args[0].equals("RunwArpTesting")){
 					
@@ -523,7 +479,7 @@ public class RunComparison {
 					//new RunPhenixThreads().PhenixThread(); 
 					 //new RunPhenix().RunPhenixTool();
 					// new ThreadsRunner().Threads(new PhenixRunner());
-					new RunPhenix().RunPhenixTool();
+					new Phenix().RunPhenixTool();
 			 }
 			 
  else if (args[0].equals("RunPhenixMultiThreads") ){

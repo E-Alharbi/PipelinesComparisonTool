@@ -1,4 +1,4 @@
-package ToolsExecution;
+package ToolsExecation.SingleThread;
 
 public class MolProbityData {
 

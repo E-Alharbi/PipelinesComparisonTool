@@ -25,8 +25,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import ResultsParsing.ARPResultsAnalysis;
-import ResultsParsing.Results;
+import Analyser.Results;
+import NotUsed.ARPResultsAnalysis;
 import Run.RunComparison;
 import Run.RunningPram;
 
@@ -252,7 +252,8 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 			 "--seqin",seqin,
 			 "--colinfo","FP,SIGFP",
 			 "--colinhl","parrot.ABCD.A,parrot.ABCD.B,parrot.ABCD.C,parrot.ABCD.D",
-			 "--iterations","25",
+			 "--iterations","5",
+			
 			 "--mtz-name",FileName,
 			 
 	};

@@ -26,13 +26,13 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import ResultsParsing.ARPResultsAnalysis;
-import ResultsParsing.ExcelSheet;
-import ResultsParsing.Results;
+import Analyser.ExcelSheet;
+import Analyser.Results;
+import NotUsed.ARPResultsAnalysis;
 import Run.RunComparison;
 import Run.RunningPram;
 
-public class RunPhenix {
+public class Phenix {
 	//static String JobDirectory="";// to use for IntermediateResults
 	//static String PDBID="";
 	static boolean FinshedBuilding=false;
@@ -50,7 +50,7 @@ public class RunPhenix {
 		RunningPram.DataPath=args[0];
 		RunningPram.PhenixAutobuild=args[1];
 	
-		new RunPhenix().RunPhenixTool();
+		new Phenix().RunPhenixTool();
 	}
 	boolean SaveIntermediateResults(String JobDirectory , String PDBID) throws InterruptedException, IOException {
 		if(!JobDirectory.equals("")) {
@@ -187,7 +187,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 	
 	FilesNames.add(CaseName);
    System.out.println(CaseName);
-   Results res= new RunPhenix().Run(FileName,CaseName);
+   Results res= new Phenix().Run(FileName,CaseName);
    
    
    long afterUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
@@ -252,7 +252,7 @@ seqin=FilePathAndName+".seq";
 			 RunningPram.PhenixAutobuild,
 	"data=",mtzin,
 	"seq_file=",seqin,
-	//"input_labels="," FP SIGFP PHIB FOM HLA HLB HLC HLD"
+	//"input_labels="," FP SIGFP PHIB FOM HLA HLB HLC HLD",
 	"input_labels=","FP SIGFP hltofom.Phi_fom.phi hltofom.Phi_fom.fom parrot.ABCD.A parrot.ABCD.B parrot.ABCD.C parrot.ABCD.D FreeR_flag",
 	"clean_up=","True"
 	 };

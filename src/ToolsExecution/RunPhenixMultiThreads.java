@@ -20,11 +20,11 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import ResultsParsing.ARPResultsAnalysis;
-import ResultsParsing.DataContainer;
-import ResultsParsing.ExcelSheet;
-import ResultsParsing.Results;
-import ResultsParsing.ResultsAnalyserMultiThreads;
+import Analyser.DataContainer;
+import Analyser.ExcelSheet;
+import Analyser.Results;
+import Analyser.ResultsAnalyserMultiThreads;
+import NotUsed.ARPResultsAnalysis;
 import Run.RunComparison;
 import Run.RunningPram;
 import Utilities.DataSetChecking;

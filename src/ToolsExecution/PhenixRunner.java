@@ -27,10 +27,10 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import ResultsParsing.ARPResultsAnalysis;
-import ResultsParsing.ExcelSheet;
-import ResultsParsing.Results;
-import ResultsParsing.ResultsAnalyserMultiThreads;
+import Analyser.ExcelSheet;
+import Analyser.Results;
+import Analyser.ResultsAnalyserMultiThreads;
+import NotUsed.ARPResultsAnalysis;
 import Run.RunComparison;
 import Run.RunningPram;
 import table.draw.LogFile;

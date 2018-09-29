@@ -19,6 +19,11 @@ import java.util.Iterator;
 import java.util.Map;
 public class Preparer {
 
+	/*
+	 * Due to the large number of runs which used different tools and parameters. This Preparer creates all necessary
+	 *  scripts that need to submit as jobs in the cluster server with minimum effort.
+	 *  Calling this class form RunComparsion    
+	  */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
@@ -323,7 +328,7 @@ boolean Bucci2Prepare(boolean Water) throws IOException {
 			Analyser=Analyser.replace("&data&", new File(RunningPram.DataPath).getAbsolutePath());
 			Analyser=Analyser.replace("&cstat&", RunningPram.castat2Path);
 			Analyser=Analyser.replace("&Mol&", RunningPram.PhenixMolProbity);
-			if(Water==true) {
+			if(Water==false) {
 				Analyser=Analyser.replace("&Tool&", "Buccaneeri2");
 				Analyser=Analyser.replace("&Logs&", "../Buccaneeri2/BuccaneerResults/BuccaneerLogs");
 				Analyser=Analyser.replace("&PDBs&", "../Buccaneeri2/BuccaneerResults/PDBs/");
@@ -331,7 +336,7 @@ boolean Bucci2Prepare(boolean Water) throws IOException {
 				Analyser=Analyser.replace("&ILogs&", "../Buccaneeri2/BuccaneerResults/IntermediateLogs/");
 				WriteTxtFile("./Buccaneeri2Analyser/Buccaneeri2Analyser.sh",Analyser);
 			}
-			if(Water==false) {
+			if(Water==true) {
 				Analyser=Analyser.replace("&Tool&", "Buccaneeri2W");
 				Analyser=Analyser.replace("&Logs&", "../Buccaneeri2W/BuccaneerResults/BuccaneerLogs");
 				Analyser=Analyser.replace("&PDBs&", "../Buccaneeri2W/BuccaneerResults/PDBs/");

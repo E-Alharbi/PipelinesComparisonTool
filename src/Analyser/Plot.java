@@ -1,4 +1,4 @@
-package ResultsParsing;
+package Analyser;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Shape;
@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 import java.util.regex.Matcher;
@@ -137,7 +138,138 @@ public class Plot {
 	}
 	
    public static void main( String[ ] args )throws Exception {
-	 
+	   /*
+	   XYSeriesCollection dataset = new XYSeriesCollection();
+	   File[] Excels = new File("/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets17/noncs").listFiles();
+		 LoadExcel e = new LoadExcel();
+		
+		 Vector<Vector<DataContainer>> Con2 = new  Vector<Vector<DataContainer>>();
+				 for (File Excel : Excels) {
+					 Vector<DataContainer> CurrentPipe = e.ReadExcel(Excel.getAbsolutePath());
+					 Vector<DataContainer> CurrentPipeRemovedNone = new   Vector<DataContainer> ();
+					 for(int i=0 ; i <CurrentPipe.size() ; ++i ) {
+						 if(!CurrentPipe.get(i).NumberofAtomsinFirstPDB.equals("None"))
+							 CurrentPipeRemovedNone.add(CurrentPipe.get(i));
+					 }
+					 Con2.add(CurrentPipeRemovedNone);
+					
+					 e.ToolsNames.add(Excel.getName());
+				 }
+				 Vector<Vector<DataContainer>> Container2 = new Vector<Vector<DataContainer>>();
+				 for(int i=0 ; i < Con2.size() ; ++i) {
+					
+					 System.out.println(" "+i + " out of "+Con2.size());
+					 Container2.addElement(e.CheckPDBexists(Con2,Con2.get(i))); 
+					 System.out.println(Container2.get(Container2.size()-1).size());
+				 } 
+				
+				 for(int c=0 ; c < Container2.size() ; ++c) {
+					 
+					 Vector<DataContainer> Con = new  Vector<DataContainer>();
+					 Con.removeAllElements();
+					 Con.addAll(Container2.get(c));
+					 Collections.sort(Con,DataContainer.DataContainerComparatorByNumOfCa);
+					
+					 // Con.add(e.ReadExcel(Excel.getAbsolutePath()));
+					
+				 
+		 
+		
+		 XYSeries series = new XYSeries(e.ToolsNames.get(c));
+		 int FirstDigit=-1;
+		 Double TotalTimeTaking=0.0;
+		 int NumberOfModels=0;
+		 int TotalModelsSize=0;
+		 
+		 int Model500=0;
+		 int Model1000=0;
+		 int Model2000=0;
+		 int Model3000=0;
+		 
+		 Double Model500Total=0.0;
+		 Double Model1000Total=0.0;
+		 Double Model2000Total=0.0;
+		 Double Model3000Total=0.0;
+		//System.out.println("\\addplot coordinates {");
+		for(int i=0; i < Con.size(); ++i) {
+			if(FirstDigit!=-1) {
+			if(String.valueOf(Con.get(i).NumberofAtomsinFirstPDB).length()==3 && FirstDigit!=String.valueOf(Con.get(i).NumberofAtomsinFirstPDB).charAt(0)) {
+				//System.out.println("========="); 
+				//System.out.println("("+Double.valueOf(TotalModelsSize/NumberOfModels)+","+Double.valueOf(TotalTimeTaking/NumberOfModels)+")"); 
+				series.add(  Double.valueOf(TotalModelsSize/NumberOfModels), Double.valueOf(TotalTimeTaking/NumberOfModels));		
+//System.out.println(Double.valueOf(Con.get(i).NumberofAtomsinFirstPDB) +" "+ Double.valueOf(TotalTimeTaking/NumberOfModels));
+TotalTimeTaking=0.0;
+ NumberOfModels=0;
+ TotalModelsSize=0;
+			}
+			if(String.valueOf(Con.get(i).NumberofAtomsinFirstPDB).length()==4 ) {
+				
+				String TheFirstTwoDigit=String.valueOf(Con.get(i).NumberofAtomsinFirstPDB.charAt(0));
+				TheFirstTwoDigit+=Con.get(i).NumberofAtomsinFirstPDB.charAt(1);
+				if(FirstDigit!=Integer.valueOf(TheFirstTwoDigit)) {
+					//System.out.println("========="); 
+					//System.out.println("("+Double.valueOf(TotalModelsSize/NumberOfModels)+","+Double.valueOf(TotalTimeTaking/NumberOfModels)+")"); 
+
+					series.add(  Double.valueOf(TotalModelsSize/NumberOfModels), Double.valueOf(TotalTimeTaking/NumberOfModels));		
+					//System.out.println(Double.valueOf(Con.get(i).NumberofAtomsinFirstPDB) +" "+ Double.valueOf(TotalTimeTaking/NumberOfModels));
+					TotalTimeTaking=0.0;
+					 NumberOfModels=0;
+					 TotalModelsSize=0;
+				}
+			}
+			}
+			if(String.valueOf(Con.get(i).NumberofAtomsinFirstPDB).length()==3) {
+				FirstDigit = String.valueOf(Con.get(i).NumberofAtomsinFirstPDB).charAt(0);
+			}
+			else {
+				String TheFirstTwoDigit=String.valueOf(Con.get(i).NumberofAtomsinFirstPDB.charAt(0));
+				TheFirstTwoDigit+=Con.get(i).NumberofAtomsinFirstPDB.charAt(1);
+				FirstDigit=Integer.valueOf(TheFirstTwoDigit);
+			}
+			//System.out.print(Con.get(i).NumberofAtomsinFirstPDB); 
+			//System.out.print(" "+Con.get(i).TimeTaking);
+			//System.out.print(" "+Con.get(i).E_mapCorrelation);
+			//System.out.print(" "+Con.get(i).PDB_ID);
+			//System.out.println(" "+Con.get(i).Completeness);
+			NumberOfModels++;
+			TotalModelsSize+=Integer.valueOf(Con.get(i).NumberofAtomsinFirstPDB);
+			TotalTimeTaking+=Double.valueOf(Con.get(i).TimeTaking);
+			
+			
+			
+			
+			if(Integer.valueOf(Con.get(i).NumberofAtomsinFirstPDB) <= 500) {
+				Model500++;
+				Model500Total+=Double.valueOf(Con.get(i).TimeTaking);
+			}
+			else if(Integer.valueOf(Con.get(i).NumberofAtomsinFirstPDB) > 500 &&  Integer.valueOf(Con.get(i).NumberofAtomsinFirstPDB) <= 1000) {
+				Model1000++;
+				Model1000Total+=Double.valueOf(Con.get(i).TimeTaking);
+			}
+			//else if(Integer.valueOf(Con.get(i).NumberofAtomsinFirstPDB) > 1000 &&  Integer.valueOf(Con.get(i).NumberofAtomsinFirstPDB) <= 2000) {
+			//	Model2000++;
+			//	Model2000Total+=Double.valueOf(Con.get(i).TimeTaking);
+			//}
+			else {
+				Model3000++;
+				Model3000Total+=Double.valueOf(Con.get(i).TimeTaking);
+			}
+		}
+	//	System.out.println("};");
+//	System.out.println("\\addlegendentry{"+e.ToolsNames.get(c)+"}");
+		System.out.println("########");
+		System.out.print(e.ToolsNames.get(c));
+		System.out.print("< 500 "+ Model500 + " "+ (Model500Total / Model500));
+		System.out.print(" 500 - 1000 "+ Model1000 + " "+ (Model1000Total / Model1000));
+		System.out.print(" 1000 - 2000 "+ Model2000 + " "+ (Model2000Total / Model2000));
+		System.out.println(" > 3000 "+ Model3000 + " "+ (Model3000Total / Model3000));
+		System.out.println("########");
+		 dataset.addSeries(series);
+				 } 
+		 new Plot().CreateLinePlot("Size", "Size",
+					"Time Taking",dataset);
+		 */
+	   /*
 	   String line = "nnnnThis order was placed for QT3000! OK? \nThis";
 	      String pattern = "R free*";
 
@@ -173,6 +305,7 @@ public class Plot {
 	 	            Cycle++;
 	        	}
 	        }
+	        */
 	        /*
 	        while (R.find()) {
 	            System.out.println("line R = " + R.group());
@@ -200,7 +333,7 @@ public class Plot {
 
 						 //dataset.addValue(Double.valueOf(Container.get(i).get(m).molProbityData.MolProbityScore), series1, Double.valueOf(Container.get(i).get(m).Resolution));
 					 
-				 
+				 /*
 				 dataset.addSeries(series);
 				
 				 dataset.addSeries(seriesOp);
@@ -209,7 +342,7 @@ public class Plot {
 			
 			new Plot().CreateLinePlot("MolScore", "Resolution",
 					"MolProbity Score",dataset);
-	   
+	   */
 	   /*
 	   final int seriesCount = 3;
        final int categoryCount = 3;

@@ -7,7 +7,7 @@ import java.util.Arrays;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
-import ResultsParsing.ARPResultsAnalysis;
+import NotUsed.ARPResultsAnalysis;
 import Run.RunningPram;
 
 public class PhenixTempCleaner {

@@ -2,6 +2,8 @@ package Run;
 
 public class RunningPram {
 
+	//All the parameters that used by this scripts from the command line 
+	
 	public static String DataPath;//Data folder path 
 	public static String LogsDirBuccaneer;// logs files for Buccaneer
 	public static String PDBsDirBuccaneer;// PDBS files that built by Buccaneer

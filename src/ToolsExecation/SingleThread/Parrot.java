@@ -1,4 +1,4 @@
-package ToolsExecution;
+package ToolsExecation.SingleThread;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,8 +9,8 @@ import java.util.Vector;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
-import ResultsParsing.DataContainer;
-import ResultsParsing.LoadExcel;
+import Analyser.DataContainer;
+import Analyser.LoadExcel;
 
 public class Parrot {
 

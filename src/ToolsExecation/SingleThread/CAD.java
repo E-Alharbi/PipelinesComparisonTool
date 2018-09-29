@@ -1,4 +1,4 @@
-package ToolsExecution;
+package ToolsExecation.SingleThread;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -97,8 +97,8 @@ String st="";
 	          FileUtils.copyFile(new File(DataPath+PDBid+".seq"),  new File(OutputPath+PDBid+".seq"));
 	          if(new File(DataPath+PDBid+".fasta").exists())
 		      FileUtils.copyFile(new File(DataPath+PDBid+".fasta"),  new File(OutputPath+PDBid+".fasta"));
-	           if(new File(DataPath+"/"+PDBid+".fa").exists())
-			   FileUtils.copyFile(new File(DataPath+"/"+PDBid+".fa"),  new File(OutputPath+PDBid+".fa"));
+	           if(new File(DataPath+PDBid+".fa").exists())
+			   FileUtils.copyFile(new File(DataPath+PDBid+".fa"),  new File(OutputPath+PDBid+".fa"));
 		        
 	}
 }

@@ -1,4 +1,4 @@
-package ToolsExecution;
+package ToolsExecation.SingleThread;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,10 +8,10 @@ import java.io.InputStreamReader;
 import java.util.Stack;
 import java.util.Vector;
 
-import ResultsParsing.DataContainer;
-import ResultsParsing.ExcelSheet;
-import ResultsParsing.LoadExcel;
-import ResultsParsing.ResultsAnalyserMultiThreads;
+import Analyser.DataContainer;
+import Analyser.ExcelSheet;
+import Analyser.LoadExcel;
+import Analyser.ResultsAnalyserMultiThreads;
 import Run.RunningPram;
 import Utilities.DataSetChecking;
 

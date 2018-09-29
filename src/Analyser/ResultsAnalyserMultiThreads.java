@@ -1,4 +1,4 @@
-package ResultsParsing;
+package Analyser;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,12 +16,12 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import Run.RunningPram;
-import ToolsExecution.Castat2Data;
-import ToolsExecution.CphasesMatch;
-import ToolsExecution.MolProbity;
-import ToolsExecution.Refmac;
+import ToolsExecation.SingleThread.Castat2Data;
+import ToolsExecation.SingleThread.CphasesMatch;
+import ToolsExecation.SingleThread.MolProbity;
+import ToolsExecation.SingleThread.Refmac;
+import ToolsExecation.SingleThread.castat2;
 import ToolsExecution.RunBuccaneerMulti;
-import ToolsExecution.castat2;
 import Utilities.DataSetChecking;
 import Utilities.FilesManagements;
 import table.draw.LogFile;
@@ -31,6 +31,12 @@ import java.util.Arrays;
 import java.util.List;
 public class ResultsAnalyserMultiThreads implements Runnable {
 
+	// This the main class for the analyser that analysis the the tools outputs and creates an excel file for each tool. 
+	// Using multi  threads 
+	// ideal number of threads is 20 threads with minimum memory 10G. If you want to reduce memory also reduce the number of threads 
+	
+	
+	
 	static Vector <DataContainer> Container = new Vector <DataContainer>();
 	
 	 static Stack<File> Files = new Stack<>();

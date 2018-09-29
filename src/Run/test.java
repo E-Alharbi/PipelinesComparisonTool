@@ -3,6 +3,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -20,23 +21,222 @@ import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.FileFileFilter;
 import org.apache.commons.io.filefilter.RegexFileFilter;
 
-import ResultsParsing.ARPResultsAnalysis;
-import ResultsParsing.DataContainer;
-import ResultsParsing.ExcelSheet;
-import ResultsParsing.LoadExcel;
-import ResultsParsing.ResultsAnalyserMultiThreads;
-import ResultsParsing.ResultsInLatex;
-
 import com.ibm.statistics.plugin.*;
+
+import Analyser.DataContainer;
+import Analyser.ExcelSheet;
+import Analyser.LoadExcel;
+import Analyser.ResultsAnalyserMultiThreads;
+import Analyser.ResultsInLatex;
+import NotUsed.ARPResultsAnalysis;
+
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
+import java.nio.file.Paths;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 public class test {
 	
+	
+	//Not Used
+	void Prog1() throws IOException, InterruptedException {
+		Path path = Paths.get("ProcessedFilesNamesCrank.txt");
+        FileChannel fileChannel = FileChannel.open(path, StandardOpenOption.READ,
+            StandardOpenOption.WRITE);
+        System.out.println("File channel opened for read write. Acquiring lock...");
+
+        FileLock lock = fileChannel.lock();  // gets an exclusive lock
+        System.out.println("Lock is shared: " + lock.isShared());
+
+        ByteBuffer buffer = ByteBuffer.allocate(20);
+        int noOfBytesRead = fileChannel.read(buffer);
+        System.out.println("Buffer contents: ");	
+
+        while (noOfBytesRead != -1) {
+
+            buffer.flip();
+            System.out.print("    ");
+
+            while (buffer.hasRemaining()) {
+	
+                System.out.print((char) buffer.get());                
+            }
+
+            System.out.println(" ");
+
+            buffer.clear();
+            Thread.sleep(1000);
+            noOfBytesRead = fileChannel.read(buffer);
+        }
+
+        fileChannel.close();
+        System.out.print("Closing the channel and releasing lock.");
+	}
+	
+	void Prog2() throws IOException, InterruptedException  {
+		System.out.println("Prog2 ");
+		Path path = Paths.get("ProcessedFilesNamesCrank.txt");
+        FileChannel fileChannel=null;
+		try {
+			fileChannel = FileChannel.open(path, StandardOpenOption.READ,
+			    StandardOpenOption.WRITE);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			
+			e.printStackTrace();
+		}
+        System.out.println("File channel opened for read write. Acquiring lock...");
+
+        FileLock lock=null;
+		try {
+			lock = fileChannel.lock();
+			 System.out.println("Lock is shared:2 " + lock.isShared());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println("hereee ");
+			Prog2();
+			e.printStackTrace();
+		}  // gets an exclusive lock
+       
+
+        ByteBuffer buffer = ByteBuffer.allocate(20);
+        int noOfBytesRead=0;
+		try {
+			
+			noOfBytesRead = fileChannel.read(buffer);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			
+			e.printStackTrace();
+		}
+        System.out.println("Buffer contents: ");	
+
+        while (noOfBytesRead != -1) {
+
+            buffer.flip();
+            System.out.print("    ");
+
+            while (buffer.hasRemaining()) {
+	
+                System.out.print((char) buffer.get());                
+            }
+
+            System.out.print("Prog2 ");
+
+            buffer.clear();
+            Thread.sleep(1000);
+            noOfBytesRead = fileChannel.read(buffer);
+        }
+
+        fileChannel.close();
+        System.out.print("Closing the channel and releasing lock.");
+	}
 	public static void main(String[] args) throws IOException, InterruptedException, StatsException {
 	
 		
+		/*
+		new Thread() { 
+	        public void run() {
+	        	try {
+					new test().Prog1();
+				} catch (IOException | InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	        }
+	    }.start();
+	    new Thread() { 
+	        public void run() {
+	        	try {
+					new test().Prog2();
+				} catch (IOException | InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	        }
+	    }.start();
+	    //etc
+
+	  
+		
+		File[] Logs = new File("/Volumes/PhDHardDrive/BuccaneerResults/BuccaneerLogs").listFiles();
+		File[] PDBs = new File("/Volumes/PhDHardDrive/BuccaneerResults2/PDBs").listFiles();
+		
+		 for (File Log : Logs) {
+			 boolean Found=false;
+			 for (File PDB : PDBs) {
+				// System.out.println("Log "+Log.getName().replaceAll("."+FilenameUtils.getExtension(Log.getName()),""));
+				// System.out.println("PDB "+PDB.getName().replaceAll("."+FilenameUtils.getExtension(PDB.getName()),""));
+			 if(Log.getName().replaceAll("."+FilenameUtils.getExtension(Log.getName()),"").equals(PDB.getName().replaceAll("."+FilenameUtils.getExtension(PDB.getName()),"")) ) {
+				 Found=true;
+				 break;
+				
+			 }
+			 }
+			 if(Found==false) {
+				 System.out.println(Log.getName());
+			 }
+		 }
+		*/
+		
+	
+		
+		
+		//File[] Logs = new File("/Users/emadalharbi/Desktop/test/CrankResultsIntermLogs/IntermediateLogs").listFiles();
+		File[] Logs = new File("/Users/emadalharbi/Desktop/test/CrankResults/CrankLogs").listFiles();
+		File[] PDBS = new File("/Users/emadalharbi/Desktop/test/CrankResultsPDB/PDBs").listFiles();
+		//String [] Names = new String[Size];
+		Vector<File> FaliedCases = new Vector<File>();
+		int Counter=0;
+		for (File Log : Logs) {
+			boolean found=false;
+		 for (File PDB : PDBS) {
+			 
+		 
+		 
+			 if(Log.getName().replaceAll("."+FilenameUtils.getExtension(Log.getName()),"").equals(PDB.getName().replaceAll("."+FilenameUtils.getExtension(PDB.getName()),"")))
+			 {
+				 found=true;
+				 break;
+			 }
+			 
+		 }
+		 if(found==false) {
+			 FaliedCases.add(Log);
+		 }
+		 }
+		 Vector<String> Names = new Vector<String>();
+		 for(int i=0 ; i < FaliedCases.size() ; ++i) {
+				 String Txt = new ResultsAnalyserMultiThreads().readFileAsString(FaliedCases.get(i).getAbsolutePath());
+			// if(!Txt.contains("Warning: PEAKMAX")&&
+		     //!Txt.contains("Warning: Phases")) {
+		//	if(Txt.contains("program.ProgramRunError: Buccaneer")) {
+				// System.out.println(Log.getName());
+				 
+				 Names.add(FaliedCases.get(i).getName());
+				 ++Counter;
+			// }
+			
+			// if(Txt.contains("Warning: PEAKMAX")) {
+			//	 
+			// }
+		 }
+		
+		 String [] SortedNAmes = Names.toArray(new String[Names.size()]);
+		System.out.println(Counter);
+		Arrays.sort(SortedNAmes);
+		for (int  i=0 ; i < SortedNAmes.length ; ++i) {
+			//System.out.print(SortedNAmes[i].replaceAll("-parrot-noncs.txt", "") +" \u212B ");
+			System.out.println(SortedNAmes[i]);
+		}
 		/*
 		LoadExcel e = new LoadExcel();
 		Vector<DataContainer> Arp =e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets11/mrncs/ARPwARP.xlsx");
@@ -85,6 +285,7 @@ Vector<DataContainer> NewCon= new Vector<DataContainer>();
 		System.out.println(count);
 		*/
 		
+		/*
 		String SeqDir="/Volumes/PhDHardDrive/jcsg1200/Seq";
 		String Jscg202="/Volumes/PhDHardDrive/jcsg1200/noncsWithMissingCases";
 		File[] Seq = new File(SeqDir).listFiles();
@@ -112,6 +313,7 @@ Vector<DataContainer> NewCon= new Vector<DataContainer>();
 			 }
 		 }
 		 }
+		 */
 
 				/*
 			LoadExcel e = new LoadExcel();

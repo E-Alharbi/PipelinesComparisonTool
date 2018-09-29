@@ -22,12 +22,11 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import ResultsParsing.ARPResultsAnalysis;
-import ResultsParsing.Factors;
-import ResultsParsing.Results;
+import Analyser.Factors;
+import Analyser.Results;
+import NotUsed.ARPResultsAnalysis;
 import Run.RunComparison;
 import Run.RunningPram;
-import ToolsExecution.Refmac;
 
 public class RunCBuccaneer {
 /*
@@ -244,6 +243,7 @@ public class RunCBuccaneer {
 			        Factors F=  new Refmac().RunRefmac(FilePathAndName+".mtz", WorkingDir+"/build.pdb",  RunningPram.RefmacPath, "CBuccaneer", WorkingDir+"/"+FileName,LIBINRefMac);
 			        res.LogFile+=F.Log;
 			            for (int i =1 ; i< 25 ; ++i ) {
+			            
 			            	System.out.println("########## Cycle "+i+" ##########");
 			            	mtzin=WorkingDir+"/"+FileName+"Ref.mtz";
 			            	cycles="2";

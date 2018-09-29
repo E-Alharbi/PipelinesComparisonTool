@@ -1,4 +1,4 @@
-package ResultsParsing;
+package Analyser;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -20,33 +20,35 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import Run.RunComparison;
 public class ExcelSheet {
 
+	//Writing the excel sheet. 
+	// Any new change in the excel structure should be made from here. 
 	int Row;
-	XSSFWorkbook CreateWorkBook(){
+	public XSSFWorkbook CreateWorkBook(){
 		Row=0;
 		 XSSFWorkbook workbook = new XSSFWorkbook();
 		 return workbook;
 	}
-	XSSFSheet CreateSheet(String SheetName,XSSFWorkbook workbook ){
+	public XSSFSheet CreateSheet(String SheetName,XSSFWorkbook workbook ){
 		XSSFSheet sheet = workbook.createSheet("Data");
 		return sheet;
 	}
-	Row CreateRow(XSSFSheet sheet){
+	public Row CreateRow(XSSFSheet sheet){
 		 Row row = sheet.createRow(Row++);
 		 return row;
 	}
-	Cell CreateCell(Row row, int col){
+	public Cell CreateCell(Row row, int col){
 		 Cell cell = row.createCell(col);
 		 return cell;
 	}
-	void SetCellValue(Cell cell,String val){
+	public void SetCellValue(Cell cell,String val){
 		cell.setCellValue(val);
 	}
-	void SetCellColor(Cell cell,String val,XSSFWorkbook workbook){
+	public void SetCellColor(Cell cell,String val,XSSFWorkbook workbook){
 		 CellStyle style = workbook.createCellStyle();
 		//cell.setCellStyle(new CellStyle().);
 		
 	}
-	void WriteExcel(XSSFWorkbook workbook, String FileName) throws FileNotFoundException, IOException{
+	public void WriteExcel(XSSFWorkbook workbook, String FileName) throws FileNotFoundException, IOException{
 		 try (FileOutputStream outputStream = new FileOutputStream(FileName+".xlsx")) {
 	            workbook.write(outputStream);
 	        }
@@ -347,7 +349,7 @@ public class ExcelSheet {
 	        */
 	    }
 
-	 static Vector<String> ReadExcelByColIndex(String FilePath, int ColIndex) throws IOException{
+	 public static Vector<String> ReadExcelByColIndex(String FilePath, int ColIndex) throws IOException{
 		 Vector<String> ColData= new Vector <String>();
 		 
 	        FileInputStream inputStream = new FileInputStream(new File(FilePath));

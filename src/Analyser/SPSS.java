@@ -1,4 +1,4 @@
-package ResultsParsing;
+package Analyser;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,10 +16,11 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class SPSS {
 
+	//Reading SPSS descriptives table to use in ResultsInLatex
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 
-		new SPSS().DescriptivesTableReader("/Users/emadalharbi/Desktop/test/hancsReso3.XLSX");
+	//	new SPSS().DescriptivesTableReader("/Users/emadalharbi/Desktop/test/hancsReso3.XLSX");
 	}
 
 	public Vector<SPSSDescriptivesTable> DescriptivesTableReader(String Excel) throws IOException {
