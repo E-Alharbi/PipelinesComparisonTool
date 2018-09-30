@@ -884,7 +884,7 @@ public class ResultsInLatex {
 			for(int n=0 ; n <ExcelNames.get(i).ToolsNames.size() ; ++n ) {
 				if(!TableHeader.contains(ExcelNames.get(i).ToolsNames.get(n))) {
 					
-					if(ExcelNames.get(i).ToolsNames.get(n).equals("ARPwARP.xlsx") || 
+					if(ExcelNames.get(i).ToolsNames.get(n).equals("ARPwARP.xlsx") ||  // Change this to change the table header and change the pipelines that you compare with. 
 					ExcelNames.get(i).ToolsNames.get(n).equals("Buccaneer5C.xlsx") || 
 					ExcelNames.get(i).ToolsNames.get(n).equals("Buccaneeri2WC5.xlsx") || 
 					ExcelNames.get(i).ToolsNames.get(n).equals("Buccaneeri2C5.xlsx") || 
@@ -902,18 +902,21 @@ public class ResultsInLatex {
 			}
 		}
 		//TableHeader=TableHeader.substring(0, TableHeader.length()-2); // For removing the last &
-		TableHeader+=" \\multicolumn{2}{c}{ \\tiny All} \\\\ \n " + ImprovemedBy +"  & \\tiny 0\\% &  \\tiny 5\\% \\\\ \\hline ";
+		TableHeader+=" \\multicolumn{2}{c}{ \\tiny All(Built)} \\\\ \n " + ImprovemedBy +"  & \\tiny 0\\% &  \\tiny 5\\% \\\\ \\hline ";
 		
 		 System.out.println(TableHeader);
 		 String Rows="";
+		 String RowsRFactor="";
 		// for(int i=0 ;i < ExcelNamesAsInTableHeader.size() ; ++i) { // looping on pipelines 
 			 for(int i=0 ;i < ExcelNamesAsInTableRows.size() ; ++i) { // looping on pipelines 
 			 Rows+=" \\tiny "+ExcelNamesAsInTableRows.get(i);// Pipeline name 
-			 
+			 RowsRFactor=" \\tiny "+ExcelNamesAsInTableRows.get(i);
 			 for(int d=0 ; d <DatasetNames.size() ; ++d ) { // looping on datasets 
 				if(ExcelNames.get(d).ToolsNames.contains(ExcelNamesAsInTableRows.get(i))) {
 				// Rows+=" & \\tiny "+DatasetNames.get(d); // dataset name 
 				 String ZeroPercentRow=" & \\tiny "+DatasetNames.get(d);
+				 String RowRFactor=" & \\tiny "+DatasetNames.get(d);
+				 
 				// String ZeroPercentRow=" & \\tiny "+DatasetNames.get(d)+" 0\\%";
 				 String FivePercentRow=" & \\tiny "+DatasetNames.get(d)+" 5\\%";
 				
@@ -934,15 +937,30 @@ public class ResultsInLatex {
 				 int CountZeroPrecentge=0;
 				 int CountFivePrecentge=0;
 				 
-				 if(IndexForTheHeaderContainer!=-1 && IndexForTheRowContainer!=-1)// This Excel not found in this dataset
+				 int CountZeroPrecentgeRFactor=0; // to use in Rafctor matrix 
+				 int CountFivePrecentgeRFactor=0;// to use in Rafctor matrix 
+				 
+				 if(IndexForTheHeaderContainer!=-1 && IndexForTheRowContainer!=-1 && IndexForTheRowContainer!=IndexForTheHeaderContainer)// This Excel not found in this dataset also do not compare the same excel 
 				 for(int c=0 ; c < AllDatasetContainer.get(d).get(IndexForTheRowContainer).size() ; ++c) {
 					 for(int compareTo=0 ; compareTo < AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).size() ; ++compareTo) {
-						if(AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).PDB_ID.equals(AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).PDB_ID)) {
+					    if(AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).BuiltPDB.equals("T") && AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).BuiltPDB.equals("T"))
+						 if(AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).PDB_ID.equals(AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).PDB_ID)) {
+					
 						if(AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).Completeness.equals("None"))
 							AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).Completeness="0";
-						if(AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).Completeness.equals("None"))
+				    	if(AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).Completeness.equals("None"))
 							AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).Completeness="0";
-							if( Integer.parseInt(AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).Completeness) >= Integer.parseInt(AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).Completeness)) {
+						
+							 //System.out.println("Dataset "+d);
+						
+								System.out.println("Excel1 "+ExcelNames.get(d).ToolsNames.get(IndexForTheRowContainer));
+								System.out.println("Excel2 "+ExcelNames.get(d).ToolsNames.get(IndexForTheHeaderContainer));
+								 System.out.println("PDB "+AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).PDB_ID +" Compare to "+AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).PDB_ID);
+								 System.out.println("PDB "+AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).Completeness +" Compare to "+AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).Completeness);
+
+						
+						
+						if( Integer.parseInt(AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).Completeness) >= Integer.parseInt(AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).Completeness)) {
 								{
 									CountZeroPrecentge++;
 								}
@@ -951,6 +969,30 @@ public class ResultsInLatex {
 								{
 									CountFivePrecentge++;
 								}
+								
+						if( (Double.parseDouble(AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).R_factor0Cycle) < Double.parseDouble(AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).R_factor0Cycle))
+								&& 
+										
+							((Double.parseDouble(AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).R_factor0Cycle)-Double.parseDouble(AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).R_free0Cycle)) <=
+							(Double.parseDouble(AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).R_factor0Cycle )- Double.parseDouble(AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).R_free0Cycle))))
+						
+						{
+							CountZeroPrecentgeRFactor++;
+						}
+						
+						
+						if((Double.parseDouble(AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).R_factor0Cycle) - Double.parseDouble(AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).R_factor0Cycle) ) <= -0.05 
+								&&
+								(((Double.parseDouble(AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).R_factor0Cycle)-Double.parseDouble(AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).R_free0Cycle)) -
+								(Double.parseDouble(AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).R_factor0Cycle )- Double.parseDouble(AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).R_free0Cycle))
+								)) >= -0.05
+								
+								)
+							
+								
+										{
+							CountFivePrecentgeRFactor++;
+						}
 								
 						}
 					 }
@@ -965,7 +1007,10 @@ public class ResultsInLatex {
 				 if(IndexForTheRowContainer!=-1) {
 					 ZeroPercentRow+=" & \\tiny "+((CountZeroPrecentge*100)/AllDatasetContainer.get(d).get(IndexForTheRowContainer).size());
 					 ZeroPercentRow+=" & \\tiny "+((CountFivePrecentge*100)/AllDatasetContainer.get(d).get(IndexForTheRowContainer).size());
-
+					
+					 RowRFactor+=" & \\tiny "+((CountZeroPrecentgeRFactor*100)/AllDatasetContainer.get(d).get(IndexForTheRowContainer).size());
+					 RowRFactor+=" & \\tiny "+((CountFivePrecentgeRFactor*100)/AllDatasetContainer.get(d).get(IndexForTheRowContainer).size());
+					 
 					 //FivePercentRow+=" & \\tiny "+((CountFivePrecentge*100)/AllDatasetContainer.get(d).get(IndexForTheRowContainer).size());
 				 }
 				 else {
@@ -973,22 +1018,32 @@ public class ResultsInLatex {
 					ZeroPercentRow+=" & \\tiny "+CountZeroPrecentge;
 					ZeroPercentRow+=" & \\tiny "+CountFivePrecentge;
 					
+					 RowRFactor+=" & \\tiny "+CountZeroPrecentgeRFactor;
+					 RowRFactor+=" & \\tiny "+CountFivePrecentgeRFactor;
 					// FivePercentRow+=" & \\tiny "+CountFivePrecentge;
 				 }
 		 }
 				 int CountZeroPrecentgeAll=0;
 				 int CountFivePrecentgeAll=0;
+				 
+				 int CountZeroPrecentgeAllRFactor=0;
+				 int CountFivePrecentgeAllRFactor=0;
 				 for(int c=0 ; c < AllDatasetContainer.get(d).get(i).size() ; ++c) {
 					// System.out.println("DataSet "+d);
 					// System.out.println("Excel "+i);
 					 //System.out.println("Record  "+c);
 					 boolean IsThisModelHasTheHighestCompletnessOverAllZeroPercent=true;
 					 boolean IsThisModelHasTheHighestCompletnessOverAllFivePercent=true;
+					 
+					 boolean IsThisModelHasTheHighestCompletnessOverAllZeroPercentRFactor=true;
+					 boolean IsThisModelHasTheHighestCompletnessOverAllFivePercentRFactor=true;
 					 for(int all=0;all < AllDatasetContainer.get(d).size() ; ++all) {
 						 if(ExcelNamesAsInTableHeader.contains(ExcelNames.get(d).ToolsNames.get(all)))
 						 for(int Excel=0;Excel < AllDatasetContainer.get(d).get(all).size() ; ++Excel) {
+							 if(AllDatasetContainer.get(d).get(i).get(c).BuiltPDB.equals("T") && AllDatasetContainer.get(d).get(all).get(Excel).BuiltPDB.equals("T"))
 							 if(AllDatasetContainer.get(d).get(i).get(c).PDB_ID.equals(AllDatasetContainer.get(d).get(all).get(Excel).PDB_ID)) {
-								 if(AllDatasetContainer.get(d).get(i).get(c).Completeness.equals("None")) {
+							
+								 	 if(AllDatasetContainer.get(d).get(i).get(c).Completeness.equals("None")) {
 										AllDatasetContainer.get(d).get(i).get(c).Completeness="0";
 								 }
 									if(AllDatasetContainer.get(d).get(all).get(Excel).Completeness.equals("None")) {
@@ -1014,6 +1069,20 @@ public class ResultsInLatex {
 										}
 								
 										
+										
+										if(i!=all&& (Double.parseDouble(AllDatasetContainer.get(d).get(i).get(c).R_factor0Cycle) > Double.parseDouble(AllDatasetContainer.get(d).get(all).get(Excel).R_factor0Cycle) 
+												|| Double.parseDouble(AllDatasetContainer.get(d).get(i).get(c).R_factorΔR_free) > Double.parseDouble(AllDatasetContainer.get(d).get(all).get(Excel).R_factorΔR_free)))
+														{
+											IsThisModelHasTheHighestCompletnessOverAllZeroPercentRFactor=false;
+										}
+										
+										
+										if(i!=all&& ((Double.parseDouble(AllDatasetContainer.get(d).get(i).get(c).R_factor0Cycle) - Double.parseDouble(AllDatasetContainer.get(d).get(all).get(Excel).R_factor0Cycle) ) > -0.05 
+												|| Double.parseDouble(AllDatasetContainer.get(d).get(i).get(c).R_factorΔR_free) > Double.parseDouble(AllDatasetContainer.get(d).get(all).get(Excel).R_factorΔR_free)))
+														{
+											IsThisModelHasTheHighestCompletnessOverAllFivePercentRFactor=false;
+										}
+										
 							 }
 						 }
 					 }
@@ -1025,23 +1094,38 @@ public class ResultsInLatex {
 						 //System.out.println("Five Percent "+AllDatasetContainer.get(d).get(i).get(c).PDB_ID);
 						 CountFivePrecentgeAll++;
 					 }
+					 
+					 if(IsThisModelHasTheHighestCompletnessOverAllZeroPercentRFactor==true) {
+							// System.out.println("Zero Percent "+AllDatasetContainer.get(d).get(i).get(c).PDB_ID);
+						 CountZeroPrecentgeAllRFactor++;
+						 }
+						 if(IsThisModelHasTheHighestCompletnessOverAllFivePercentRFactor==true) {
+							 //System.out.println("Five Percent "+AllDatasetContainer.get(d).get(i).get(c).PDB_ID);
+							 CountFivePrecentgeAllRFactor++;
+						 }
 				 }
  
 					 
 				 ZeroPercentRow+=" & \\tiny "+((CountZeroPrecentgeAll*100)/AllDatasetContainer.get(d).get(i).size());
 				 ZeroPercentRow+=" & \\tiny "+((CountFivePrecentgeAll*100)/AllDatasetContainer.get(d).get(i).size());
 
+				 RowRFactor+=" & \\tiny "+((CountZeroPrecentgeAllRFactor*100)/AllDatasetContainer.get(d).get(i).size());
+				 RowRFactor+=" & \\tiny "+((CountFivePrecentgeAllRFactor*100)/AllDatasetContainer.get(d).get(i).size());
 				 //FivePercentRow+=" & \\tiny "+((CountFivePrecentgeAll*100)/AllDatasetContainer.get(d).get(i).size());
 				 
 				 Rows+=ZeroPercentRow +" \\\\ \n";
+				 Rows+=RowRFactor +" \\\\ \n";
 				 //Rows+=FivePercentRow;
 				// Rows+=" \\\\ \n"; 
 			 } 
 	}
-			 Rows+=" \\hline \n"; 	 
+			 Rows+=" \\hline \n"; 
+			 RowsRFactor+=" \\hline \n"; 
 		 }
 		 
 	System.out.println(Rows);
+	new Preparer().WriteTxtFile("Latex/LongMatrixCompleteness"+".tex", Rows);
+	new Preparer().WriteTxtFile("Latex/LongMatrixRfactor"+".tex", RowsRFactor);
 	}
 }
 

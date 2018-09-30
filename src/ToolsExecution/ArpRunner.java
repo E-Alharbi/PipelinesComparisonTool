@@ -29,7 +29,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import Analyser.ExcelSheet;
-import Analyser.Results;
+import Analyser.PipelineLog;
 import NotUsed.ARPResultsAnalysis;
 import Run.RunComparison;
 import Run.RunningPram;
@@ -179,7 +179,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
    FilesNames.add(CaseName);
    System.out.println(CaseName);
    //Results res= new RunArp().RunArpTool(FileName,file.getName().substring(0,file.getName().indexOf('.')));
-   Results res= new ArpRunner().RunArpTool(FileName,CaseName);
+   PipelineLog res= new ArpRunner().RunArpTool(FileName,CaseName);
 
 	
    long afterUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
@@ -200,14 +200,14 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 		
 	}
 	
-	Results RunArpTool(String FilePathAndName,String FileName){
+	PipelineLog RunArpTool(String FilePathAndName,String FileName){
 		
 		List<String> headersList = Arrays.asList("Thread Nmae", "File Name", "Last Line From Log ", "Thread ID", "Thread start time");
 		Timer timer = new Timer();
 		 timer( System.getProperty("user.dir")+"/wArpResults/WorkingDir/"+FileName ,  FileName ,timer);
 		 String st = null;
 		 Date ProStartTime = new java.util.Date();
-		 Results res= new Results();
+		 PipelineLog res= new PipelineLog();
 		 
 		         try {
 

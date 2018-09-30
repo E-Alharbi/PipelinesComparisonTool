@@ -25,7 +25,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import Analyser.ExcelSheet;
-import Analyser.Results;
+import Analyser.PipelineLog;
 import NotUsed.ARPResultsAnalysis;
 import Run.Preparer;
 import Run.RunComparison;
@@ -177,7 +177,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 	
 	FilesNames.add(CaseName);
    System.out.println(CaseName);
-   Results res= new Crank().RunCrankTool(FileName,CaseName);
+   PipelineLog res= new Crank().RunCrankTool(FileName,CaseName);
 	
 	
    long afterUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
@@ -198,7 +198,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 		
 	}
 
-	Results RunCrankTool(String FilePathAndName,String FileName) throws IOException{
+	PipelineLog RunCrankTool(String FilePathAndName,String FileName) throws IOException{
 		
 	 //new RunComparison().CheckDirAndFile(FileName);// Because Crank does not create a dir for each job
 	 //FileUtils.copyFile(new File("./crank.sh"),  new File(FileName+"/crank.sh")); // copy crank script to the case dir
@@ -212,7 +212,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 		String st = null;
 		 Date ProStartTime = new java.util.Date();
 		 StartTime= new java.util.Date();
-		 Results res= new Results();
+		 PipelineLog res= new PipelineLog();
 		 
 		         try {
 

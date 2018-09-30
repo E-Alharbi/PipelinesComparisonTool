@@ -20,7 +20,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import Analyser.Factors;
-import Analyser.Results;
+import Analyser.PipelineLog;
 import NotUsed.ARPResultsAnalysis;
 import Run.RunComparison;
 import Run.RunningPram;
@@ -79,7 +79,7 @@ public class RunCBuccaneerTestingProupse {
 	
 	FilesNames.add(file.getName().substring(0,file.getName().indexOf('.')));
    System.out.println(file.getName().substring(0,file.getName().indexOf('.')));
-   Results res= new RunCBuccaneerTestingProupse().RunBuccaneer(FileName,file.getName().substring(0,file.getName().indexOf('.')));
+   PipelineLog res= new RunCBuccaneerTestingProupse().RunBuccaneer(FileName,file.getName().substring(0,file.getName().indexOf('.')));
 
 	try(  PrintWriter out = new PrintWriter( PATHLogs+"/"+file.getName().substring(0,file.getName().indexOf('.'))+".txt" )  ){
 	    out.println( res.LogFile );
@@ -92,12 +92,12 @@ public class RunCBuccaneerTestingProupse {
 		
 	}
 
-	Results RunBuccaneer(String FilePathAndName,String FileName){
+	PipelineLog RunBuccaneer(String FilePathAndName,String FileName){
 		String WorkingDir="BuccaneerResults/WorkingDir"+FileName;
 		new RunComparison().CheckDirAndFile(WorkingDir);
 		 String st = null;
 		 Date ProStartTime = new java.util.Date();
-		 Results res= new Results();
+		 PipelineLog res= new PipelineLog();
 		         try {
 	String seqin=FilePathAndName+".seq";
 	String mtzin=FilePathAndName+".mtz";

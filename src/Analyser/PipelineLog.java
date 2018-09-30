@@ -1,6 +1,6 @@
 package Analyser;
 
-public class Results {
+public class PipelineLog {
 
 	// The results that obtained from the log file during building
 	public String Roslution;

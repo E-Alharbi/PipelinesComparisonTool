@@ -23,16 +23,15 @@ public class Cleaner {
 	
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		LoadExcel e = new LoadExcel();
-		//Vector<DataContainer> Container = e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Run4/noncs/Crank.xlsx");
+		
+		
 		
 		int count=0;
-		String Script="";
-		String PDB="";
 		
+		/*
 		Vector<DataContainer> Container = new Vector<DataContainer>();
 		
-		File[] PDBs = new File("/Volumes/PhDHardDrive/TempResults/BuccaneerResultsPdbNoncs/PDBs").listFiles();
+		File[] PDBs = new File("/Volumes/PhDHardDrive/TempResults/Bucci2PDBHancsSample/PDBs").listFiles();
 		
 		
 			 for (File pdb : PDBs) {
@@ -46,7 +45,7 @@ public class Cleaner {
 				
 			 }
 			
-			Vector<DataContainer> Container2 = e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Run4/noncs/ARPwARP.xlsx");
+			Vector<DataContainer> Container2 = e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Run4/hancs/ARPwARP.xlsx");
 			for(int i=0; i < Container2.size();++i ) {
 				boolean Foound=false;
 				for(int c=0; c <Container.size() ; ++ c ) {
@@ -64,63 +63,24 @@ public class Cleaner {
 				}
 			}
 	
+		*/
 		
 		
-		for(int i=0; i < Container.size();++i ) {
+		LoadExcel e = new LoadExcel();
+		//Vector<DataContainer> Container = e.ReadExcel("/Volumes/PhDHardDrive/TempResults/Reproducibility/hancsExcel/ARPwARP.xlsx");
 		
+		 File[] Dataset = new File("/Volumes/PhDHardDrive/TempResults/Reproducibility/").listFiles();
 			
+		 for (File folder : Dataset) {
+			 if(folder.isDirectory()) {
+				 for (File Excel : folder.listFiles()) {
+					 String ExcelName= Excel.getName().replaceAll("."+FilenameUtils.getExtension(Excel.getName()),"");
+					 Vector<DataContainer> Container = e.ReadExcel(Excel.getAbsolutePath());
+					 new Cleaner().WrtieTheCleanerScript(Container, folder.getName()+ExcelName);
+				 }
+			 }
 			
-			//if(Container.get(i).BuiltPDB.equals("F") || (Container.get(i).Intermediate.equals("T") && Math.round(Double.valueOf(Container.get(i).TimeTaking)/60) < 48 )) {
-				if(Container.get(i).BuiltPDB.equals("F") || Container.get(i).Intermediate.equals("T")) {
-
-					//System.out.println(Container.get(i).PDB_ID);
-				Script+="rm -r "+Container.get(i).PDB_ID+" \n";
-				Script+="rm -r project"+Container.get(i).PDB_ID+" \n";
-				Script+="rm BuccaneerResults/PDBs/"+Container.get(i).PDB_ID+".pdb \n";
-				Script+="rm BuccaneerResults/BuccaneerLogs/"+Container.get(i).PDB_ID+".txt \n";
-				Script+="rm BuccaneerResults/IntermediatePDBs/"+Container.get(i).PDB_ID+".pdb \n";
-				Script+="rm BuccaneerResults/IntermediateLogs/"+Container.get(i).PDB_ID+".txt \n";
-				
-			}
-			else {
-				PDB+=Container.get(i).PDB_ID+" \n";
-				
-			}
-			
-				/*
-			if(Container.get(i).BuiltPDB.equals("F") || Container.get(i).Intermediate.equals("T")) {
-					count++;
-					Script+="rm -r project"+Container.get(i).PDB_ID+" \n";
-					Script+="rm -r "+Container.get(i).PDB_ID+" \n";
-					Script+="rm BuccaneerResults/PDBs/"+Container.get(i).PDB_ID+".pdb \n";
-					Script+="rm BuccaneerResults/BuccaneerLogs/"+Container.get(i).PDB_ID+".txt \n";
-					Script+="rm BuccaneerResults/IntermediatePDBs/"+Container.get(i).PDB_ID+".pdb \n";
-					Script+="rm BuccaneerResults/IntermediateLogs/"+Container.get(i).PDB_ID+".txt \n";
-
-				}
-				else {
-					PDB+=Container.get(i).PDB_ID+" \n";
-				}
-				*/
-			/*
-				if(Container.get(i).BuiltPDB.equals("F") || Container.get(i).Intermediate.equals("T")) {
-					count++;
-					Script+="rm -r "+Container.get(i).PDB_ID+"xml \n";
-					
-					Script+="rm CrankResults/PDBs/"+Container.get(i).PDB_ID+".pdb \n";
-					Script+="rm CrankResults/CrankLogs/"+Container.get(i).PDB_ID+".txt \n";
-					Script+="rm CrankResults/IntermediatePDBs/"+Container.get(i).PDB_ID+".pdb \n";
-					Script+="rm CrankResults/IntermediateLogs/"+Container.get(i).PDB_ID+".txt \n";
-					Script+="rm -r CrankResults/WorkingDir/"+Container.get(i).PDB_ID+" \n";
-
-				}
-				else {
-					PDB+=Container.get(i).PDB_ID+" \n";
-				}
-				*/
-			}
-		new Preparer().WriteTxtFile("RemoverScript.sh",Script);
-		new Preparer().WriteTxtFile("ProcessedFilesNamesBuccaneer.txt",PDB);
+		 }
 		
 		/*
 		 * Vector<DataContainer> Container2 = e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Run4/noncs/ARPwARP.xlsx");
@@ -213,4 +173,60 @@ public class Cleaner {
 		
 	}
 
+	void WrtieTheCleanerScript(Vector<DataContainer> Container, String ExcelName) throws IOException {
+		String Script="";
+		String PDB="";
+		String TxtFileName="";
+        for(int i=0; i < Container.size();++i ) {
+		
+			
+			
+        
+			//if(Container.get(i).BuiltPDB.equals("F") || (Container.get(i).Intermediate.equals("T") && Math.round(Double.valueOf(Container.get(i).TimeTaking)/60) < 48 )) {
+				if(Container.get(i).BuiltPDB.equals("F") || Container.get(i).Intermediate.equals("T")) {
+
+					//System.out.println(Container.get(i).PDB_ID);
+			//	Script+="rm -r "+Container.get(i).PDB_ID+" \n";
+			//	Script+="rm -r project"+Container.get(i).PDB_ID+" \n";
+			if(ExcelName.contains("ARP")) {
+				Script+="rm wArpResults/PDBs/"+Container.get(i).PDB_ID+".pdb \n";
+				Script+="rm wArpResults/ArpLogs/"+Container.get(i).PDB_ID+".txt \n";
+				Script+="rm wArpResults/IntermediatePDBs/"+Container.get(i).PDB_ID+".pdb \n";
+				Script+="rm wArpResults/IntermediateLogs/"+Container.get(i).PDB_ID+".txt \n";
+				TxtFileName="ProcessedFilesNamesArp.txt";
+			}
+			if(ExcelName.contains("Buccaneer")) {
+				Script+="rm BuccaneerResults/PDBs/"+Container.get(i).PDB_ID+".pdb \n";
+				Script+="rm BuccaneerResults/BuccaneerLogs/"+Container.get(i).PDB_ID+".txt \n";
+				Script+="rm BuccaneerResults/IntermediatePDBs/"+Container.get(i).PDB_ID+".pdb \n";
+				Script+="rm BuccaneerResults/IntermediateLogs/"+Container.get(i).PDB_ID+".txt \n";
+				TxtFileName="ProcessedFilesNamesBuccaneer.txt";
+			}
+			if(ExcelName.contains("Crank")) {
+				Script+="rm CrankResults/PDBs/"+Container.get(i).PDB_ID+".pdb \n";
+				Script+="rm CrankResults/CrankLogs/"+Container.get(i).PDB_ID+".txt \n";
+				Script+="rm CrankResults/IntermediatePDBs/"+Container.get(i).PDB_ID+".pdb \n";
+				Script+="rm CrankResults/IntermediateLogs/"+Container.get(i).PDB_ID+".txt \n";
+				TxtFileName="ProcessedFilesNamesCrank.txt";
+			}
+			if(ExcelName.contains("Phenix")) {
+				Script+="rm PhenixResults/PDBs/"+Container.get(i).PDB_ID+".pdb \n";
+				Script+="rm PhenixResults/PhinexLogs/"+Container.get(i).PDB_ID+".txt \n";
+				Script+="rm PhenixResults/IntermediatePDBs/"+Container.get(i).PDB_ID+".pdb \n";
+				Script+="rm PhenixResults/IntermediateLogs/"+Container.get(i).PDB_ID+".txt \n";
+				TxtFileName="ProcessedFilesNamesPhenix.txt";
+			}
+			}
+			else {
+				PDB+=Container.get(i).PDB_ID+" \n";
+				
+			}
+			
+			
+			}
+        new RunComparison().CheckDirAndFile("RemoverScripts");
+        new RunComparison().CheckDirAndFile("RemoverScripts/"+ExcelName);
+		new Preparer().WriteTxtFile("RemoverScripts/"+ExcelName+"/RemoverScript.sh",Script);
+		new Preparer().WriteTxtFile("RemoverScripts/"+ExcelName+"/"+TxtFileName,PDB);
+	}
 }

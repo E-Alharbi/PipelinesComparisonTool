@@ -22,7 +22,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import Analyser.DataContainer;
 import Analyser.ExcelSheet;
-import Analyser.Results;
+import Analyser.PipelineLog;
 import Analyser.ResultsAnalyserMultiThreads;
 import NotUsed.ARPResultsAnalysis;
 import Run.RunComparison;
@@ -97,13 +97,13 @@ public synchronized String GetFile() {
 		
 	}
 
-	Results Run(String FileName){
+	PipelineLog Run(String FileName){
 		
 		System.out.println("####### Thread : "+ Thread.currentThread().getName() + " Processing " + FileName +" #####");
 		
 		String st = null;
 		 Date ProStartTime = new java.util.Date();
-		 Results res= new Results();
+		 PipelineLog res= new PipelineLog();
 		 
 		         try {
 	
@@ -215,7 +215,7 @@ String labels=" FP SIGFP PHIB FOM parrot.ABCD.A parrot.ABCD.B parrot.ABCD.C parr
 		// TODO Auto-generated method stub
 		System.out.println(Thread.currentThread().getName() + " START");
 		String FileName=GetFile();
-		Results res= new RunPhenixMultiThreads().Run(FileName);
+		PipelineLog res= new RunPhenixMultiThreads().Run(FileName);
 			
 			try(  PrintWriter out = new PrintWriter( PATHLogs+"/"+FileName+".txt" )  ){
 			    out.println( res.LogFile );

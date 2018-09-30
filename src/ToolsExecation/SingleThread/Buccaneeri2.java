@@ -25,7 +25,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import Analyser.Results;
+import Analyser.PipelineLog;
 import NotUsed.ARPResultsAnalysis;
 import Run.RunComparison;
 import Run.RunningPram;
@@ -209,7 +209,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 	
 	FilesNames.add(CaseName);
   
-   Results res= new Buccaneeri2().RunBuccaneer(FileName,CaseName);
+   PipelineLog res= new Buccaneeri2().RunBuccaneer(FileName,CaseName);
   
    try(  PrintWriter out = new PrintWriter( PATHLogs+"/"+CaseName+".txt" )  ){
 	    out.println(res.LogFile + "\n" +"TimeTaking "+ res.TimeTaking );
@@ -225,7 +225,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 		
 	}
 
-	Results RunBuccaneer(String FilePathAndName,String FileName) throws InterruptedException{
+	PipelineLog RunBuccaneer(String FilePathAndName,String FileName) throws InterruptedException{
 		Thread.sleep(60000);// avoiding conflicts between threads in using SQL
 		System.out.println(Thread.currentThread().getName()+" Proccessing "+FileName);
 		Timer timer = new Timer();
@@ -233,7 +233,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 		String st = null;
 		 Date ProStartTime = new java.util.Date();
 		 StartTime = new java.util.Date();
-		 Results res= new Results();
+		 PipelineLog res= new PipelineLog();
 		         try {
 	//String seqin=FilePathAndName+".seq";
 	String seqin="";

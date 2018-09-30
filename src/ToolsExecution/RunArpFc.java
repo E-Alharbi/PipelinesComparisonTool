@@ -16,7 +16,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import Analyser.ExcelSheet;
-import Analyser.Results;
+import Analyser.PipelineLog;
 
 public class RunArpFc {
 
@@ -47,7 +47,7 @@ public class RunArpFc {
 	
 	FilesNames.add(file.getName().substring(0,file.getName().indexOf('.')));
    System.out.println(file.getName().substring(0,file.getName().indexOf('.')));
-   Results res= new RunArpFc().RunArpTool(FileName,file.getName().substring(0,file.getName().indexOf('.')));
+   PipelineLog res= new RunArpFc().RunArpTool(FileName,file.getName().substring(0,file.getName().indexOf('.')));
 	
 	
 	
@@ -62,10 +62,10 @@ public class RunArpFc {
 		
 	}
 
-	Results RunArpTool(String FilePathAndName,String FileName){
+	PipelineLog RunArpTool(String FilePathAndName,String FileName){
 		 String st = null;
 		 Date ProStartTime = new java.util.Date();
-		 Results res= new Results();
+		 PipelineLog res= new PipelineLog();
 		 
 		         try {
 

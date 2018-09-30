@@ -23,7 +23,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import Analyser.Factors;
-import Analyser.Results;
+import Analyser.PipelineLog;
 import NotUsed.ARPResultsAnalysis;
 import Run.RunComparison;
 import Run.RunningPram;
@@ -138,7 +138,7 @@ public class RunCBuccaneerGA {
     
 	FilesNames.add(CaseName);
    System.out.println(CaseName);
-   Results res= new RunCBuccaneerGA().RunBuccaneer(FileName,CaseName);
+   PipelineLog res= new RunCBuccaneerGA().RunBuccaneer(FileName,CaseName);
 
    //Results res= new RunCBuccaneer().RunBuccaneer(FileName,file.getName().substring(0,file.getName().indexOf('.')));
    long afterUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
@@ -158,7 +158,7 @@ public class RunCBuccaneerGA {
 		
 	}
 
-	Results RunBuccaneer(String FilePathAndName,String FileName){
+	PipelineLog RunBuccaneer(String FilePathAndName,String FileName){
 		System.out.println("FilePathAndName "+FilePathAndName);
 		System.out.println("FileName "+FileName);
 		System.out.println("BuccaneerPipeLine "+ RunningPram.BuccaneerPipeLine);
@@ -169,7 +169,7 @@ public class RunCBuccaneerGA {
 		 String st = null;
 		 Date ProStartTime = new java.util.Date();
 		  StartTime= new java.util.Date();
-		 Results res= new Results();
+		 PipelineLog res= new PipelineLog();
 		         try {
 	//String seqin=FilePathAndName+".seq";
 	String seqin="";

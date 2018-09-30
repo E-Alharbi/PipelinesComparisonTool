@@ -20,7 +20,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import Analyser.ExcelSheet;
-import Analyser.Results;
+import Analyser.PipelineLog;
 import NotUsed.ARPResultsAnalysis;
 import Run.RunComparison;
 import Run.RunningPram;
@@ -72,7 +72,7 @@ public class RunPhenixHLA {
 	
 	FilesNames.add(file.getName().substring(0,file.getName().indexOf('.')));
    System.out.println(file.getName().substring(0,file.getName().indexOf('.')));
-   Results res= new RunPhenixHLA().Run(FileName,file.getName().substring(0,file.getName().indexOf('.')));
+   PipelineLog res= new RunPhenixHLA().Run(FileName,file.getName().substring(0,file.getName().indexOf('.')));
 	
 	
 	
@@ -88,10 +88,10 @@ public class RunPhenixHLA {
 		
 	}
 
-	Results Run(String FilePathAndName,String FileName){
+	PipelineLog Run(String FilePathAndName,String FileName){
 		 String st = null;
 		 Date ProStartTime = new java.util.Date();
-		 Results res= new Results();
+		 PipelineLog res= new PipelineLog();
 		 
 		         try {
 	

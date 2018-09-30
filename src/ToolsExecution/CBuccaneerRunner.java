@@ -23,7 +23,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import Analyser.Factors;
-import Analyser.Results;
+import Analyser.PipelineLog;
 import NotUsed.ARPResultsAnalysis;
 import Run.RunComparison;
 import Run.RunningPram;
@@ -133,7 +133,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
     
 	FilesNames.add(CaseName);
    System.out.println(CaseName);
-   Results res= new CBuccaneerRunner().RunBuccaneer(FileName,CaseName);
+   PipelineLog res= new CBuccaneerRunner().RunBuccaneer(FileName,CaseName);
 
    //Results res= new RunCBuccaneer().RunBuccaneer(FileName,file.getName().substring(0,file.getName().indexOf('.')));
    long afterUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
@@ -153,7 +153,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 		
 	}
 
-	Results RunBuccaneer(String FilePathAndName,String FileName){
+	PipelineLog RunBuccaneer(String FilePathAndName,String FileName){
 	
 		System.out.println(Thread.currentThread().getName()+" Proccessing "+FileName);
 		System.out.println("FilePathAndName "+FilePathAndName);
@@ -164,7 +164,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 		new RunComparison().CheckDirAndFile(WorkingDir);
 		 String st = null;
 		 Date ProStartTime = new java.util.Date();
-		 Results res= new Results();
+		 PipelineLog res= new PipelineLog();
 		         try {
 	String seqin=FilePathAndName+".seq";
 	String mtzin=FilePathAndName+".mtz";

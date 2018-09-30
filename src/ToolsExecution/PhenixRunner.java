@@ -28,7 +28,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import Analyser.ExcelSheet;
-import Analyser.Results;
+import Analyser.PipelineLog;
 import Analyser.ResultsAnalyserMultiThreads;
 import NotUsed.ARPResultsAnalysis;
 import Run.RunComparison;
@@ -145,7 +145,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 	
 	FilesNames.add(CaseName);
    System.out.println(CaseName);
-   Results res= new PhenixRunner().Run(FileName,CaseName);
+   PipelineLog res= new PhenixRunner().Run(FileName,CaseName);
    
    
    long afterUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
@@ -181,7 +181,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 	}
 
 	
-Results Run(String FilePathAndName,String FileName){
+PipelineLog Run(String FilePathAndName,String FileName){
 	List<String> headersList = Arrays.asList("Thread Nmae", "File Name", "Last Line From Log ", "Thread ID", "Thread start time");
 
 		
@@ -190,7 +190,7 @@ Results Run(String FilePathAndName,String FileName){
 		//  PDBID=FileName;
 		 String st = null;
 		 Date ProStartTime = new java.util.Date();
-		 Results res= new Results();
+		 PipelineLog res= new PipelineLog();
 
 		         try {
 	

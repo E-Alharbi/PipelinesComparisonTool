@@ -27,7 +27,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import Analyser.ExcelSheet;
-import Analyser.Results;
+import Analyser.PipelineLog;
 import NotUsed.ARPResultsAnalysis;
 import Run.RunComparison;
 import Run.RunningPram;
@@ -154,7 +154,7 @@ public class RunPhenix2 {
 	
 	FilesNames.add(CaseName);
    System.out.println(CaseName);
-   Results res= new RunPhenix2().Run(FileName,CaseName);
+   PipelineLog res= new RunPhenix2().Run(FileName,CaseName);
    
    
    long afterUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
@@ -189,12 +189,12 @@ public class RunPhenix2 {
 		 FinshedBuilding =true;
 	}
 
-	Results Run(String FilePathAndName,String FileName){
+	PipelineLog Run(String FilePathAndName,String FileName){
 		  
 		  PDBID=FileName;
 		 String st = null;
 		 Date ProStartTime = new java.util.Date();
-		 Results res= new Results();
+		 PipelineLog res= new PipelineLog();
 		 
 		         try {
 	
