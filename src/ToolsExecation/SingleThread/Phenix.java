@@ -252,7 +252,7 @@ seqin=FilePathAndName+".seq";
 			 RunningPram.PhenixAutobuild,
 	"data=",mtzin,
 	"seq_file=",seqin,
-	//"input_labels="," FP SIGFP PHIB FOM HLA HLB HLC HLD",
+	//"input_labels="," FP SIGFP PHIB FOM HLA HLB HLC HLD", 
 	"input_labels=","FP SIGFP hltofom.Phi_fom.phi hltofom.Phi_fom.fom parrot.ABCD.A parrot.ABCD.B parrot.ABCD.C parrot.ABCD.D FreeR_flag",
 	"clean_up=","True"
 	 };
@@ -317,7 +317,7 @@ seqin=FilePathAndName+".seq";
 	         		res.ProcessStatus="Success";
 	         		
 	         		File f = new File("./PhenixResults/PDBs/"+FileName+".pdb");
-	       		 if(f.exists() && !f.isDirectory()) { 
+	       		 if(f.exists() && !f.isDirectory()) {  // rare to happen 
 	       		     System.out.println("Exists");
 	       		  FileUtils.copyFile(new File(Working_directory+"/overall_best.pdb"),  new File("./PhenixResults/PDBs/"+FileName+".pdb"+new java.util.Date().toString()));
 
@@ -327,6 +327,7 @@ seqin=FilePathAndName+".seq";
 	       		 }
 	       		 else {
 	       			 System.out.println("NotExists");
+	       			if(res.LogFile.contains("Done cleaning up")) // it's the last line in log file when the building is succeed which means Phenix done removing temp files  
 	       			FileUtils.copyFile(new File(Working_directory+"/overall_best.pdb"),  new File("./PhenixResults/PDBs/"+FileName+".pdb"));
 
 		         	//FileUtils.copyDirectoryToDirectory(new File(Working_directory),new File( System.getProperty("user.dir")+"/PhenixResults/WorkingDir/"+FileName));

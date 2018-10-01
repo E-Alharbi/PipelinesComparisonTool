@@ -9,6 +9,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Vector;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -169,11 +170,14 @@ String [] FandE=new CphasesMatch().cphasesmatch(RunningPram.DataPath+"/"+DC.PDB_
 DC.F_mapCorrelation=FandE[0];
 DC.E_mapCorrelation=FandE[1];
 }
+				
 				Factors F = new Refmac().RunRefmac(RunningPram.DataPath+"/"+DC.PDB_ID+".mtz", RunningPram.DataPath+"/"+DC.PDB_ID+".pdb", RunningPram.RefmacPath, RunningPram.ToolName, DC.PDB_ID,"");
 				DC.Resolution=F.Reso;
+				
 				Parse(DC,new File(LogsDir+"/"+NameOfFile+".txt"),PDB);
 				
-				
+				 FileUtils.deleteQuietly(new File(DC.PDB_ID+"Ref.mtz"));// removing  refmac output to save storage  
+				 FileUtils.deleteQuietly(new File(DC.PDB_ID+"Ref.pdb"));
 
 	Container.add(DC);
 	CreateExcel();

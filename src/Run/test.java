@@ -186,10 +186,24 @@ public class test {
 			 }
 		 }
 		*/
-		
-	
-		
-		
+		int count=0;
+		File[] Logs = new File("/Volumes/PhDHardDrive/TempResults/Pipelines/PhenixNoncsLogsHLA").listFiles();
+		String PDBs = "/Volumes/PhDHardDrive/TempResults/Pipelines/noncsPDBS/PhenixnoncsPDBSHLA/";
+		for (File Log : Logs) {
+			 String Txt = new ResultsAnalyserMultiThreads().readFileAsString(Log.getAbsolutePath());
+			// if(Txt.contains("Disk quota exceeded")) {
+				 //if(Txt.contains("NOTE: no model built")) {
+			// if(Txt.trim().length()==0) {
+			// if(Txt.contains("needs more memory than is available")) {
+				 if(!Txt.contains("Done cleaning up")) {
+				 System.out.println(Log.getName());
+				 String PDB=PDBs+ Log.getName().replaceAll("."+FilenameUtils.getExtension(Log.getName()),"")+".pdb";
+				 FileUtils.deleteQuietly(new File(PDB));
+				 count++;
+			 }
+		}
+		System.out.println(count);
+		/*
 		//File[] Logs = new File("/Users/emadalharbi/Desktop/test/CrankResultsIntermLogs/IntermediateLogs").listFiles();
 		File[] Logs = new File("/Users/emadalharbi/Desktop/test/CrankResults/CrankLogs").listFiles();
 		File[] PDBS = new File("/Users/emadalharbi/Desktop/test/CrankResultsPDB/PDBs").listFiles();
@@ -237,6 +251,7 @@ public class test {
 			//System.out.print(SortedNAmes[i].replaceAll("-parrot-noncs.txt", "") +" \u212B ");
 			System.out.println(SortedNAmes[i]);
 		}
+		*/
 		/*
 		LoadExcel e = new LoadExcel();
 		Vector<DataContainer> Arp =e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets11/mrncs/ARPwARP.xlsx");

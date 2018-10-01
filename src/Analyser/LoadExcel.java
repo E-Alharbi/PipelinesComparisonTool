@@ -39,7 +39,7 @@ public class LoadExcel {
 	
 	
 	public Vector<DataContainer> ReadExcel(String Excel) {
-	      System.out.println(Excel);
+	     // System.out.println(Excel);
 			Vector<DataContainer> Container = new Vector<DataContainer>();
 			try {
 

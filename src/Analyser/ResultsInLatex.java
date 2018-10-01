@@ -41,8 +41,8 @@ public class ResultsInLatex {
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets17";
 		//String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/GAResults/Ex5";
 		
-		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/TestMatrix";
-		String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets17";
+		 String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/TestMatrix";
+		//String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets17";
 		
 		new RunComparison().CheckDirAndFile("CSV");
 		new RunComparison().CheckDirAndFile("Latex");
@@ -849,10 +849,14 @@ public class ResultsInLatex {
 		Vector<Vector<Vector<DataContainer>>> AllDatasetContainer = new Vector<Vector<Vector<DataContainer>>>();
 		Vector<String> DatasetNames= new Vector<String>();
 		Vector<LoadExcel> ExcelNames= new Vector<LoadExcel>();
+		Vector<String> ExcelNamesAsInTableHeader= new  Vector<String>();
+		String TableHeader="\\tiny Pipelines && ";
+		String ImprovemedBy="\\tiny Improvemed By & ";
+		
 		 for (File Folder : Folders) {
 			
 			 
-			 if(Folder.isDirectory()) {
+			 if(Folder.isDirectory() && !Folder.getName().equals("Headers")) {
 				 
 				 LoadExcel e = new LoadExcel();
 				 
@@ -867,7 +871,13 @@ public class ResultsInLatex {
 				 ExcelNames.add(e);// Saving excel names  
 				 DatasetNames.add(Folder.getName()); // Saving dataset name in case there is more than one 
 			 }
-			 
+			 if(Folder.isDirectory()&&Folder.getName().equals("Headers")) {
+				 for (File Excel : Folder.listFiles()) {
+					 ExcelNamesAsInTableHeader.add(Excel.getName()); 
+					 TableHeader+=" \\multicolumn{2}{c}{ \\tiny "+ Excel.getName() +"} &";
+						ImprovemedBy+=" & \\tiny 0\\% &  \\tiny 5\\% ";
+				 }
+			 }
 		 }
 		
 		System.out.println(AllDatasetContainer.size());
@@ -875,15 +885,14 @@ public class ResultsInLatex {
 		System.out.println(ExcelNames.size());
 		 
 		//Writing the table header 
-		String TableHeader="\\tiny Pipelines && ";
-		String ImprovemedBy="\\tiny Improvemed By & ";
-		Vector<String> ExcelNamesAsInTableHeader= new  Vector<String>();
+		
 		Vector<String> ExcelNamesAsInTableRows= new  Vector<String>();
 		for(int i=0 ; i <ExcelNames.size() ; ++i) {
 			
 			for(int n=0 ; n <ExcelNames.get(i).ToolsNames.size() ; ++n ) {
 				if(!TableHeader.contains(ExcelNames.get(i).ToolsNames.get(n))) {
 					
+					/*
 					if(ExcelNames.get(i).ToolsNames.get(n).equals("ARPwARP.xlsx") ||  // Change this to change the table header and change the pipelines that you compare with. 
 					ExcelNames.get(i).ToolsNames.get(n).equals("Buccaneer5C.xlsx") || 
 					ExcelNames.get(i).ToolsNames.get(n).equals("Buccaneeri2WC5.xlsx") || 
@@ -895,7 +904,7 @@ public class ResultsInLatex {
 					ExcelNamesAsInTableHeader.add(ExcelNames.get(i).ToolsNames.get(n));
 					
 					}
-					
+					*/
 				}
 				if(!ExcelNamesAsInTableRows.contains(ExcelNames.get(i).ToolsNames.get(n)))
 					ExcelNamesAsInTableRows.add(ExcelNames.get(i).ToolsNames.get(n));
@@ -905,12 +914,12 @@ public class ResultsInLatex {
 		TableHeader+=" \\multicolumn{2}{c}{ \\tiny All(Built)} \\\\ \n " + ImprovemedBy +"  & \\tiny 0\\% &  \\tiny 5\\% \\\\ \\hline ";
 		
 		 System.out.println(TableHeader);
-		 String Rows="";
-		 String RowsRFactor="";
+		 String Rows=TableHeader +"\n";
+		 String RowsRFactor=TableHeader+"\n";
 		// for(int i=0 ;i < ExcelNamesAsInTableHeader.size() ; ++i) { // looping on pipelines 
 			 for(int i=0 ;i < ExcelNamesAsInTableRows.size() ; ++i) { // looping on pipelines 
 			 Rows+=" \\tiny "+ExcelNamesAsInTableRows.get(i);// Pipeline name 
-			 RowsRFactor=" \\tiny "+ExcelNamesAsInTableRows.get(i);
+			 RowsRFactor+=" \\tiny "+ExcelNamesAsInTableRows.get(i);
 			 for(int d=0 ; d <DatasetNames.size() ; ++d ) { // looping on datasets 
 				if(ExcelNames.get(d).ToolsNames.contains(ExcelNamesAsInTableRows.get(i))) {
 				// Rows+=" & \\tiny "+DatasetNames.get(d); // dataset name 
@@ -953,10 +962,10 @@ public class ResultsInLatex {
 						
 							 //System.out.println("Dataset "+d);
 						
-								System.out.println("Excel1 "+ExcelNames.get(d).ToolsNames.get(IndexForTheRowContainer));
-								System.out.println("Excel2 "+ExcelNames.get(d).ToolsNames.get(IndexForTheHeaderContainer));
-								 System.out.println("PDB "+AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).PDB_ID +" Compare to "+AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).PDB_ID);
-								 System.out.println("PDB "+AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).Completeness +" Compare to "+AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).Completeness);
+								//System.out.println("Excel1 "+ExcelNames.get(d).ToolsNames.get(IndexForTheRowContainer));
+								//System.out.println("Excel2 "+ExcelNames.get(d).ToolsNames.get(IndexForTheHeaderContainer));
+								// System.out.println("PDB "+AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).PDB_ID +" Compare to "+AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).PDB_ID);
+								// System.out.println("PDB "+AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).Completeness +" Compare to "+AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).Completeness);
 
 						
 						
@@ -970,7 +979,7 @@ public class ResultsInLatex {
 									CountFivePrecentge++;
 								}
 								
-						if( (Double.parseDouble(AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).R_factor0Cycle) < Double.parseDouble(AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).R_factor0Cycle))
+						if( (Double.parseDouble(AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).R_factor0Cycle) <= Double.parseDouble(AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).R_factor0Cycle))
 								&& 
 										
 							((Double.parseDouble(AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).R_factor0Cycle)-Double.parseDouble(AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).R_free0Cycle)) <=
@@ -1037,8 +1046,36 @@ public class ResultsInLatex {
 					 
 					 boolean IsThisModelHasTheHighestCompletnessOverAllZeroPercentRFactor=true;
 					 boolean IsThisModelHasTheHighestCompletnessOverAllFivePercentRFactor=true;
+					
+					 Vector<Boolean> GreaterThanZeroPercent= new Vector<Boolean>();
+					 Vector<Boolean> GreaterThanZeroFivePercent= new Vector<Boolean>();
+					 int CountHowManyPipelineInTheHeaderWeComapreWith=0;
 					 for(int all=0;all < AllDatasetContainer.get(d).size() ; ++all) {
-						 if(ExcelNamesAsInTableHeader.contains(ExcelNames.get(d).ToolsNames.get(all)))
+						 if(ExcelNamesAsInTableHeader.contains(ExcelNames.get(d).ToolsNames.get(all)) && !ExcelNames.get(d).ToolsNames.get(all).equals(ExcelNames.get(d).ToolsNames.get(i))) {
+							 CountHowManyPipelineInTheHeaderWeComapreWith++;
+						 } 
+					 }
+					 for(int all=0;all < AllDatasetContainer.get(d).size() ; ++all) {
+						 
+						 
+						 
+						 System.out.println(CountHowManyPipelineInTheHeaderWeComapreWith);
+						 System.out.println("d "+ d);
+						// if(all==i && all+1 >= AllDatasetContainer.get(d).size())
+						//	 break;
+						 
+						// if(all==i && all+1 < AllDatasetContainer.get(d).size()) // to avoid comapre the pipeline with itself when we have only one Pipeline in the header also avoid compare the pipelines with itself in case we have more pipeliens in the header  
+						//	 ++all;
+						 
+						/* if(all==0)
+						{
+							  IsThisModelHasTheHighestCompletnessOverAllZeroPercent=true;
+							  IsThisModelHasTheHighestCompletnessOverAllFivePercent=true;
+							 
+							  IsThisModelHasTheHighestCompletnessOverAllZeroPercentRFactor=true;
+							  IsThisModelHasTheHighestCompletnessOverAllFivePercentRFactor=true; 
+						 }*/
+						 if(ExcelNamesAsInTableHeader.contains(ExcelNames.get(d).ToolsNames.get(all)) &&  !ExcelNames.get(d).ToolsNames.get(all).equals(ExcelNames.get(d).ToolsNames.get(i)))
 						 for(int Excel=0;Excel < AllDatasetContainer.get(d).get(all).size() ; ++Excel) {
 							 if(AllDatasetContainer.get(d).get(i).get(c).BuiltPDB.equals("T") && AllDatasetContainer.get(d).get(all).get(Excel).BuiltPDB.equals("T"))
 							 if(AllDatasetContainer.get(d).get(i).get(c).PDB_ID.equals(AllDatasetContainer.get(d).get(all).get(Excel).PDB_ID)) {
@@ -1050,30 +1087,63 @@ public class ResultsInLatex {
 										AllDatasetContainer.get(d).get(all).get(Excel).Completeness="0";
 									}
 								
-								 if(i!=all&& Integer.parseInt(AllDatasetContainer.get(d).get(i).get(c).Completeness) < Integer.parseInt(AllDatasetContainer.get(d).get(all).get(Excel).Completeness)) 
+									
+									 if(Integer.parseInt(AllDatasetContainer.get(d).get(i).get(c).Completeness) >= Integer.parseInt(AllDatasetContainer.get(d).get(all).get(Excel).Completeness)) 
 										{
 									 
-									 //System.out.println("DataSet "+d);
-										//System.out.println("Excel1 "+ExcelNames.get(d).ToolsNames.get(i));
-										//System.out.println("Excel2 "+ExcelNames.get(d).ToolsNames.get(all));
-										// System.out.println("PDB "+AllDatasetContainer.get(d).get(i).get(c).PDB_ID +" Compare to "+AllDatasetContainer.get(d).get(all).get(Excel).PDB_ID);
-										 //System.out.println("PDB "+AllDatasetContainer.get(d).get(i).get(c).Completeness +" Compare to "+AllDatasetContainer.get(d).get(all).get(Excel).Completeness);
-
-											
+									    System.out.println("DataSet "+d);
+										System.out.println("Excel1 "+ExcelNames.get(d).ToolsNames.get(i));
+										System.out.println("Excel2 "+ExcelNames.get(d).ToolsNames.get(all));
+										System.out.println("PDB "+AllDatasetContainer.get(d).get(i).get(c).PDB_ID +" Compare to "+AllDatasetContainer.get(d).get(all).get(Excel).PDB_ID);
+										System.out.println("PDB "+AllDatasetContainer.get(d).get(i).get(c).Completeness +" Compare to "+AllDatasetContainer.get(d).get(all).get(Excel).Completeness);
+										System.out.println("all "+all);
+									 
+										GreaterThanZeroPercent.add(true);
 											IsThisModelHasTheHighestCompletnessOverAllZeroPercent=false;
 										}
-										// avoiding compare the tool with its self for ex Bucc completeness 95 >> 95 -95 =0 so 0 < 5 
-										if(i!=all&& ((Integer.parseInt(AllDatasetContainer.get(d).get(i).get(c).Completeness) - Integer.parseInt(AllDatasetContainer.get(d).get(all).get(Excel).Completeness)) < 5)) {
+									/*
+								 if(Integer.parseInt(AllDatasetContainer.get(d).get(i).get(c).Completeness) < Integer.parseInt(AllDatasetContainer.get(d).get(all).get(Excel).Completeness)) 
+										{
+									 
+									    System.out.println("DataSet "+d);
+										System.out.println("Excel1 "+ExcelNames.get(d).ToolsNames.get(i));
+										System.out.println("Excel2 "+ExcelNames.get(d).ToolsNames.get(all));
+										System.out.println("PDB "+AllDatasetContainer.get(d).get(i).get(c).PDB_ID +" Compare to "+AllDatasetContainer.get(d).get(all).get(Excel).PDB_ID);
+										System.out.println("PDB "+AllDatasetContainer.get(d).get(i).get(c).Completeness +" Compare to "+AllDatasetContainer.get(d).get(all).get(Excel).Completeness);
+										System.out.println("all "+all);
+									 
+									 
+											IsThisModelHasTheHighestCompletnessOverAllZeroPercent=false;
+										}
+										*/
+										// avoiding compare the tool with itself for ex Bucc completeness 95 >> 95 -95 =0 so 0 < 5 
+										
+									 if( ( (Integer.parseInt(AllDatasetContainer.get(d).get(i).get(c).Completeness) - Integer.parseInt(AllDatasetContainer.get(d).get(all).get(Excel).Completeness)) >= 5)) {
+											
+										 System.out.println("DataSet "+d);
+											System.out.println("Excel1 "+ExcelNames.get(d).ToolsNames.get(i));
+											System.out.println("Excel2 "+ExcelNames.get(d).ToolsNames.get(all));
+											System.out.println("PDB "+AllDatasetContainer.get(d).get(i).get(c).PDB_ID +" Compare to "+AllDatasetContainer.get(d).get(all).get(Excel).PDB_ID);
+											System.out.println("PDB "+AllDatasetContainer.get(d).get(i).get(c).Completeness +" Compare to "+AllDatasetContainer.get(d).get(all).get(Excel).Completeness);
+											System.out.println("all "+all);
+											
+										 GreaterThanZeroFivePercent.add(true);
+											IsThisModelHasTheHighestCompletnessOverAllFivePercent=false;
+										}
+									 /*
+									 if( ((Integer.parseInt(AllDatasetContainer.get(d).get(i).get(c).Completeness) - Integer.parseInt(AllDatasetContainer.get(d).get(all).get(Excel).Completeness)) < 5)) {
 											
 											IsThisModelHasTheHighestCompletnessOverAllFivePercent=false;
 										}
-								
+								*/
 										
 										
 										if(i!=all&& (Double.parseDouble(AllDatasetContainer.get(d).get(i).get(c).R_factor0Cycle) > Double.parseDouble(AllDatasetContainer.get(d).get(all).get(Excel).R_factor0Cycle) 
 												|| Double.parseDouble(AllDatasetContainer.get(d).get(i).get(c).R_factorΔR_free) > Double.parseDouble(AllDatasetContainer.get(d).get(all).get(Excel).R_factorΔR_free)))
 														{
 											IsThisModelHasTheHighestCompletnessOverAllZeroPercentRFactor=false;
+											  
+											
 										}
 										
 										
@@ -1081,25 +1151,40 @@ public class ResultsInLatex {
 												|| Double.parseDouble(AllDatasetContainer.get(d).get(i).get(c).R_factorΔR_free) > Double.parseDouble(AllDatasetContainer.get(d).get(all).get(Excel).R_factorΔR_free)))
 														{
 											IsThisModelHasTheHighestCompletnessOverAllFivePercentRFactor=false;
+											
 										}
 										
 							 }
 						 }
 					 }
-					 if(IsThisModelHasTheHighestCompletnessOverAllZeroPercent==true) {
+					
+					 
+					 
+					 if(CountHowManyPipelineInTheHeaderWeComapreWith== GreaterThanZeroPercent.size() && GreaterThanZeroPercent.size()!=0) {
+							// System.out.println("Zero Percent "+AllDatasetContainer.get(d).get(i).get(c).PDB_ID);
+						 System.out.println("GreaterThanZeroPercent.size() "+GreaterThanZeroPercent.size());
+							 CountZeroPrecentgeAll++;
+						 }
+						 if(CountHowManyPipelineInTheHeaderWeComapreWith== GreaterThanZeroFivePercent.size()  && GreaterThanZeroFivePercent.size()!=0) {
+							 //System.out.println("Five Percent "+AllDatasetContainer.get(d).get(i).get(c).PDB_ID);
+							 CountFivePrecentgeAll++;
+						 }
+						 
+					 /*
+					 if(IsThisModelHasTheHighestCompletnessOverAllZeroPercent==true ) {
 						// System.out.println("Zero Percent "+AllDatasetContainer.get(d).get(i).get(c).PDB_ID);
 						 CountZeroPrecentgeAll++;
 					 }
-					 if(IsThisModelHasTheHighestCompletnessOverAllFivePercent==true) {
+					 if(IsThisModelHasTheHighestCompletnessOverAllFivePercent==true ) {
 						 //System.out.println("Five Percent "+AllDatasetContainer.get(d).get(i).get(c).PDB_ID);
 						 CountFivePrecentgeAll++;
 					 }
-					 
-					 if(IsThisModelHasTheHighestCompletnessOverAllZeroPercentRFactor==true) {
+					 */
+					 if(IsThisModelHasTheHighestCompletnessOverAllZeroPercentRFactor==true ) {
 							// System.out.println("Zero Percent "+AllDatasetContainer.get(d).get(i).get(c).PDB_ID);
 						 CountZeroPrecentgeAllRFactor++;
 						 }
-						 if(IsThisModelHasTheHighestCompletnessOverAllFivePercentRFactor==true) {
+						 if(IsThisModelHasTheHighestCompletnessOverAllFivePercentRFactor==true ) {
 							 //System.out.println("Five Percent "+AllDatasetContainer.get(d).get(i).get(c).PDB_ID);
 							 CountFivePrecentgeAllRFactor++;
 						 }
@@ -1114,7 +1199,7 @@ public class ResultsInLatex {
 				 //FivePercentRow+=" & \\tiny "+((CountFivePrecentgeAll*100)/AllDatasetContainer.get(d).get(i).size());
 				 
 				 Rows+=ZeroPercentRow +" \\\\ \n";
-				 Rows+=RowRFactor +" \\\\ \n";
+				 RowsRFactor+=RowRFactor +" \\\\ \n";
 				 //Rows+=FivePercentRow;
 				// Rows+=" \\\\ \n"; 
 			 } 
