@@ -122,6 +122,8 @@ return false;
 	Analyser=Analyser.replace("&IPDBs&", "../Phenix/PhenixResults/IntermediatePDBs/");
 	Analyser=Analyser.replace("&ILogs&", "../Phenix/PhenixResults/IntermediateLogs/");
 	Analyser=Analyser.replace("&Mol&", RunningPram.PhenixMolProbity);
+	Analyser=Analyser.replace("&UsingMol&", RunningPram.UsingMolProbity);
+	Analyser=Analyser.replace("&CPhasesMatchPhases&", RunningPram.PhasesUsedCPhasesMatch);
 	WriteTxtFile("./PhenixAnalyser/PhenixAnalyser.sh",Analyser);
 	return true;
 }
@@ -173,6 +175,8 @@ boolean ArpwArpPrepare(boolean Bucc) throws IOException {
 		Analyser=Analyser.replace("&cstat&", RunningPram.castat2Path);
 		
 		Analyser=Analyser.replace("&Mol&", RunningPram.PhenixMolProbity);
+		Analyser=Analyser.replace("&UsingMol&", RunningPram.UsingMolProbity);
+		Analyser=Analyser.replace("&CPhasesMatchPhases&", RunningPram.PhasesUsedCPhasesMatch);
 		if(Bucc==false) {
 		Analyser=Analyser.replace("&Tool&", "ARPwARP");
 		Analyser=Analyser.replace("&Logs&", "../ArpWArp/wArpResults/ArpLogs");
@@ -231,6 +235,8 @@ boolean Bucci1Prepare() throws IOException {
 	Analyser=Analyser.replace("&IPDBs&", "../Buccaneeri1/BuccaneerResults/IntermediatePDBs/");
 	Analyser=Analyser.replace("&ILogs&", "../Buccaneeri1/BuccaneerResults/IntermediateLogs/");
 	Analyser=Analyser.replace("&Mol&", RunningPram.PhenixMolProbity);
+	Analyser=Analyser.replace("&UsingMol&", RunningPram.UsingMolProbity);
+	Analyser=Analyser.replace("&CPhasesMatchPhases&", RunningPram.PhasesUsedCPhasesMatch);
 	WriteTxtFile("./Buccaneeri1Analyser/Buccaneeri1Analyser.sh",Analyser);
 	return true;
 }
@@ -272,6 +278,8 @@ boolean Crank() throws IOException {
 		Analyser=Analyser.replace("&IPDBs&", "../Crank/CrankResults/IntermediatePDBs/");
 		Analyser=Analyser.replace("&ILogs&", "../Crank/CrankResults/IntermediateLogs/");
 		Analyser=Analyser.replace("&Mol&", RunningPram.PhenixMolProbity);
+		Analyser=Analyser.replace("&UsingMol&", RunningPram.UsingMolProbity);
+		Analyser=Analyser.replace("&CPhasesMatchPhases&", RunningPram.PhasesUsedCPhasesMatch);
 		WriteTxtFile("./CrankAnalyser/CrankAnalyser.sh",Analyser);
 	
 	return true;
@@ -328,6 +336,8 @@ boolean Bucci2Prepare(boolean Water) throws IOException {
 			Analyser=Analyser.replace("&data&", new File(RunningPram.DataPath).getAbsolutePath());
 			Analyser=Analyser.replace("&cstat&", RunningPram.castat2Path);
 			Analyser=Analyser.replace("&Mol&", RunningPram.PhenixMolProbity);
+			Analyser=Analyser.replace("&UsingMol&", RunningPram.UsingMolProbity);
+			Analyser=Analyser.replace("&CPhasesMatchPhases&", RunningPram.PhasesUsedCPhasesMatch);
 			if(Water==false) {
 				Analyser=Analyser.replace("&Tool&", "Buccaneeri2");
 				Analyser=Analyser.replace("&Logs&", "../Buccaneeri2/BuccaneerResults/BuccaneerLogs");

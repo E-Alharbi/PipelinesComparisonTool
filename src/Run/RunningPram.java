@@ -29,14 +29,14 @@ public class RunningPram {
 	public static String Buccaneeri2PipeLine;// Buccaneeri2 PipeLine
 	
 	public static String shScriptPath;// the path for script in a cluster server  
-	public static String NoofTime;// Number of times to run the script 
+	public static String NoofTime;// Number of times to run the script. Using in the Script Manager 
 	
 	public static String CrankPipeLine;// Number of times to run the script 
 	
 	public static String ZeroCycle;// Number of times to run the script 
 	
 	public static String PhenixWorkingDirList; // the txt file which has the working dir lists 
-	public static String PhenixMolProbity;
+	public static String PhenixMolProbity;// Path for Mol Probity
 	public static String PDBs;
 	public static String ExcellPath;
 	
@@ -50,4 +50,6 @@ public class RunningPram {
 	public static String IntermediateLogs;
 	
 	public static String CfakeAnom;
+	public static String UsingMolProbity="F"; // Using Mol Probity in the Analyser. Default is False
+	public static String PhasesUsedCPhasesMatch="parrot.ABCD.A,parrot.ABCD.B,parrot.ABCD.C,parrot.ABCD.D";// Default is parrot phases.
 }

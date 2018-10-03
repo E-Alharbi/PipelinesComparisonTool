@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.Vector;
 
 import Analyser.ExcelSheet;
+import Run.RunningPram;
 
 public class CphasesMatch {
 
@@ -57,13 +58,13 @@ public class CphasesMatch {
 		
 	}
 	public String [] cphasesmatch(String FilePathAndName, String CphasesMatchScriptPath){
-		System.out.println("##cphasesmatch##");
+		//System.out.println("##cphasesmatch##");
 		 String st = null;
 		 String F_mapCorrelation="";
 		 String E_mapCorrelation="";
 		         try {
 	String mtzin=FilePathAndName+".mtz";
-	String colinhl="parrot.ABCD.A,parrot.ABCD.B,parrot.ABCD.C,parrot.ABCD.D";
+	String colinhl=RunningPram.PhasesUsedCPhasesMatch;
 	String colinfo="FP,SIGFP";
 	String colinhl2="sfcalc.ABCD.A,sfcalc.ABCD.B,sfcalc.ABCD.C,sfcalc.ABCD.D";
 	 

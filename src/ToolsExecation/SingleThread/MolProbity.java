@@ -91,7 +91,7 @@ public class MolProbity implements Runnable {
 		}
 		
 	public MolProbityData molProbity(File PDB, File mtz) throws IOException {
-		System.out.println( RunningPram.PhenixMolProbity);
+		//System.out.println( RunningPram.PhenixMolProbity);
 		//System.out.println(RunningPram.PDBs+ D.PDB_ID+".pdb");
 		//System.out.println(RunningPram.DataPath+D.PDB_ID+".mtz:FP,SIGFP");
 		MolProbityData  Results= new MolProbityData();
@@ -121,8 +121,9 @@ public class MolProbity implements Runnable {
 			            
 	boolean IsSummaryAppeared=false;
 			             while ((st = stdInput.readLine()) != null) {
-			            	// System.out.println(st);
+			            	 
 			            	 if(IsSummaryAppeared==true) {
+			            		 //System.out.println(st);
 				            	 if(st.contains("Ramachandran outliers")) {
 				            		 Results.RamachandranOutliers=st.split("=")[1];
 				            	 }
@@ -141,7 +142,7 @@ public class MolProbity implements Runnable {
 				            	 if(st.contains("RMS(angles)")) {
 				            		 Results.RMSAngles=st.split("=")[1];
 				            	 }
-				            	 if(st.contains("Molprobity score")) {
+				            	 if(st.contains("MolProbity score")) {
 				            		 Results.MolProbityScore=st.split("=")[1];
 				            	 }
 				            	 if(st.contains("R-work")) {
@@ -166,16 +167,16 @@ public class MolProbity implements Runnable {
 			     		//D.molProbityData=Results;
 			     		//NewContainer.add(D);
 			     		//CreateExcel();
-			     	System.out.println(Results.RamachandranOutliers);
-			    		System.out.println(Results.RamachandranFavored);
-			    		System.out.println(Results.RotamerOutliers);
-			    		System.out.println(Results.Clashscore);
-			    		System.out.println(Results.RMSBonds);
-			    		System.out.println(Results.RMSAngles);
-			    		System.out.println(Results.MolProbityScore);
-			    		System.out.println(Results.RWork);
-			    		System.out.println(Results.RFree);
-			    		System.out.println(Results.RefinementProgram);
+			     	//System.out.println(Results.RamachandranOutliers);
+			    		//System.out.println(Results.RamachandranFavored);
+			    		//System.out.println(Results.RotamerOutliers);
+			    		//System.out.println(Results.Clashscore);
+			    		//System.out.println(Results.RMSBonds);
+			    		//System.out.println(Results.RMSAngles);
+			    		//System.out.println(Results.MolProbityScore);
+			    		//System.out.println(Results.RWork);
+			    		//System.out.println(Results.RFree);
+			    		//System.out.println(Results.RefinementProgram);
 			             return Results;
 			             }
 

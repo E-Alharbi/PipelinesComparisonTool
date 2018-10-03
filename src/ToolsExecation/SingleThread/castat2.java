@@ -14,8 +14,8 @@ public class castat2 {
 				 PathPDB1,
 				 PathPDB2,
 					};
-		 System.out.println("PDB1 "+PathPDB1);
-		 System.out.println("PDB2 "+PathPDB2);
+		 //System.out.println("PDB1 "+PathPDB1);
+		 //System.out.println("PDB2 "+PathPDB2);
 try{
 					 Process p = Runtime.getRuntime().exec(callAndArgs);
 
@@ -34,7 +34,7 @@ try{
 String st;
 Castat2Data c = new Castat2Data();
 						             while ((st = stdInput.readLine()) != null) {
-						            	 System.out.println(st);
+						            	 //System.out.println(st);
 						            	  String []Results= st.split(" ");
 						            	  c.NumberOfAtomsInFirstPDB=Results[0];
 						            	  c.NumberOfAtomsInSecondPDB=Results[1];

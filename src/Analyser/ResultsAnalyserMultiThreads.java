@@ -81,7 +81,8 @@ public class ResultsAnalyserMultiThreads implements Runnable {
    	Analyses();
 	}
 	public static void Analyses() throws FileNotFoundException, IOException {
-      ResultsAnalyserMultiThreads Analyser = new ResultsAnalyserMultiThreads();
+		
+    ResultsAnalyserMultiThreads Analyser = new ResultsAnalyserMultiThreads();
   	int NumberpfThreads= Integer.valueOf(RunningPram.NumberofThreads);
 		
 		String LogsDir=RunningPram.LogsDir;// logs files 
@@ -90,8 +91,18 @@ public class ResultsAnalyserMultiThreads implements Runnable {
 			 Analyser.Files.push(file); 
 		 }
 		 
-  	
-  	
+		 System.out.println("The paramters will be used by the Analyser: ");
+		 System.out.println("Pipeline= "+ RunningPram.ToolName);
+		 System.out.println("Data Path= "+RunningPram.DataPath);
+		 System.out.println("Logs Folder Path= "+RunningPram.LogsDir);
+		 System.out.println("PDB Folder Path= "+RunningPram.PDBsDir);
+		 System.out.println("Refmac= "+RunningPram.RefmacPath);
+		 System.out.println("Cphases Match Path= "+ RunningPram.CphasesMatchScriptPath);
+		 System.out.println("Phases used in CPhasesMatch= "+  RunningPram.PhasesUsedCPhasesMatch);
+		 System.out.println("Using MolProbity?= "+  RunningPram.UsingMolProbity);
+		 if(RunningPram.UsingMolProbity.equals("T"))
+		 System.out.println("MolProbity Path= "+  RunningPram.PhenixMolProbity);
+		 
 	     //System.out.println(Thread.activeCount()); 
 	     int ThreadNumber=0;
 	     while (Files.size()!=0) {
@@ -135,20 +146,17 @@ public class ResultsAnalyserMultiThreads implements Runnable {
 	public void AnalysingResults(File file) throws IOException
 	{
 		
-		System.out.println(Thread.currentThread().getName()+" Proccessing "+file.getAbsolutePath());
+		//System.out.println(Thread.currentThread().getName()+" Proccessing "+file.getAbsolutePath());
 			
-		//System.out.println("file  "+file.getAbsolutePath());
-		String DataPath=RunningPram.DataPath;//Data folder path 
+		
+	
 		String LogsDir=RunningPram.LogsDir;// 
 		String PDBsDir=RunningPram.PDBsDir;//
-		String castat2Path=RunningPram.castat2Path;// castat2 path
-		String CphasesMatchScriptPath=RunningPram.CphasesMatchScriptPath;//CphasesMatch Script Path in CCP4 folder
-		String RefmacPath=RunningPram.RefmacPath;
-		String LIBIN="FP=FP SIGFP=SIGFP FREE=FreeR_flag HLA=parrot.ABCD.A HLB=parrot.ABCD.B HLC=parrot.ABCD.C HLD=parrot.ABCD.D";
+
+		
 		
 		String NameOfFile=file.getName().replaceAll("."+FilenameUtils.getExtension(file.getName()),"");
-		//String NameOfFile=file.getName().substring(0,file.getName().indexOf(".")).trim();
-		//System.out.println(NameOfFile);
+		
 				DataContainer DC = new DataContainer();
 				DC.PDB_ID=NameOfFile;
 				DC.PDBIDTXT=NameOfFile.substring(0, 4);
@@ -171,13 +179,18 @@ DC.F_mapCorrelation=FandE[0];
 DC.E_mapCorrelation=FandE[1];
 }
 				
-				Factors F = new Refmac().RunRefmac(RunningPram.DataPath+"/"+DC.PDB_ID+".mtz", RunningPram.DataPath+"/"+DC.PDB_ID+".pdb", RunningPram.RefmacPath, RunningPram.ToolName, DC.PDB_ID,"");
-				DC.Resolution=F.Reso;
+				
 				
 				Parse(DC,new File(LogsDir+"/"+NameOfFile+".txt"),PDB);
 				
-				 FileUtils.deleteQuietly(new File(DC.PDB_ID+"Ref.mtz"));// removing  refmac output to save storage  
-				 FileUtils.deleteQuietly(new File(DC.PDB_ID+"Ref.pdb"));
+				// removing  refmac output to save storage 
+				if(new File(DC.PDB_ID+"Ref.mtz").exists()) {
+				 FileUtils.deleteQuietly(new File(DC.PDB_ID+"Ref.mtz")); 
+				 
+				}
+				if(new File(DC.PDB_ID+"Ref.pdb").exists()) {
+					FileUtils.deleteQuietly(new File(DC.PDB_ID+"Ref.pdb"));
+				}
 
 	Container.add(DC);
 	CreateExcel();
@@ -185,7 +198,7 @@ DC.E_mapCorrelation=FandE[1];
  public void Parse (DataContainer DC, File Log , File PDB) throws IOException {
 	
 	 List<String> headersList = Arrays.asList("Tool Name", "File Name", "File Num", "Current Step", "Current Step Output");
-	 String R="";
+	
 		String LogTxt=new ResultsAnalyserMultiThreads().readFileAsString(Log.getAbsolutePath());
 
 		String RFactor="Not Found";
@@ -217,6 +230,8 @@ DC.WarringLogFile="F";
 
 		if(PDB!=null){
 			String Line="";
+			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "Parsing both R and Rfree from log file ", "Running ...",headersList);
+
 			if(RunningPram.ToolName.equals("Buccaneer") || RunningPram.ToolName.equals("Buccaneeri2") || RunningPram.ToolName.equals("Buccaneeri2W")) {
 			
 				for(int s=0 ; s<LogTxt.length();++s){
@@ -297,10 +312,10 @@ DC.WarringLogFile="F";
 			DecimalFormat df = new DecimalFormat("#.##");
 			if(!RFactor.equals("Not Found") && !RFree.equals("Not Found")){
 				
-			
+			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "Parsing both R and Rfree from log file ", "RFactor "+RFactor + " RFree "+RFree,headersList);
+
 				
-			System.out.println("RFactor "+RFactor);
-			System.out.println("RFree "+RFree);
+			
 			
 			df.setRoundingMode(RoundingMode.CEILING);
 			Double OverfiitingPercentage=0.0;
@@ -363,7 +378,9 @@ DC.WarringLogFile="F";
 			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "Run Refmac (well know) ", F.RFactor +" "+F.FreeFactor,headersList);
 			//DC.OptimalR_factor="0";
 			Castat2Data Cas =  new castat2().Runcastat2(RunningPram.DataPath+"/"+DC.PDB_ID+".pdb", PDB.getAbsolutePath(), RunningPram.castat2Path);
-			
+			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "castat2 ", "Running ...",headersList);
+			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "castat2 ", "Done" ,headersList);
+
 			DC.NumberofAtomsinFirstPDB=Cas.NumberOfAtomsInFirstPDB;
 		
 			DC.NumberofAtomsinSecondPDB=Cas.NumberOfAtomsInSecondPDB;
@@ -384,13 +401,20 @@ DC.WarringLogFile="F";
 			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "cphasesmatch  ", "Running... ",headersList);
 
 			 String [] FandE=new CphasesMatch().cphasesmatch(RunningPram.DataPath+"/"+DC.PDB_ID,RunningPram.CphasesMatchScriptPath);
-				DC.F_mapCorrelation=FandE[0];
-				DC.E_mapCorrelation=FandE[1];
-				DC.BuiltPDB="T";
-				
-				new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "cphasesmatch F and E map  ", FandE[0] +" "+ FandE[1],headersList);
-				DC.molProbityData=new MolProbity().molProbity(PDB,new File(RunningPram.DataPath+"/"+DC.PDB_ID+".mtz"));
-		
+			 DC.F_mapCorrelation=FandE[0];
+			 DC.E_mapCorrelation=FandE[1];
+			 
+			 DC.BuiltPDB="T";
+			
+			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "cphasesmatch F and E map  ", FandE[0] +" "+ FandE[1],headersList);
+			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "Phases Used in CPhasesMatch  ", RunningPram.PhasesUsedCPhasesMatch,headersList );
+
+			if(RunningPram.UsingMolProbity.equals("T")) {
+			DC.molProbityData=new MolProbity().molProbity(PDB,new File(RunningPram.DataPath+"/"+DC.PDB_ID+".mtz"));
+			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "MolProbity  ", "Running... ",headersList);
+			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "MolProbity ", "Done ",headersList );
+
+			}
 		//else {
 		//	DC.BuiltPDB="F";
 		//}
@@ -403,6 +427,12 @@ DC.WarringLogFile="F";
 			DC.BuiltPDB="F";
 			
 		}
+		
+		if(DC.Resolution.equals("None")) { // it is rare to happen, but if might occurred when there is built PDB and refmac throw and error 
+		Factors F = new Refmac().RunRefmac(RunningPram.DataPath+"/"+DC.PDB_ID+".mtz", RunningPram.DataPath+"/"+DC.PDB_ID+".pdb", RunningPram.RefmacPath, RunningPram.ToolName, DC.PDB_ID,"");
+		DC.Resolution=F.Reso;	
+		}
+		
  }
 	public String readFileAsString(String filePath) throws IOException {
         StringBuffer fileData = new StringBuffer();

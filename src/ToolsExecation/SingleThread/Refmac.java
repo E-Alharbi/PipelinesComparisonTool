@@ -33,19 +33,18 @@ public class Refmac {
 		
 		 String st = null;
 		
-		 System.out.println("mtzPath "+mtzPath+"/"+FileName);
-		 System.out.println("pdbPath "+pdbPath);
-		 System.out.println("RefmacPath "+RefmacPath);
-		 System.out.println("ToolName "+ToolName);
-		 System.out.println("FileName "+FileName);
+		// System.out.println("mtzPath "+mtzPath+"/"+FileName);
+		// System.out.println("pdbPath "+pdbPath);
+		// System.out.println("RefmacPath "+RefmacPath);
+		// System.out.println("ToolName "+ToolName);
+		// System.out.println("FileName "+FileName);
 		 String[] callAndArgs= {
 					"sh","./refmacscript.sh",
 					RefmacPath,
 					mtzPath,
 					FileName+"Ref.mtz",
 					pdbPath,
-					FileName+"Ref.pdb",		
-					LIBIN,
+					FileName+"Ref.pdb",					
 					};
 
 		 Process  p = Runtime.getRuntime().exec(callAndArgs);
@@ -68,7 +67,7 @@ public class Refmac {
 					Factors F= new Factors();
 					boolean IsReadRfactor=false;
 						             while ((st = stdInput.readLine()) != null) {
-						           // 	System.out.println(st);
+						            //	System.out.println(st);
 						            	LogTxt+=st+"\n";
 						            	if(st.contains("Overall R factor"))
 						            	{

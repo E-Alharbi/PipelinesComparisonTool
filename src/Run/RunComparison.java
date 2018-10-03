@@ -257,6 +257,8 @@ public class RunComparison {
 					System.out.println("ccp4i2Core= path for ccp4i2 core folder   ");
 					System.out.println("DatafakeAnomalous= path Data fake Anomalous");
 					System.out.println("cstat2= path for cstat2 core folder");
+					System.out.println("UsingMolProbity= T or F");
+					System.out.println("PhasesUsedCPhasesMatch= Default is (parrot.ABCD.A,parrot.ABCD.B,parrot.ABCD.C,parrot.ABCD.D)");
 					System.exit(-1);
 				}
 					 if(checkArg(Parm,"Pipelines")!=null){
@@ -281,6 +283,16 @@ public class RunComparison {
 					 }
 					 if(checkArg(Parm,"cstat2")!=null){
 						 RunningPram.castat2Path=checkArg(Parm,"cstat2");
+						
+					 }
+					 
+					 if(checkArg(Parm,"UsingMolProbity")!=null){
+						 RunningPram.UsingMolProbity=checkArg(Parm,"UsingMolProbity");
+						
+					 }
+					 
+					 if(checkArg(Parm,"PhasesUsedCPhasesMatch")!=null){
+						 RunningPram.PhasesUsedCPhasesMatch=checkArg(Parm,"PhasesUsedCPhasesMatch");
 						
 					 }
 					 Vector <String>PipelinesNames=  new Vector<String>(Arrays.asList(RunningPram.Pipelines.split(",")));
@@ -574,7 +586,8 @@ public class RunComparison {
 					System.out.println("ToolName= Buccaneer,  ARP/wARP or Phenix");
 					System.out.println("ILogsDir= Intermediate Logs folder ");
 					System.out.println("IPDBsDir= Intermediate PDBs folder");
-					System.out.println("MolProbity= phenix MolProbity");
+					System.out.println("UsingMolProbity= T or F");
+					System.out.println("PhasesUsedCPhasesMatch= Default is (parrot.ABCD.A,parrot.ABCD.B,parrot.ABCD.C,parrot.ABCD.D)");
 					
 					System.exit(-1);
 				}
@@ -614,6 +627,15 @@ public class RunComparison {
 					 }
 					 if(checkArg(Parm,"MolProbity")!=null){
 						 RunningPram.PhenixMolProbity=checkArg(Parm,"MolProbity");
+						
+					 }
+					 if(checkArg(Parm,"UsingMolProbity")!=null){
+						 RunningPram.UsingMolProbity=checkArg(Parm,"UsingMolProbity");
+						
+					 }
+					 
+					 if(checkArg(Parm,"PhasesUsedCPhasesMatch")!=null){
+						 RunningPram.PhasesUsedCPhasesMatch=checkArg(Parm,"PhasesUsedCPhasesMatch");
 						
 					 }
 						new ResultsAnalyserMultiThreads().Analyses();
