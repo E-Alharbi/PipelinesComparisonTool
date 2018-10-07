@@ -91,6 +91,24 @@ public class ResultsAnalyserMultiThreads implements Runnable {
 			 Analyser.Files.push(file); 
 		 }
 		 
+		 if(new File(RunningPram.ToolName+".xlsx").exists()) {
+			 System.out.println("Found an excel file ");
+			 System.out.println("Exculidng the proccseed files based on the excel");
+			 LoadExcel e = new LoadExcel();
+			 Vector<DataContainer> ProccseedFilesContainer = e.ReadExcel(RunningPram.ToolName+".xlsx");
+			for(int i=0 ;i < ProccseedFilesContainer.size() ; ++i) {
+				for(int f=0 ; f <  Analyser.Files.size() ; ++f) {
+			  
+					String Log= Analyser.Files.get(f).getName().replaceAll("."+FilenameUtils.getExtension(Analyser.Files.get(f).getName()),"");
+	               if(ProccseedFilesContainer.get(i).PDB_ID.equals(Log)) {
+		            Analyser.Files.remove(Analyser.Files.get(f));
+	                   }
+				}
+
+			}
+			Container.addAll(ProccseedFilesContainer);
+		 }
+		 
 		 System.out.println("The paramters will be used by the Analyser: ");
 		 System.out.println("Pipeline= "+ RunningPram.ToolName);
 		 System.out.println("Data Path= "+RunningPram.DataPath);

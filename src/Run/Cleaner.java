@@ -29,7 +29,7 @@ public class Cleaner {
 	
 		
 		
-		File[] PDBFolders = new File("/Volumes/PhDHardDrive/TempResults/Pipelines/noncsPDBS").listFiles();
+		File[] PDBFolders = new File("/Volumes/PhDHardDrive/TempResults/Pipelines/ReNoncs").listFiles();
 		
 		 for (File Folder : PDBFolders) {
 			 
@@ -48,7 +48,7 @@ public class Cleaner {
 						
 					 }
 					
-					Vector<DataContainer> Container2 = e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Run4/noncs/ARPwARP.xlsx");
+					Vector<DataContainer> Container2 = e.ReadExcel("/Volumes/PhDHardDrive/TempResults/Reproducibility/noncsExcel/ARPwARP.xlsx");
 					for(int i=0; i < Container2.size();++i ) {
 						boolean Foound=false;
 						for(int c=0; c <Container.size() ; ++ c ) {

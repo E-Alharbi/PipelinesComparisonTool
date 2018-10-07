@@ -2,6 +2,7 @@ package Analyser;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -39,7 +40,7 @@ public class ResultsInLatex {
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets17";
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/GAResults/Ex5";
 
-		String ExcelDir = "/Volumes/PhDHardDrive/jcsg1200Results/TestMatrix";
+		String ExcelDir = "/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Run5";
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets17";
 
 		new RunComparison().CheckDirAndFile("CSV");
@@ -866,7 +867,9 @@ public class ResultsInLatex {
 
 	void LongMatrixOfResults(String ResultsDir) throws IOException {
 		File[] Folders = new File(ResultsDir).listFiles();
-		String Table = "";
+		
+		DecimalFormat decim = new DecimalFormat("#.##");
+		
 		Vector<Vector<Vector<DataContainer>>> AllDatasetContainer = new Vector<Vector<Vector<DataContainer>>>();
 		Vector<String> DatasetNames = new Vector<String>();
 		Vector<LoadExcel> ExcelNames = new Vector<LoadExcel>();
@@ -882,11 +885,17 @@ public class ResultsInLatex {
 
 				Vector<Vector<DataContainer>> CurrentReading = new Vector<Vector<DataContainer>>();
 				for (File Excel : Folder.listFiles()) {
+					System.out.println(Excel.getName());
 					CurrentReading.add(e.ReadExcel(Excel.getAbsolutePath()));
 					e.ToolsNames.add(Excel.getName());
 
 				}
-
+for(int i=0; i < CurrentReading.size() ; ++i) {
+	for(int c=0; c < CurrentReading.get(i).size() ; ++c) {
+		if(CurrentReading.get(i).get(c).R_factor0Cycle.equals("None"))
+			CurrentReading.get(i).get(c).BuiltPDB="F";
+	}
+}
 				AllDatasetContainer.add(CurrentReading);
 				ExcelNames.add(e);// Saving excel names
 				DatasetNames.add(Folder.getName()); // Saving dataset name in case there is more than one
@@ -999,20 +1008,13 @@ public class ResultsInLatex {
 
 											// System.out.println("Dataset "+d);
 
-											 System.out.println("Excel1"+ExcelNames.get(d).ToolsNames.get(IndexForTheRowContainer));
-											 System.out.println("Excel2"+ExcelNames.get(d).ToolsNames.get(IndexForTheHeaderContainer));
-											 System.out.println("PDB "+AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).PDB_ID+" Compare to"+AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).PDB_ID);
-											 System.out.println("PDB"+AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).Completeness+" Compare to"+AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).Completeness);
-
-											 System.out.println("PDB1 R "+AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).PDB_ID+" Compare to"+AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).PDB_ID);
-											 System.out.println("PDB2 R"+Double.parseDouble(AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).R_factor0Cycle)+" Compare to"+Double.parseDouble(AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).R_factor0Cycle));
-
+											
 											if (Integer.parseInt(AllDatasetContainer.get(d).get(IndexForTheRowContainer)
 													.get(c).Completeness) >= Integer.parseInt(
 															AllDatasetContainer.get(d).get(IndexForTheHeaderContainer)
 																	.get(compareTo).Completeness)) 
 												{
-													System.out.println("Met Completeness");
+													
 													CountZeroPrecentge++;
 												}
 
@@ -1037,11 +1039,14 @@ System.out.println(Double.parseDouble(AllDatasetContainer.get(d).get(IndexForThe
 
 													{
 														System.out.println("Met Rfactor");
+														
 														double FirstPDB = 
 																 Double.parseDouble(AllDatasetContainer.get(d)
 																		.get(IndexForTheRowContainer)
 																		.get(c).R_free0Cycle) -Double.parseDouble(AllDatasetContainer.get(d)
 																				.get(IndexForTheRowContainer).get(c).R_factor0Cycle);
+														
+														
 														double SecondPDB = 
 																 Double.parseDouble(AllDatasetContainer.get(d)
 																		.get(IndexForTheHeaderContainer)
@@ -1049,10 +1054,14 @@ System.out.println(Double.parseDouble(AllDatasetContainer.get(d).get(IndexForThe
 																				.parseDouble(AllDatasetContainer.get(d)
 																						.get(IndexForTheHeaderContainer)
 																						.get(compareTo).R_factor0Cycle);
-System.out.println("FirstPDB "+FirstPDB);
+														FirstPDB = Double.parseDouble(decim.format(FirstPDB));
+														SecondPDB = Double.parseDouble(decim.format(SecondPDB));
+														System.out.println("FirstPDB "+FirstPDB);
 System.out.println("SecondPDB "+SecondPDB);
-														if (FirstPDB <= SecondPDB)
+
+														if (FirstPDB <= 0.05)
 															CountZeroPrecentgeRFactor++;
+														
 													}
 
 													if ((Double
@@ -1082,7 +1091,10 @@ System.out.println("SecondPDB "+SecondPDB);
 																		.get(compareTo).R_factor0Cycle);
 														System.out.println(" FirstPDB 5% "+FirstPDB);
 														System.out.println("SecondPDB 5% "+SecondPDB);
-                                                         if((FirstPDB - SecondPDB) <= - 0.05 )
+                                                        // if((FirstPDB - SecondPDB) <= - 0.05 )
+														FirstPDB = Double.parseDouble(decim.format(FirstPDB));
+														SecondPDB = Double.parseDouble(decim.format(SecondPDB));
+														if (FirstPDB <= 0.05)
 														CountFivePrecentgeRFactor++;
 													}
 
@@ -1094,6 +1106,7 @@ System.out.println("SecondPDB "+SecondPDB);
 							}
 
 						if (IndexForTheRowContainer != -1) {
+							
 							ZeroPercentRow += " & \\tiny " + ((CountZeroPrecentge * 100)
 									/ AllDatasetContainer.get(d).get(IndexForTheRowContainer).size());
 							ZeroPercentRow += " & \\tiny " + ((CountFivePrecentge * 100)
@@ -1125,11 +1138,9 @@ System.out.println("SecondPDB "+SecondPDB);
 						// System.out.println("DataSet "+d);
 						// System.out.println("Excel "+i);
 						// System.out.println("Record "+c);
-						// boolean IsThisModelHasTheHighestCompletnessOverAllZeroPercent=true;
-						// boolean IsThisModelHasTheHighestCompletnessOverAllFivePercent=true;
+						
 
-						boolean IsThisModelHasTheHighestCompletnessOverAllZeroPercentRFactor = true;
-						boolean IsThisModelHasTheHighestCompletnessOverAllFivePercentRFactor = true;
+						
 
 						Vector<Boolean> GreaterThanZeroPercent = new Vector<Boolean>();
 						Vector<Boolean> GreaterThanZeroFivePercent = new Vector<Boolean>();
@@ -1146,8 +1157,8 @@ System.out.println("SecondPDB "+SecondPDB);
 						}
 						for (int all = 0; all < AllDatasetContainer.get(d).size(); ++all) {
 
-							System.out.println(CountHowManyPipelineInTheHeaderWeComapreWith);
-							System.out.println("d " + d);
+							//System.out.println(CountHowManyPipelineInTheHeaderWeComapreWith);
+							//System.out.println("d " + d);
 							// if(all==i && all+1 >= AllDatasetContainer.get(d).size())
 							// break;
 
@@ -1262,7 +1273,9 @@ System.out.println("SecondPDB "+SecondPDB);
 
 												double FirstPDB=Double.parseDouble(AllDatasetContainer.get(d).get(i).get(c).R_free0Cycle) - Double.parseDouble(AllDatasetContainer.get(d).get(i).get(c).R_factor0Cycle); 
 												double SecondPDB=Double.parseDouble(AllDatasetContainer.get(d).get(all).get(Excel).R_free0Cycle) - Double.parseDouble(AllDatasetContainer.get(d).get(all).get(Excel).R_factor0Cycle);
-												if(FirstPDB <= SecondPDB )
+												FirstPDB = Double.parseDouble(decim.format(FirstPDB));
+												SecondPDB = Double.parseDouble(decim.format(SecondPDB));
+												if(FirstPDB <= 0.05 )
 													GreaterThanZeroPercentRFactor.add(true);
 												//IsThisModelHasTheHighestCompletnessOverAllZeroPercentRFactor = false;
 
@@ -1275,7 +1288,10 @@ System.out.println("SecondPDB "+SecondPDB);
 												
 												double FirstPDB=Double.parseDouble(AllDatasetContainer.get(d).get(i).get(c).R_free0Cycle) - Double.parseDouble(AllDatasetContainer.get(d).get(i).get(c).R_factor0Cycle); 
 												double SecondPDB=Double.parseDouble(AllDatasetContainer.get(d).get(all).get(Excel).R_free0Cycle) - Double.parseDouble(AllDatasetContainer.get(d).get(all).get(Excel).R_factor0Cycle);
-												if((FirstPDB - SecondPDB) <= - 0.05 )
+												FirstPDB = Double.parseDouble(decim.format(FirstPDB));
+												SecondPDB = Double.parseDouble(decim.format(SecondPDB));
+												//if((FirstPDB - SecondPDB) <= - 0.05 )
+													if(FirstPDB <= 0.05 )
 													GreaterThanZeroFivePercentRFactor.add(true);
 												//IsThisModelHasTheHighestCompletnessOverAllFivePercentRFactor = false;
 
@@ -1289,7 +1305,7 @@ System.out.println("SecondPDB "+SecondPDB);
 								&& GreaterThanZeroPercent.size() != 0) {
 							// System.out.println("Zero Percent
 							// "+AllDatasetContainer.get(d).get(i).get(c).PDB_ID);
-							System.out.println("GreaterThanZeroPercent.size() " + GreaterThanZeroPercent.size());
+							//System.out.println("GreaterThanZeroPercent.size() " + GreaterThanZeroPercent.size());
 							CountZeroPrecentgeAll++;
 						}
 						if (CountHowManyPipelineInTheHeaderWeComapreWith == GreaterThanZeroFivePercent.size()
@@ -1304,7 +1320,7 @@ System.out.println("SecondPDB "+SecondPDB);
 								&& GreaterThanZeroPercentRFactor.size() != 0) {
 							// System.out.println("Zero Percent
 							// "+AllDatasetContainer.get(d).get(i).get(c).PDB_ID);
-							System.out.println("GreaterThanZeroPercent.size() " + GreaterThanZeroPercent.size());
+							//System.out.println("GreaterThanZeroPercent.size() " + GreaterThanZeroPercent.size());
 							CountZeroPrecentgeAllRFactor++;
 						}
 						if (CountHowManyPipelineInTheHeaderWeComapreWith == GreaterThanZeroFivePercentRFactor.size()
