@@ -42,6 +42,8 @@ public class Buccaneeri2 {
 	public static void main(String[] args) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 
+		
+		
 		if(args.length<1){
 			System.out.println("Error: No Inputs! ");
 			System.out.println("You have to set the path for your data folder");
@@ -57,11 +59,13 @@ public class Buccaneeri2 {
 				  new RegexFileFilter("log.txt"), 
 				  DirectoryFileFilter.DIRECTORY
 				);
+		 
 		 Vector <File>LogsFiles = new   Vector <File>();
 		 LogsFiles.addAll(Logs);
 		
 		 String LogTxt="";
 		 for(int i=0; i<LogsFiles.size();++i ) {
+			 System.out.println(LogsFiles.get(i).getAbsolutePath());
 			 LogTxt+=new ARPResultsAnalysis().readFileAsString(LogsFiles.get(i).getAbsolutePath())+"\n"; 
 			
 		 }

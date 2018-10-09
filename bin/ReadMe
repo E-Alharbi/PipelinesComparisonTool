@@ -19,13 +19,13 @@
 -	Your data needs a pre-processing by few tools before running it.
 1-	Phases should be modified by parrot 
 2-	You should convert HL coefficients to phase and figure-of-merit by using chltofom
-3-	Use CAD tool to add fake wavelength in case the mtz does not has.
+3-	Use CAD tool to add fake wavelength in case the mtz does not has.(Crank need this)
 4-	You need to Convert F/sig to fake anom. Use cfakeanom tool(The code is attached. You need to compile it)
 5-	Your data folder has to be in this structure
--mtz, deposited pdb and seq for each case. The name of these files should be exactly same.  
+mtz, deposited pdb and seq for each case. The name of these files should be exactly same.  
 example, 1o6a.mtz 1o6a.pdb 1o6a.seq and so on. 
 
-####### Run  ####### 
+####### How to run it?  ####### 
 The steps to run the script:
 1-	Run the preparer by using this command:
 java –jar RunComparsion Pareparer 
@@ -44,5 +44,10 @@ cstat2= path for cstat2 folder
    
 ####### Compiling  c++ code  #######
 In order to compile the c++ code on cluster server, you need to 
-- modify make file and add   -L "../ccp4/7.0.052/1/default/ccp4-7.0/lib"
-- modify subdir.mk file and add  -I"ccp4/7.0.052/1/default/ccp4-7.0/include"
+- Modifying make file and add   -L "../ccp4/7.0.052/1/default/ccp4-7.0/lib"
+- Modifying subdir.mk file and add  -I"ccp4/7.0.052/1/default/ccp4-7.0/include"
+
+####### Knowing issues  #######
+1-Sometimes the large PDB is copied to final models dir and it need to be copied manually as well as its logs 
+2- (ON MAC NOT ON CLUSTER SERVER) The text of Buccanner i2 logs might appeared unsorted, ex iteration 2 appeared before iteration 1 in the log file. This due to the reading of jobs folders is not sorted by names.       
+3- ARP/wARP might stop working because the memory limited and this error does not appeared in the ARP/wARP log. Also, in case of  storage shortage. 

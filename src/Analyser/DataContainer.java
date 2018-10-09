@@ -191,4 +191,54 @@ public class DataContainer implements Comparable<DataContainer> {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	
+	public String toString() { 
+	   return this.PDB_ID +","+ 
+				this.Resolution +","+ 
+				this.TimeTaking +","+ 
+				this.R_factor +","+ 
+				this.R_free +","+ 
+				this.R_factorΔR_free +","+ 
+
+				this.Overfitting +","+ 
+				this.R_factor0Cycle +","+ 
+				
+				this.R_free0Cycle +","+ 
+				this.OptimalR_factor +","+
+
+				this.NumberofAtomsinFirstPDB +","+ 
+				this.NumberofAtomsinSecondPDB +","+ 
+
+				this.NumberOfAtomsInFirstNotInSecond +","+ 
+
+				this.NumberOfAtomsInSecondNotInFirst +","+ 
+
+				this.Seqrn1n2n2n1 +","+ 
+
+				this.n1m2 +","+ 
+				this.n2m1 +","+ 
+
+				this.F_mapCorrelation +","+ 
+
+				this.E_mapCorrelation +","+ 
+
+				this.BuiltPDB +","+ 
+				this.WarringTimeTaking +","+ 
+				this.WarringLogFile +","+ 
+				this.ExceptionNoLogFile +","+ 
+				this.molProbityData.RamachandranOutliers+","+ 
+				 this.molProbityData.RamachandranFavored+","+ 
+				 this.molProbityData.RotamerOutliers+","+ 
+				 this.molProbityData.Clashscore+","+ 
+				 this.molProbityData.RMSBonds+","+ 
+				 this.molProbityData.RMSAngles+","+ 
+				 this.molProbityData.MolProbityScore+","+ 
+				 this.molProbityData.RWork+","+ 
+				 this.molProbityData.RFree+","+ 
+				 this.molProbityData.RefinementProgram+","+ 
+				
+				this.Intermediate+","+
+				this.Completeness+","+
+				this.PDBIDTXT;
+	} 
 }

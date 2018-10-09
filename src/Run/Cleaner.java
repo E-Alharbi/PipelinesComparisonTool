@@ -26,9 +26,9 @@ public class Cleaner {
 		
 		
 		
-	
+		new Cleaner().CleanerUsingExcelSheets("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Run6/All/hancs");
 		
-		
+		/*
 		File[] PDBFolders = new File("/Volumes/PhDHardDrive/TempResults/Pipelines/ReNoncs").listFiles();
 		
 		 for (File Folder : PDBFolders) {
@@ -71,7 +71,8 @@ public class Cleaner {
 					}
 			 }
 		 }
-		
+		*/
+		 
 		/*
 		Vector<DataContainer> Container = new Vector<DataContainer>();
 		
@@ -210,6 +211,7 @@ public class Cleaner {
 		 File[] Dataset = new File(ExcelSheetFolderPath).listFiles();
 			
 		 for (File folder : Dataset) {
+			 
 			 if(folder.isDirectory()) {
 				 for (File Excel : folder.listFiles()) {
 					 String ExcelName= Excel.getName().replaceAll("."+FilenameUtils.getExtension(Excel.getName()),"");
@@ -229,12 +231,12 @@ public class Cleaner {
         for(int i=0; i < Container.size();++i ) {
 		
 			
-			
+       
         
-			//if(Container.get(i).BuiltPDB.equals("F") || (Container.get(i).Intermediate.equals("T") && Math.round(Double.valueOf(Container.get(i).TimeTaking)/60) < 48 )) {
-				if(Container.get(i).BuiltPDB.equals("F") || Container.get(i).Intermediate.equals("T")) {
+			if(Container.get(i).BuiltPDB.equals("F") || ((Container.get(i).Intermediate.equals("T") && Math.round(Double.valueOf(Container.get(i).TimeTaking)/60) < 48 ))) {
+				//if(Container.get(i).BuiltPDB.equals("F") || Container.get(i).Intermediate.equals("T")) {
 
-					//System.out.println(Container.get(i).PDB_ID);
+					
 			//	Script+="rm -r "+Container.get(i).PDB_ID+" \n";
 			//	Script+="rm -r project"+Container.get(i).PDB_ID+" \n";
 			if(ExcelName.contains("ARP")) {
@@ -267,16 +269,18 @@ public class Cleaner {
 			}
 			}
 			else {
+			  	
 				PDB+=Container.get(i).PDB_ID+" \n";
 				
 			}
 			
 			
 			}
-       
+       if(!Script.equals("")) {
         new RunComparison().CheckDirAndFile("RemoverScripts");
         new RunComparison().CheckDirAndFile("RemoverScripts/"+ExcelName);
 		new Preparer().WriteTxtFile("RemoverScripts/"+ExcelName+"/RemoverScript.sh",Script);
 		new Preparer().WriteTxtFile("RemoverScripts/"+ExcelName+"/"+TxtFileName,PDB);
+       }
 	}
 }

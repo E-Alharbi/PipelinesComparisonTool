@@ -112,6 +112,7 @@ public class LoadExcel {
 					C.Intermediate=currentRow.getCell(33).getStringCellValue().trim() ;
 					C.Completeness=currentRow.getCell(34).getStringCellValue().trim() ;
 					C.PDBIDTXT=currentRow.getCell(35).getStringCellValue().trim() ;
+					
 					Container.add(C);
 
 					// System.out.println();

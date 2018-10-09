@@ -40,7 +40,7 @@ public class ResultsInLatex {
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets17";
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/GAResults/Ex5";
 
-		String ExcelDir = "/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Run5";
+		String ExcelDir = "/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Run6/All";
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets17";
 
 		new RunComparison().CheckDirAndFile("CSV");
