@@ -270,7 +270,7 @@ public class Cleaner {
 			}
 			else {
 			  	
-				PDB+=Container.get(i).PDB_ID+" \n";
+				PDB+=Container.get(i).PDB_ID+"\n";
 				
 			}
 			

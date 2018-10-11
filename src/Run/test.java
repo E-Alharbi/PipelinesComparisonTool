@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Vector;
@@ -42,6 +43,7 @@ import java.nio.channels.FileLock;
 import java.nio.file.Paths;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.text.DecimalFormat;
 public class test {
 	
 	
@@ -188,22 +190,30 @@ public class test {
 			 }
 		 }
 		*/
+		
 		int count=0;
-		File[] Logs = new File("/Volumes/PhDHardDrive/TempResults/Pipelines/PhenixNoncsLogsHLA").listFiles();
-		String PDBs = "/Volumes/PhDHardDrive/TempResults/Pipelines/noncsPDBS/PhenixnoncsPDBSHLA/";
+		File[] Logs = new File("/Volumes/PhDHardDrive/TempResults/Pipelines/Phenix/PhenixLogsHancs").listFiles();
+		//String PDBs = "/Volumes/PhDHardDrive/TempResults/Pipelines/PhenixPDBNoncsRe/";
 		for (File Log : Logs) {
 			 String Txt = new ResultsAnalyserMultiThreads().readFileAsString(Log.getAbsolutePath());
 			// if(Txt.contains("Disk quota exceeded")) {
 				 //if(Txt.contains("NOTE: no model built")) {
 			// if(Txt.trim().length()==0) {
 			// if(Txt.contains("needs more memory than is available")) {
-				 if(!Txt.contains("Done cleaning up")) {
-				 System.out.println(Log.getName());
-				 String PDB=PDBs+ Log.getName().replaceAll("."+FilenameUtils.getExtension(Log.getName()),"")+".pdb";
-				 FileUtils.deleteQuietly(new File(PDB));
+				 //if(!Txt.contains("Done cleaning up")) {
+			// if(!Txt.contains("against") ) {
+			 if(!Txt.contains("HLB=parrot.ABCD.B")) {
+					// if(!Txt.contains("DUM")) {
+				// System.out.println(Log.getName());
+				// String PDB=PDBs+ Log.getName().replaceAll("."+FilenameUtils.getExtension(Log.getName()),"")+".pdb";
+					 String PDBID= Log.getName().replaceAll("."+FilenameUtils.getExtension(Log.getName()),"");
+System.out.println(PDBID);
+				 
+				 //FileUtils.deleteQuietly(new File(PDB));
 				 count++;
 			 }
 		}
+		
 		System.out.println(count);
 		/*
 		//File[] Logs = new File("/Users/emadalharbi/Desktop/test/CrankResultsIntermLogs/IntermediateLogs").listFiles();
@@ -604,4 +614,6 @@ Vector<DataContainer> NewCon= new Vector<DataContainer>();
 	void mm (DataContainer DC) {
 		DC.BuiltPDB="111";
 	}
+	
+	
 }

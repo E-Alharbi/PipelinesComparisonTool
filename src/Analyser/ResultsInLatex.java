@@ -24,6 +24,7 @@ public class ResultsInLatex {
 
 	public static void main(String[] args) throws IOException, StatsException {
 		// TODO Auto-generated method stub
+		
 		/*
 		 * File[] Excels = new File("/Users/emadalharbi/Desktop/test").listFiles();
 		 * LoadExcel e = new LoadExcel(); Vector<Vector<DataContainer>> Container = new
@@ -40,7 +41,7 @@ public class ResultsInLatex {
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets17";
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/GAResults/Ex5";
 
-		String ExcelDir = "/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Run6/All";
+		String ExcelDir = "/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Run6Bucc/BuccEx54";
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets17";
 
 		new RunComparison().CheckDirAndFile("CSV");
@@ -54,8 +55,8 @@ public class ResultsInLatex {
 		// new ResultsInLatex().PrepareExcelForSpss(ExcelDir);
 		// new ResultsInLatex().SpssBootstraping("SpssExcel");
 		// new ResultsInLatex().ReadingSpssBootstraping("SpssExcelResults");
-		// new ResultsInLatex().MatrixOfResults(ExcelDir);
-		new ResultsInLatex().LongMatrixOfResults(ExcelDir);
+		 new ResultsInLatex().MatrixOfResults(ExcelDir);
+		//new ResultsInLatex().LongMatrixOfResults(ExcelDir);
 
 		// new ResultsInCSV().GroupByPhases(ExcelDir);
 	}
@@ -798,18 +799,22 @@ public class ResultsInLatex {
 
 	void MatrixOfResults(String ResultsDir) throws IOException {
 		File[] Folders = new File(ResultsDir).listFiles();
-		String Table = "";
+		
 		for (File Folder : Folders) {
 			if (Folder.isDirectory()) {
 				Vector<Vector<DataContainer>> Container = new Vector<Vector<DataContainer>>();
 				LoadExcel e = new LoadExcel();
 
 				for (File Excel : Folder.listFiles()) {
+					System.out.println(Excel.getAbsolutePath());
 					Container.add(e.ReadExcel(Excel.getAbsolutePath()));
 					e.ToolsNames.add(Excel.getName() + Folder.getName());
 				}
+				String Table = "";
 				String Col = "";
-				String Row = "";
+				String RowCom0 = "";
+				String RowCom5 = "";
+				/*
 				Vector<Vector<DataContainer>> Container2 = new Vector<Vector<DataContainer>>();
 				for (int i = 0; i < Container.size(); ++i) {
 
@@ -820,9 +825,11 @@ public class ResultsInLatex {
 
 				Container.removeAllElements();
 				Container.addAll(Container2); // only the cases that built by all tools
+				*/
 				for (int i = 0; i < Container.size(); ++i) {
 					Col = "\\tiny Pipeline ";// avoiding repetition
-					Row += "\\tiny " + e.ToolsNames.get(i);
+					RowCom0 += "\\tiny " + e.ToolsNames.get(i);
+					RowCom5 += "\\tiny " + e.ToolsNames.get(i);
 					for (int m = 0; m < Container.size(); ++m) {
 
 						if (Col.length() == 0) {
@@ -830,35 +837,85 @@ public class ResultsInLatex {
 						} else {
 							Col += " & \\tiny " + e.ToolsNames.get(m);
 						}
-						int count = 0;
+						float CountModelCom0 = 0;
+						float EquivalentFor0=0;
+						float CountModel=0;
+						
+						float CountModelCom5 = 0;
+						float EquivalentFor5=0;
 						for (int model = 0; model < Container.get(i).size(); ++model) {
 							for (int modeComTo = 0; modeComTo < Container.get(m).size(); ++modeComTo) {
+								System.out.println(e.ToolsNames.get(m));
+								System.out.println(Folder.getName());
 								if (Container.get(i).get(model).PDB_ID.equals(Container.get(m).get(modeComTo).PDB_ID)) {
-									if (!Container.get(i).get(model).Completeness.equals("None")
-											&& !Container.get(m).get(modeComTo).Completeness.equals("None")
-											&& Integer.valueOf(Container.get(i).get(model).Completeness) - Integer
-													.valueOf(Container.get(m).get(modeComTo).Completeness) >= 5) {
+									if (Container.get(i).get(model).BuiltPDB.equals("T")
+											&& Container.get(m).get(modeComTo).BuiltPDB.equals("T")) {
+										CountModel++;
+											if( Integer.valueOf(Container.get(i).get(model).Completeness) - Integer
+													.valueOf(Container.get(m).get(modeComTo).Completeness) >= 1) {
+										
+
+												CountModelCom0++;
+									}
+									if ( Integer.valueOf(Container.get(i).get(model).Completeness) - Integer
+													.valueOf(Container.get(m).get(modeComTo).Completeness) == 0) {
 										// if(Integer.valueOf(Container.get(i).get(model).Completeness) -
 										// Integer.valueOf(Container.get(m).get(modeComTo).Completeness) >=5) {
 
-										count++;
+										EquivalentFor0++;
+									}
+									
+									
+									if( Integer.valueOf(Container.get(i).get(model).Completeness) - Integer
+											.valueOf(Container.get(m).get(modeComTo).Completeness) >= 5) {
+								
+
+										CountModelCom5++;
+							}
+							if ( Integer.valueOf(Container.get(i).get(model).Completeness) - Integer
+											.valueOf(Container.get(m).get(modeComTo).Completeness) < 5 &&Integer.valueOf(Container.get(i).get(model).Completeness) - Integer
+											.valueOf(Container.get(m).get(modeComTo).Completeness) >0 ) {
+								
+
+								EquivalentFor5++;
+							}
+									
+									
+									
 									}
 								}
 							}
 						}
-						if (Row.length() == 0)
-							Row += count;
-						else
-							Row += "& \\tiny " + ((count * 100) / Container.get(i).size()) + "\\%";
+						if (RowCom0.length() == 0) {
+							RowCom0 += CountModelCom0;
+							RowCom5 += CountModelCom5;
+						}
+						else {
+							DecimalFormat decim = new DecimalFormat("#.##");
+							
+							RowCom0 += "& \\tiny " + decim.format(((CountModelCom0 * 100) / CountModel)) + "\\% ";
+							RowCom0 += " \\tiny (=" + decim.format(((EquivalentFor0 * 100) / CountModel)) + "\\%)";
+							RowCom0 += " \\tiny " + EquivalentFor0  + "";
+							
+							RowCom5 += "& \\tiny " + decim.format(((CountModelCom5 * 100) / CountModel)) + "\\% ";
+							RowCom5 += " \\tiny (=" + decim.format(((EquivalentFor5 * 100) / CountModel)) + "\\%)";
+							RowCom5 += " \\tiny " + EquivalentFor5  + "";
+						}
 					}
-					Row += "\\\\ \\hline \n ";
+					RowCom0 += "\\\\ \\hline \n ";
+					RowCom5 += "\\\\ \\hline \n ";
 
 				}
 				System.out.println(Col);
-				System.out.println(Row);
+				System.out.println(RowCom0);
 				Table += Col + "\\\\ \\hline \n ";
-				Table += Row;
-				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + ".tex", Table);
+				Table += RowCom0;
+				
+				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "Com0.tex", Table);
+			
+				String TableCom5 = Col + "\\\\ \\hline \n ";
+				TableCom5 += RowCom5;
+				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "Com5.tex", TableCom5);
 			}
 
 		}
@@ -978,7 +1035,7 @@ for(int i=0; i < CurrentReading.size() ; ++i) {
 
 						int CountZeroPrecentge = 0;
 						int CountFivePrecentge = 0;
-
+						
 						int CountZeroPrecentgeRFactor = 0; // to use in Rafctor matrix
 						int CountFivePrecentgeRFactor = 0;// to use in Rafctor matrix
 
@@ -996,7 +1053,7 @@ for(int i=0; i < CurrentReading.size() ; ++i) {
 										if (AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).PDB_ID
 												.equals(AllDatasetContainer.get(d).get(IndexForTheHeaderContainer)
 														.get(compareTo).PDB_ID)) {
-
+/*
 											if (AllDatasetContainer.get(d).get(IndexForTheRowContainer)
 													.get(c).Completeness.equals("None"))
 												AllDatasetContainer.get(d).get(IndexForTheRowContainer)
@@ -1005,7 +1062,7 @@ for(int i=0; i < CurrentReading.size() ; ++i) {
 													.get(compareTo).Completeness.equals("None"))
 												AllDatasetContainer.get(d).get(IndexForTheHeaderContainer)
 														.get(compareTo).Completeness = "0";
-
+*/
 											// System.out.println("Dataset "+d);
 
 											
@@ -1017,7 +1074,13 @@ for(int i=0; i < CurrentReading.size() ; ++i) {
 													
 													CountZeroPrecentge++;
 												}
-
+											
+											else {
+												System.out.println("First "+AllDatasetContainer.get(d).get(IndexForTheRowContainer)
+													.get(c).Completeness);
+												System.out.println("Second "+AllDatasetContainer.get(d).get(IndexForTheHeaderContainer)
+																	.get(compareTo).Completeness);
+											}
 												if ((Integer
 														.parseInt(AllDatasetContainer.get(d)
 																.get(IndexForTheRowContainer).get(c).Completeness)
@@ -1028,8 +1091,8 @@ for(int i=0; i < CurrentReading.size() ; ++i) {
 														
 														CountFivePrecentge++;
 													}
-System.out.println(Double.parseDouble(AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).R_factor0Cycle));
-System.out.println(Double.parseDouble(AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).R_factor0Cycle));
+//System.out.println(Double.parseDouble(AllDatasetContainer.get(d).get(IndexForTheRowContainer).get(c).R_factor0Cycle));
+//System.out.println(Double.parseDouble(AllDatasetContainer.get(d).get(IndexForTheHeaderContainer).get(compareTo).R_factor0Cycle));
 													if (Double.parseDouble(
 															AllDatasetContainer.get(d).get(IndexForTheRowContainer)
 																	.get(c).R_factor0Cycle) <= Double
@@ -1038,7 +1101,7 @@ System.out.println(Double.parseDouble(AllDatasetContainer.get(d).get(IndexForThe
 																					.get(compareTo).R_factor0Cycle) )
 
 													{
-														System.out.println("Met Rfactor");
+														//System.out.println("Met Rfactor");
 														
 														double FirstPDB = 
 																 Double.parseDouble(AllDatasetContainer.get(d)
@@ -1056,8 +1119,8 @@ System.out.println(Double.parseDouble(AllDatasetContainer.get(d).get(IndexForThe
 																						.get(compareTo).R_factor0Cycle);
 														FirstPDB = Double.parseDouble(decim.format(FirstPDB));
 														SecondPDB = Double.parseDouble(decim.format(SecondPDB));
-														System.out.println("FirstPDB "+FirstPDB);
-System.out.println("SecondPDB "+SecondPDB);
+														//System.out.println("FirstPDB "+FirstPDB);
+//System.out.println("SecondPDB "+SecondPDB);
 
 														if (FirstPDB <= 0.05)
 															CountZeroPrecentgeRFactor++;
@@ -1074,7 +1137,7 @@ System.out.println("SecondPDB "+SecondPDB);
 													)
 
 													{
-														System.out.println("Met RFactor 5%");
+														//System.out.println("Met RFactor 5%");
 														double FirstPDB = 
 																 Double.parseDouble(AllDatasetContainer.get(d)
 																		.get(IndexForTheRowContainer)
@@ -1089,8 +1152,8 @@ System.out.println("SecondPDB "+SecondPDB);
 																.parseDouble(AllDatasetContainer.get(d)
 																		.get(IndexForTheHeaderContainer)
 																		.get(compareTo).R_factor0Cycle);
-														System.out.println(" FirstPDB 5% "+FirstPDB);
-														System.out.println("SecondPDB 5% "+SecondPDB);
+														//System.out.println(" FirstPDB 5% "+FirstPDB);
+														//System.out.println("SecondPDB 5% "+SecondPDB);
                                                         // if((FirstPDB - SecondPDB) <= - 0.05 )
 														FirstPDB = Double.parseDouble(decim.format(FirstPDB));
 														SecondPDB = Double.parseDouble(decim.format(SecondPDB));
@@ -1107,8 +1170,11 @@ System.out.println("SecondPDB "+SecondPDB);
 
 						if (IndexForTheRowContainer != -1) {
 							
+							System.out.println("CountZeroPrecentge "+CountZeroPrecentge);
 							ZeroPercentRow += " & \\tiny " + ((CountZeroPrecentge * 100)
 									/ AllDatasetContainer.get(d).get(IndexForTheRowContainer).size());
+						
+							
 							ZeroPercentRow += " & \\tiny " + ((CountFivePrecentge * 100)
 									/ AllDatasetContainer.get(d).get(IndexForTheRowContainer).size());
 
@@ -1183,7 +1249,7 @@ System.out.println("SecondPDB "+SecondPDB);
 											&& AllDatasetContainer.get(d).get(all).get(Excel).BuiltPDB.equals("T"))
 										if (AllDatasetContainer.get(d).get(i).get(c).PDB_ID
 												.equals(AllDatasetContainer.get(d).get(all).get(Excel).PDB_ID)) {
-
+/*
 											if (AllDatasetContainer.get(d).get(i).get(c).Completeness.equals("None")) {
 												AllDatasetContainer.get(d).get(i).get(c).Completeness = "0";
 											}
@@ -1191,7 +1257,7 @@ System.out.println("SecondPDB "+SecondPDB);
 													.equals("None")) {
 												AllDatasetContainer.get(d).get(all).get(Excel).Completeness = "0";
 											}
-
+*/
 											if (Integer.parseInt(
 													AllDatasetContainer.get(d).get(i).get(c).Completeness) >= Integer
 															.parseInt(AllDatasetContainer.get(d).get(all)
@@ -1239,7 +1305,7 @@ System.out.println("SecondPDB "+SecondPDB);
 													.parseInt(AllDatasetContainer.get(d).get(i).get(c).Completeness)
 													- Integer.parseInt(AllDatasetContainer.get(d).get(all)
 															.get(Excel).Completeness)) >= 5)) {
-
+/*
 												System.out.println("DataSet " + d);
 												System.out.println("Excel1 " + ExcelNames.get(d).ToolsNames.get(i));
 												System.out.println("Excel2 " + ExcelNames.get(d).ToolsNames.get(all));
@@ -1252,7 +1318,7 @@ System.out.println("SecondPDB "+SecondPDB);
 														+ " Compare to "
 														+ AllDatasetContainer.get(d).get(all).get(Excel).Completeness);
 												System.out.println("all " + all);
-
+*/
 												GreaterThanZeroFivePercent.add(true);
 												// IsThisModelHasTheHighestCompletnessOverAllFivePercent=false;
 											}
