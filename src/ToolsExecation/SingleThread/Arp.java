@@ -409,6 +409,12 @@ else {
 						 return PDB.getAbsolutePath();
 					 }
 				 }
+		     BuccModels = new File(RunningPram.BuccModels.replaceAll("PDBs", "IntermediatePDBs")).listFiles(); 
+		     for (File PDB : BuccModels) {
+				 if(PDBId.trim().equals(PDB.getName())) {
+					 return PDB.getAbsolutePath();
+				 }
+			 } 
 				 return "";// Not Found
 		}
 }

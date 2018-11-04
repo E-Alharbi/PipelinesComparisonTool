@@ -31,7 +31,7 @@ import table.draw.Table;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class LoadExcel {
+public class ExcelLoader {
 	
 
 	
@@ -151,7 +151,7 @@ public class LoadExcel {
 
 				}
 				*/
-				if (ThisToolDataPDB.equals(AllToolsDataPDB) &&AllToolsData.get(i).get(m).BuiltPDB.equals("T")&& AllToolsData.get(i).get(m).Intermediate.equals("F")) {
+				if (ThisToolDataPDB.equals(AllToolsDataPDB) &&AllToolsData.get(i).get(m).BuiltPDB.equals("T")) {
 					PDFFoundInThis=true;
 
 				}

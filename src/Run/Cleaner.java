@@ -8,7 +8,7 @@ import java.util.Vector;
 import org.apache.commons.io.FilenameUtils;
 
 import Analyser.DataContainer;
-import Analyser.LoadExcel;
+import Analyser.ExcelLoader;
 
 public class Cleaner {
 
@@ -205,7 +205,7 @@ public class Cleaner {
 	}
 
 	void CleanerUsingExcelSheets(String ExcelSheetFolderPath) throws IOException {
-		LoadExcel e = new LoadExcel();
+		ExcelLoader e = new ExcelLoader();
 		//Vector<DataContainer> Container = e.ReadExcel("/Volumes/PhDHardDrive/TempResults/Reproducibility/hancsExcel/ARPwARP.xlsx");
 		
 		 File[] Dataset = new File(ExcelSheetFolderPath).listFiles();

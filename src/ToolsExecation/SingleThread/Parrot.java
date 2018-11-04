@@ -10,13 +10,13 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import Analyser.DataContainer;
-import Analyser.LoadExcel;
+import Analyser.ExcelLoader;
 
 public class Parrot {
 
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		LoadExcel e = new LoadExcel();
+		ExcelLoader e = new ExcelLoader();
 		Vector<Vector<DataContainer>> Container =  new Vector<Vector<DataContainer>>();
 		
 		Container.add(e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets2/hancs/Buccaneer.xlsx"));

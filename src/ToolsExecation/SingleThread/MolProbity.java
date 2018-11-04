@@ -10,7 +10,7 @@ import java.util.Vector;
 
 import Analyser.DataContainer;
 import Analyser.ExcelSheet;
-import Analyser.LoadExcel;
+import Analyser.ExcelLoader;
 import Analyser.ResultsAnalyserMultiThreads;
 import Run.RunningPram;
 import Utilities.DataSetChecking;
@@ -58,7 +58,7 @@ public class MolProbity implements Runnable {
 	public static void RunMol() throws FileNotFoundException, IOException {
 		
 	  	int NumberpfThreads= Integer.valueOf(RunningPram.NumberofThreads);
-			Vector <DataContainer> temp = new LoadExcel().ReadExcel(RunningPram.ExcellPath);
+			Vector <DataContainer> temp = new ExcelLoader().ReadExcel(RunningPram.ExcellPath);
 			for(int i=0 ; i < temp.size() ; ++i) {
 				OldContainer.push(temp.get(i));
 			}

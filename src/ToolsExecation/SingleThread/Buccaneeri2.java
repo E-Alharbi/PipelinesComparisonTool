@@ -65,7 +65,7 @@ public class Buccaneeri2 {
 		
 		 String LogTxt="";
 		 for(int i=0; i<LogsFiles.size();++i ) {
-			 System.out.println(LogsFiles.get(i).getAbsolutePath());
+			 
 			 LogTxt+=new ARPResultsAnalysis().readFileAsString(LogsFiles.get(i).getAbsolutePath())+"\n"; 
 			
 		 }
@@ -249,7 +249,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 	seqin=FilePathAndName+".seq";
 	
 	String mtzin=FilePathAndName+".mtz";
-	// add water option is set in bucrefi2.py not here!!!
+	// adding water option is set in bucrefi2.py not here!!!
 	 String[]callAndArgs= {
 			 "ccp4-python",RunningPram.Buccaneeri2PipeLine,
 			 "--mtzin",mtzin,
@@ -257,7 +257,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 			 "--colinfo","FP,SIGFP",
 			 "--colinhl","parrot.ABCD.A,parrot.ABCD.B,parrot.ABCD.C,parrot.ABCD.D",
 			 "--iterations","5",
-			
+			 
 			 "--mtz-name",FileName,
 			 
 	};

@@ -6,7 +6,7 @@ import java.util.Vector;
 
 import Analyser.DataContainer;
 import Analyser.ExcelSheet;
-import Analyser.LoadExcel;
+import Analyser.ExcelLoader;
 import Run.RunningPram;
 
 public class UpdateExcel {
@@ -14,7 +14,7 @@ public class UpdateExcel {
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		// TODO Auto-generated method stub
 
-		LoadExcel e = new LoadExcel();
+		ExcelLoader e = new ExcelLoader();
 		Vector<DataContainer> Crank = new Vector<DataContainer>();
 		Crank = e.ReadExcel("/Users/emadalharbi/Desktop/PhDYork/jcsg202Results/ToolsResults12_3_2018/Crank.xlsx");
 		Vector<DataContainer> Arp = e.ReadExcel("/Users/emadalharbi/Desktop/PhDYork/jcsg202Results/ToolsResults12_3_2018/ARPwARP.xlsx");

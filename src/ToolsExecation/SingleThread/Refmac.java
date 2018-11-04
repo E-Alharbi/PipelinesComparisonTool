@@ -67,7 +67,7 @@ public class Refmac {
 					Factors F= new Factors();
 					boolean IsReadRfactor=false;
 						             while ((st = stdInput.readLine()) != null) {
-						            //	System.out.println(st);
+						            	//System.out.println(st);
 						            	LogTxt+=st+"\n";
 						            	if(st.contains("Overall R factor"))
 						            	{

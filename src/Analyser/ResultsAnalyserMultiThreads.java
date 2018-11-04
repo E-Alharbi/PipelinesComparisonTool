@@ -5,9 +5,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.Thread.State;
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -16,6 +19,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import Run.RunComparison;
 import Run.RunningPram;
 import ToolsExecation.SingleThread.Castat2Data;
 import ToolsExecation.SingleThread.CphasesMatch;
@@ -25,6 +29,7 @@ import ToolsExecation.SingleThread.castat2;
 import ToolsExecution.RunBuccaneerMulti;
 import Utilities.DataSetChecking;
 import Utilities.FilesManagements;
+import Utilities.RemovingWaterChainID;
 import table.draw.LogFile;
 import java.util.Stack;
 import java.util.ArrayList;
@@ -90,11 +95,11 @@ public class ResultsAnalyserMultiThreads implements Runnable {
 		 for (File file : files) {
 			 Analyser.Files.push(file); 
 		 }
-		 
+		 	
 		 if(new File(RunningPram.ToolName+".xlsx").exists()) {
 			 System.out.println("Found an excel file ");
 			 System.out.println("Excluding the proccseed files based on the excel");
-			 LoadExcel e = new LoadExcel();
+			 ExcelLoader e = new ExcelLoader();
 			 Vector<DataContainer> ProccseedFilesContainer = e.ReadExcel(RunningPram.ToolName+".xlsx");
 			 Vector<DataContainer> FilesNotNeedToAnalysedContainer=new Vector<DataContainer>();
 			for(int i=0 ;i < ProccseedFilesContainer.size() ; ++i) {
@@ -114,6 +119,8 @@ public class ResultsAnalyserMultiThreads implements Runnable {
 			Container.addAll(FilesNotNeedToAnalysedContainer);
 			}
 		 }
+		 
+		 
 		 
 		 System.out.println("The paramters will be used by the Analyser: ");
 		 System.out.println("Pipeline= "+ RunningPram.ToolName);
@@ -341,12 +348,12 @@ DC.WarringLogFile="F";
 				
 			
 			
-			df.setRoundingMode(RoundingMode.CEILING);
+			df.setRoundingMode(RoundingMode.HALF_UP);
 			Double OverfiitingPercentage=0.0;
-			RFactor = df.format(Double.valueOf(RFactor));
-			RFree = df.format(Double.valueOf(RFree));
+			RFactor = df.format(BigDecimal.valueOf(Double.valueOf(RFactor)));
+			RFree = df.format(BigDecimal.valueOf(Double.valueOf(RFree)));
 			
-			df.setRoundingMode(RoundingMode.HALF_DOWN);
+			df.setRoundingMode(RoundingMode.HALF_UP);
 			if(Double.parseDouble(RFactor)>Double.parseDouble(RFree)){
 			
 				OverfiitingPercentage=(Double.parseDouble(RFactor)- Double.parseDouble(RFree));
@@ -358,13 +365,14 @@ DC.WarringLogFile="F";
 			
 			//System.out.println("OverfiitingPercentage "+OverfiitingPercentage);
 			
-			DC.R_factorΔR_free=String.valueOf(df.format(Double.valueOf(OverfiitingPercentage)));
+			DC.R_factorΔR_free=String.valueOf(df.format(BigDecimal.valueOf(Double.valueOf(OverfiitingPercentage))));
 			
-			df.setRoundingMode(RoundingMode.CEILING);
-			DC.R_factor=df.format(Double.valueOf(RFactor));
+			df.setRoundingMode(RoundingMode.HALF_UP);
+			DC.R_factor=df.format(BigDecimal.valueOf(Double.valueOf(RFactor)));
 			
-			DC.R_free=df.format(Double.valueOf(RFree));
-			//df = new DecimalFormat("#.##");
+			DC.R_free=df.format(BigDecimal.valueOf(Double.valueOf(RFree)));
+			
+		  //df = new DecimalFormat("#.##");
          //df.setRoundingMode(RoundingMode.CEILING);
              
 			
@@ -378,14 +386,14 @@ DC.WarringLogFile="F";
 			Factors F = new Refmac().RunRefmac(RunningPram.DataPath+"/"+DC.PDB_ID+".mtz", PDB.getAbsolutePath(), RunningPram.RefmacPath, RunningPram.ToolName, DC.PDB_ID,"");
 			
 			if(!F.RFactor.equals("None")) {
-			DC.R_factor0Cycle=df.format(Double.valueOf(F.RFactor));
+			DC.R_factor0Cycle=df.format(BigDecimal.valueOf(Double.valueOf(F.RFactor)));
 			DC.Resolution=F.Reso;
 			}
 			else
 				DC.R_factor0Cycle="None";
 			
 			if(!F.FreeFactor.equals("None"))
-			DC.R_free0Cycle=df.format(Double.valueOf(F.FreeFactor));
+			DC.R_free0Cycle=df.format(BigDecimal.valueOf(Double.valueOf(F.FreeFactor)));
 			else
 			DC.R_free0Cycle=	"None";
 			
@@ -395,9 +403,9 @@ DC.WarringLogFile="F";
 
 			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "Run Refmac (well known) ", "Running ...",headersList);
 
-			F = new Refmac().RunRefmac(RunningPram.DataPath+"/"+DC.PDB_ID+".mtz",RunningPram.DataPath+"/"+DC.PDB_ID+".pdb", RunningPram.RefmacPath, RunningPram.ToolName, DC.PDB_ID,"");
-			 
-			DC.OptimalR_factor=df.format(Double.valueOf(F.RFactor));
+			//F = new Refmac().RunRefmac(RunningPram.DataPath+"/"+DC.PDB_ID+".mtz",RunningPram.DataPath+"/"+DC.PDB_ID+".pdb", RunningPram.RefmacPath, RunningPram.ToolName, DC.PDB_ID,"");
+			ParsingRFromDepoistedPDB(new File(RunningPram.DataPath+"/"+DC.PDB_ID+".pdb"),DC);
+			DC.OptimalR_factor=df.format(BigDecimal.valueOf(Double.valueOf(DC.OptimalR_factor)));
 			
 			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "Run Refmac (well know) ", F.RFactor +" "+F.FreeFactor,headersList);
 			//DC.OptimalR_factor="0";
@@ -405,6 +413,17 @@ DC.WarringLogFile="F";
 			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "castat2 ", "Running ...",headersList);
 			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "castat2 ", "Done" ,headersList);
 
+			
+			if(RunningPram.ToolName.equals("Buccaneeri2W") && Cas.n1m2.equals("None")) { // this occurs in very few cases when the water chain ID is Z and the PDB has many chains 
+				new RunComparison().CheckDirAndFile("PDBsWithEmptyWaterChainID");
+				FileUtils.copyToDirectory(PDB, new File("PDBsWithEmptyWaterChainID"));
+				new RemovingWaterChainID().RemoveWaterChainID("PDBsWithEmptyWaterChainID"+"/"+PDB.getName());
+				Cas =  new castat2().Runcastat2(RunningPram.DataPath+"/"+DC.PDB_ID+".pdb", "PDBsWithEmptyWaterChainID"+"/"+PDB.getName(), RunningPram.castat2Path);
+				new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "castat2 Buccaneeri2W", "Running ...",headersList);
+				new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "castat2 Buccaneeri2W", "Done" ,headersList);
+
+			}
+			
 			DC.NumberofAtomsinFirstPDB=Cas.NumberOfAtomsInFirstPDB;
 		
 			DC.NumberofAtomsinSecondPDB=Cas.NumberOfAtomsInSecondPDB;
@@ -418,8 +437,9 @@ DC.WarringLogFile="F";
 			DC.n1m2=Cas.n1m2;
 			
 			DC.n2m1=Cas.n2m1;
+			
 			if(!Cas.n1m2.equals("None"))
-			DC.Completeness= df.format(((Integer.parseInt(Cas.n1m2) * 100)/Integer.parseInt(Cas.NumberOfAtomsInFirstPDB)));
+			DC.Completeness= df.format((BigDecimal.valueOf((Double.parseDouble(Cas.n1m2) * 100.00)/Double.parseDouble(Cas.NumberOfAtomsInFirstPDB)) ));
 			else
 		    DC.Completeness=	"None";
 			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "cphasesmatch  ", "Running... ",headersList);
@@ -471,5 +491,41 @@ DC.WarringLogFile="F";
         reader.close();
         return fileData.toString();
     }
+	
+	void ParsingRFromDepoistedPDB(File pdb , DataContainer dc) throws IOException {
+		System.out.println(pdb.getAbsolutePath());
+		String PDB=new ResultsAnalyserMultiThreads().readFileAsString(pdb.getAbsolutePath());
+		
+		 
+	     
+	      String regex = "REMARK\\s+3\\s+R VALUE\\s+\\(WORKING SET\\).+\n";
+	      
+	      Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+	      Matcher matcher = pattern.matcher(PDB);
+	      
+	      while (matcher.find())
+	      {
+	          //System.out.print("1Start index: " + matcher.start());
+	          //System.out.print(" 1End index: " + matcher.end() + " ");
+	        //  System.out.println(matcher.group().split(":")[1].trim());
+	        dc.OptimalR_factor=matcher.group().split(":")[1].trim();
+	      }
+	      
+	      
+            regex = "REMARK\\s+3\\s+FREE R VALUE\\s+(?!Test)\\s+.+\n";
+	      
+	       pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+	       matcher = pattern.matcher(PDB);
+	      
+	      while (matcher.find())
+	      {
+	         // System.out.print("Start index: " + matcher.start());
+	         // System.out.print("End index: " + matcher.end() + " ");
+	         // System.out.println((matcher.group().split(":")[1].trim()));
+	        
+	      }	
+	      //System.out.println(pdb.getAbsolutePath());
+			
+	}
 	
 }

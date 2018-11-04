@@ -2,6 +2,9 @@ package Analyser;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Collections;
@@ -41,7 +44,8 @@ public class ResultsInLatex {
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets17";
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/GAResults/Ex5";
 
-		String ExcelDir = "/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Run6Bucc/BuccEx54";
+		String ExcelDir = "/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Run13/ExFaliedCases/Orginalonlythe54Cases/All";
+		
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets17";
 
 		new RunComparison().CheckDirAndFile("CSV");
@@ -49,13 +53,13 @@ public class ResultsInLatex {
 
 		// new ResultsInCSV().PDBTable(Container);
 
-		// new ResultsInLatex().OverallResults(ExcelDir);
+		new ResultsInLatex().OverallResults(ExcelDir);
 		// new ResultsInLatex().PDBList(ExcelDir);
 		// new ResultsInLatex().BestAndWorstCases(ExcelDir);
 		// new ResultsInLatex().PrepareExcelForSpss(ExcelDir);
 		// new ResultsInLatex().SpssBootstraping("SpssExcel");
 		// new ResultsInLatex().ReadingSpssBootstraping("SpssExcelResults");
-		 new ResultsInLatex().MatrixOfResults(ExcelDir);
+		new ResultsInLatex().MatrixOfResults(ExcelDir);
 		//new ResultsInLatex().LongMatrixOfResults(ExcelDir);
 
 		// new ResultsInCSV().GroupByPhases(ExcelDir);
@@ -88,13 +92,15 @@ public class ResultsInLatex {
 
 	void OverallResults(String ResultsDir) throws IOException {
 		File[] Folders = new File(ResultsDir).listFiles();
-		LoadExcel e = new LoadExcel();
+		ExcelLoader e = new ExcelLoader();
 		Vector<Vector<DataContainer>> Container = new Vector<Vector<DataContainer>>();
 		for (File Folder : Folders) {
 			if (Folder.isDirectory()) {
+				
 				for (File Excel : Folder.listFiles()) {
+					if(Excel.isFile()) { // Because this folder might contains Bucc54 folder
 					Container.add(e.ReadExcel(Excel.getAbsolutePath()));
-					e.ToolsNames.add(Excel.getName() + Folder.getName());
+					e.ToolsNames.add(Excel.getName() + Folder.getName());}
 				}
 			}
 
@@ -130,7 +136,8 @@ public class ResultsInLatex {
 		System.out.println(CSV);
 		new Preparer().WriteTxtFile("CSV/Overall.csv", CSV);
 		Vector<String> CheckedFiles = new Vector<String>();
-		String Table = "";
+		String Table = "\\tiny Pipeline &&\\tiny Hancs &&&&\\tiny Mrncs &&&& \\tiny Noncs\\\\ \n" + 
+				"&&\\tiny Compelete & \\tiny Intermediate& \\tiny Falied&&\\tiny Compelete &\\tiny Intermediate& \\tiny Falied&& \\tiny Compelete & \\tiny Intermediate& \\tiny Falied\\\\ \\hline";
 		for (int i = 0; i < Results.size(); ++i) {
 			// System.out.println(Results.get(i).DM);
 			String hancs = "-&-&-";
@@ -160,20 +167,21 @@ public class ResultsInLatex {
 				// System.out.println(Results.get(i).FileName);
 				// System.out.println(Results.get(i).DM);
 
-				System.out.println("\\scriptsize " + Results.get(i).FileName + "&&" + hancs + "&&" + mrncs + "&&"
+				System.out.println("\\tiny " + Results.get(i).FileName + "&&" + hancs + "&&" + mrncs + "&&"
 						+ noncs + "\\\\");
-				Table += "\\scriptsize " + Results.get(i).FileName + "&&" + hancs + "&&" + mrncs + "&&" + noncs + "\\\\"
-						+ "\n";
+				Table += "\\tiny " + Results.get(i).FileName + "&&" + hancs + "&&" + mrncs + "&&" + noncs + "\\\\"
+						+ "\\hline \n";
 				;
 			}
 			CheckedFiles.add(Results.get(i).FileName);
 		}
+		Table=FormatingPipelinesNames(Table,true);
 		new Preparer().WriteTxtFile("Latex/TheNumberOfCompletedCases.tex", Table.replace(".xlsx", ""));
 	}
 
 	void PDBList(String ResultsDir) throws IOException {
 		File[] Folders = new File(ResultsDir).listFiles();
-		LoadExcel e = new LoadExcel();
+		ExcelLoader e = new ExcelLoader();
 		Vector<Vector<DataContainer>> Container = new Vector<Vector<DataContainer>>();
 		for (File Folder : Folders) {
 			if (Folder.isDirectory()) {
@@ -350,7 +358,7 @@ public class ResultsInLatex {
 		for (File Folder : Folders) {
 			Vector<Vector<DataContainer>> Container = new Vector<Vector<DataContainer>>();
 			if (Folder.isDirectory()) {
-				LoadExcel e = new LoadExcel();
+				ExcelLoader e = new ExcelLoader();
 				for (File Excel : Folder.listFiles()) {
 					Container.add(e.ReadExcel(Excel.getAbsolutePath()));
 					e.ToolsNames.add(Excel.getName() + Folder.getName());
@@ -505,7 +513,7 @@ public class ResultsInLatex {
 
 		for (File Folder : Folders) {
 			Vector<Vector<DataContainer>> Container = new Vector<Vector<DataContainer>>();
-			LoadExcel e = new LoadExcel();
+			ExcelLoader e = new ExcelLoader();
 			if (Folder.isDirectory()) {
 				for (File Excel : Folder.listFiles()) {
 					Container.add(e.ReadExcel(Excel.getAbsolutePath()));
@@ -708,7 +716,7 @@ public class ResultsInLatex {
 
 	void GroupByPhases(String ResultsDir) throws IOException {
 		File[] Folders = new File(ResultsDir).listFiles();
-		LoadExcel e = new LoadExcel();
+		ExcelLoader e = new ExcelLoader();
 		Vector<Vector<DataContainer>> Container = new Vector<Vector<DataContainer>>();
 		for (File Folder : Folders) {
 			if (Folder.isDirectory()) {
@@ -798,22 +806,76 @@ public class ResultsInLatex {
 	}
 
 	void MatrixOfResults(String ResultsDir) throws IOException {
+		if(new File("MatricesLogs").exists()) {
+			FileUtils.deleteDirectory(new File("MatricesLogs"));
+		}
 		File[] Folders = new File(ResultsDir).listFiles();
 		
 		for (File Folder : Folders) {
 			if (Folder.isDirectory()) {
 				Vector<Vector<DataContainer>> Container = new Vector<Vector<DataContainer>>();
-				LoadExcel e = new LoadExcel();
+				ExcelLoader e = new ExcelLoader();
 
 				for (File Excel : Folder.listFiles()) {
+					if(Excel.isFile()) {
 					System.out.println(Excel.getAbsolutePath());
 					Container.add(e.ReadExcel(Excel.getAbsolutePath()));
 					e.ToolsNames.add(Excel.getName() + Folder.getName());
+					}
 				}
 				String Table = "";
 				String Col = "";
 				String RowCom0 = "";
 				String RowCom5 = "";
+				
+				String RowCom0Equivalent = "";
+				String RowCom5Equivalent = "";
+				
+				String RowCom0Models = "";
+				String RowCom5Models= "";
+				
+				
+				String RowR0 = "";
+				
+				
+				String RowR0Equivalent = "";
+			
+				String RowROverfitting = "";
+				
+				String RowR5 = "";
+				String RowR5Overfitting="";
+				
+				String RowRFree0 = "";
+				String RowRFree5 = "";
+				
+				String RowRFree0Equivalent = "";
+				String RowRFree5Equivalent = "";
+				String RowR5Equivalent = "";
+				
+				String LogOfR5Equivalent="";
+				
+				String LogOfCom0="";
+				String LogOfCom0Equivalent="";
+				String LogOfCom5="";
+				String LogOfCom5Equivalent="";
+				String LogOfR0="";
+				String LogOfRFree0="";
+				
+				String LogOfR0Equivalent="";
+				String LogOfRFree0Equivalent="";
+				
+				String LogOfR5="";
+				String LogOfRFree5="";
+				
+				String LogOfRFree5Equivalent="";
+				/*
+				for(int i=0 ;i < Container.size() ; ++i) {
+					for(int c=0 ;c < Container.get(i).size() ; ++c) {
+						if(Container.get(i).get(c).Completeness.equals("None") || Container.get(i).get(c).R_factor0Cycle.equals("None"))
+							Container.get(i).get(c).BuiltPDB="F";
+					}
+				}
+				*/
 				/*
 				Vector<Vector<DataContainer>> Container2 = new Vector<Vector<DataContainer>>();
 				for (int i = 0; i < Container.size(); ++i) {
@@ -828,14 +890,36 @@ public class ResultsInLatex {
 				*/
 				for (int i = 0; i < Container.size(); ++i) {
 					Col = "\\tiny Pipeline ";// avoiding repetition
+					
 					RowCom0 += "\\tiny " + e.ToolsNames.get(i);
 					RowCom5 += "\\tiny " + e.ToolsNames.get(i);
+					 RowCom0Equivalent  += "\\tiny " + e.ToolsNames.get(i);
+					 RowCom5Equivalent += "\\tiny " + e.ToolsNames.get(i);
+					
+					 RowCom0Models += "\\tiny " + e.ToolsNames.get(i);
+					 RowCom5Models+= "\\tiny " + e.ToolsNames.get(i);
+					 
+					 
+					 RowR0 += "\\tiny " + e.ToolsNames.get(i)+"_R";
+					 RowR0Equivalent+= "\\tiny " + e.ToolsNames.get(i)+"_R";
+					 RowROverfitting="\\tiny Overfitting" ;
+					 RowR5 += "\\tiny " + e.ToolsNames.get(i)+"_R";
+					 RowR5Overfitting="\\tiny Overfitting" ;
+					 
+					  RowRFree0 ="\\tiny " + e.ToolsNames.get(i)+"_R_{free}";
+					  
+					  RowRFree5 = "\\tiny " + e.ToolsNames.get(i)+"_R_{free}";
+					  
+					  RowRFree0Equivalent="\\tiny " + e.ToolsNames.get(i)+"_R_{free}";
+				
+					   RowRFree5Equivalent = "\\tiny " + e.ToolsNames.get(i)+"_R_{free}";
+					   RowR5Equivalent += "\\tiny " + e.ToolsNames.get(i)+"_R";
 					for (int m = 0; m < Container.size(); ++m) {
 
 						if (Col.length() == 0) {
-							Col += "\\tiny " + e.ToolsNames.get(m);
+							Col +=  " \\tiny " + e.ToolsNames.get(m);
 						} else {
-							Col += " & \\tiny " + e.ToolsNames.get(m);
+							Col +=  "& \\tiny " + e.ToolsNames.get(m);
 						}
 						float CountModelCom0 = 0;
 						float EquivalentFor0=0;
@@ -843,83 +927,446 @@ public class ResultsInLatex {
 						
 						float CountModelCom5 = 0;
 						float EquivalentFor5=0;
+						
+						float CountModelR = 0;
+						float EquivalentR=0;
+						float OverfittingR=0;
+						
+						float CountModelR5 = 0;
+						float OverfittingR5= 0;
+						
+						float CountRFree0=0;
+						float CountRFree5=0;
+						
+						float EquivalentRFree=0;
+						
+						float EquivalentR5=0;
+						float EquivalentRFree5=0;
+						
 						for (int model = 0; model < Container.get(i).size(); ++model) {
 							for (int modeComTo = 0; modeComTo < Container.get(m).size(); ++modeComTo) {
-								System.out.println(e.ToolsNames.get(m));
-								System.out.println(Folder.getName());
+								
+								
+								//System.out.println(Folder.getName());
 								if (Container.get(i).get(model).PDB_ID.equals(Container.get(m).get(modeComTo).PDB_ID)) {
 									if (Container.get(i).get(model).BuiltPDB.equals("T")
 											&& Container.get(m).get(modeComTo).BuiltPDB.equals("T")) {
 										CountModel++;
-											if( Integer.valueOf(Container.get(i).get(model).Completeness) - Integer
-													.valueOf(Container.get(m).get(modeComTo).Completeness) >= 1) {
+										if (  new BigDecimal(Container.get(i).get(model).Completeness).setScale(0, RoundingMode.HALF_UP).subtract( 
+												new BigDecimal(Container.get(m).get(modeComTo).Completeness).setScale(0, RoundingMode.HALF_UP)).compareTo(new BigDecimal("1")) >=0)  {
 										
 
 												CountModelCom0++;
-									}
-									if ( Integer.valueOf(Container.get(i).get(model).Completeness) - Integer
-													.valueOf(Container.get(m).get(modeComTo).Completeness) == 0) {
+												LogOfCom0+=e.ToolsNames.get(i) +"\t"+Container.get(i).get(model).PDB_ID+"\t"+	new BigDecimal(Container.get(i).get(model).Completeness).setScale(0, RoundingMode.HALF_UP)+"\t"+	e.ToolsNames.get(m)+"\t"+Container.get(m).get(modeComTo).PDB_ID+"\t"	+new BigDecimal(Container.get(m).get(modeComTo).Completeness).setScale(0, RoundingMode.HALF_UP)+"\n";				
+
+												
+										}
+									if (  new BigDecimal(Container.get(i).get(model).Completeness).setScale(0, RoundingMode.HALF_UP).subtract( 
+											new BigDecimal(Container.get(m).get(modeComTo).Completeness).setScale(0, RoundingMode.HALF_UP)).compareTo(new BigDecimal("0"))==0) {
 										// if(Integer.valueOf(Container.get(i).get(model).Completeness) -
 										// Integer.valueOf(Container.get(m).get(modeComTo).Completeness) >=5) {
 
 										EquivalentFor0++;
+										LogOfCom0Equivalent+=e.ToolsNames.get(i) +"\t"+Container.get(i).get(model).PDB_ID+"\t"+	new BigDecimal(Container.get(i).get(model).Completeness).setScale(0, RoundingMode.HALF_UP)+"\t"+	e.ToolsNames.get(m)+"\t"+Container.get(m).get(modeComTo).PDB_ID+"\t"	+new BigDecimal(Container.get(m).get(modeComTo).Completeness).setScale(0, RoundingMode.HALF_UP)+"\n";				
+
+										
 									}
 									
 									
-									if( Integer.valueOf(Container.get(i).get(model).Completeness) - Integer
-											.valueOf(Container.get(m).get(modeComTo).Completeness) >= 5) {
+									if (  new BigDecimal(Container.get(i).get(model).Completeness).setScale(0, RoundingMode.HALF_UP).subtract( 
+											new BigDecimal(Container.get(m).get(modeComTo).Completeness).setScale(0, RoundingMode.HALF_UP)).compareTo(new BigDecimal("5")) >=0)  {
+									
 								
 
 										CountModelCom5++;
+										LogOfCom5+=e.ToolsNames.get(i) +"\t"+Container.get(i).get(model).PDB_ID+"\t"+	new BigDecimal(Container.get(i).get(model).Completeness).setScale(0, RoundingMode.HALF_UP)+"\t"+	e.ToolsNames.get(m)+"\t"+Container.get(m).get(modeComTo).PDB_ID+"\t"	+new BigDecimal(Container.get(m).get(modeComTo).Completeness).setScale(0, RoundingMode.HALF_UP)+"\n";				
+	
+										
 							}
-							if ( Integer.valueOf(Container.get(i).get(model).Completeness) - Integer
-											.valueOf(Container.get(m).get(modeComTo).Completeness) < 5 &&Integer.valueOf(Container.get(i).get(model).Completeness) - Integer
-											.valueOf(Container.get(m).get(modeComTo).Completeness) >0 ) {
-								
+							if (new BigDecimal(Container.get(i).get(model).Completeness).setScale(0, RoundingMode.HALF_UP).subtract( 
+									new BigDecimal(Container.get(m).get(modeComTo).Completeness).setScale(0, RoundingMode.HALF_UP)).compareTo(new BigDecimal("5")) <0 && new BigDecimal(Container.get(i).get(model).Completeness).setScale(0, RoundingMode.HALF_UP).subtract( 
+											new BigDecimal(Container.get(m).get(modeComTo).Completeness).setScale(0, RoundingMode.HALF_UP)).compareTo(new BigDecimal("0")) >0 ) {
+								LogOfCom5Equivalent+=e.ToolsNames.get(i) +"\t"+Container.get(i).get(model).PDB_ID+"\t"+	new BigDecimal(Container.get(i).get(model).Completeness).setScale(0, RoundingMode.HALF_UP)+"\t"+	e.ToolsNames.get(m)+"\t"+Container.get(m).get(modeComTo).PDB_ID+"\t"	+new BigDecimal(Container.get(m).get(modeComTo).Completeness).setScale(0, RoundingMode.HALF_UP)+"\n";				
 
+								
 								EquivalentFor5++;
 							}
+							
+						//	System.out.println(Container.get(m).get(modeComTo).PDB_ID);	
+							//	System.out.println(Container.get(m).get(modeComTo).R_free0Cycle);	
+						//	if( new BigDecimal(Container.get(i).get(model).R_free0Cycle).subtract(new BigDecimal(Container.get(i).get(model).R_factor0Cycle) ).compareTo(new BigDecimal("0.05")) <= 0 &&  new BigDecimal(Container.get(m).get(modeComTo).R_free0Cycle).subtract(new BigDecimal(Container.get(m).get(modeComTo).R_factor0Cycle) ).compareTo(new BigDecimal("0.05")) > 0 ) {
+								if( new BigDecimal(Container.get(i).get(model).R_factor0Cycle).compareTo(new BigDecimal(Container.get(m).get(modeComTo).R_factor0Cycle)) < 0  ) {
+
 									
+								CountModelR ++;
+								LogOfR0+=e.ToolsNames.get(i) +"\t"+Container.get(i).get(model).PDB_ID+"\t"+	new BigDecimal(Container.get(i).get(model).R_factor0Cycle)+"\t"+	e.ToolsNames.get(m)+"\t"+Container.get(m).get(modeComTo).PDB_ID+"\t"	+new BigDecimal(Container.get(m).get(modeComTo).R_factor0Cycle)+"\n";				
+
+								
+						if( new BigDecimal(Container.get(i).get(model).R_free0Cycle).subtract(new BigDecimal(Container.get(i).get(model).R_factor0Cycle)).compareTo(new BigDecimal("0.05")) >0 ) {
+		
+								OverfittingR++;
+						}
+							}
+								
+								
+								
+								if( new BigDecimal(Container.get(i).get(model).R_free0Cycle).compareTo(new BigDecimal(Container.get(m).get(modeComTo).R_free0Cycle)) < 0  ) {
+
 									
+									CountRFree0++;
 									
+									LogOfRFree0+=e.ToolsNames.get(i) +"\t"+Container.get(i).get(model).PDB_ID+"\t"+	new BigDecimal(Container.get(i).get(model).R_free0Cycle)+"\t"+	e.ToolsNames.get(m)+"\t"+Container.get(m).get(modeComTo).PDB_ID+"\t"	+new BigDecimal(Container.get(m).get(modeComTo).R_free0Cycle)+"\n";				
+
+								}
+								
+								
+								if(   new BigDecimal(Container.get(i).get(model).R_factor0Cycle).add(new BigDecimal("0.05")).compareTo(new BigDecimal(Container.get(m).get(modeComTo).R_factor0Cycle)) <= 0  ) {
+
+									
+									LogOfR5+=e.ToolsNames.get(i) +"\t"+Container.get(i).get(model).PDB_ID+"\t"+	new BigDecimal(Container.get(i).get(model).R_factor0Cycle)+"\t"+	e.ToolsNames.get(m)+"\t"+Container.get(m).get(modeComTo).PDB_ID+"\t"	+new BigDecimal(Container.get(m).get(modeComTo).R_factor0Cycle)+"\n";				
+
+									CountModelR5++;
+									if( new BigDecimal(Container.get(i).get(model).R_free0Cycle).subtract(new BigDecimal(Container.get(i).get(model).R_factor0Cycle)).compareTo(new BigDecimal("0.05")) >0 ) {
+										
+										OverfittingR5++;
+								}
+								}	
+								
+								
+if( new BigDecimal(Container.get(i).get(model).R_free0Cycle).add(new BigDecimal("0.05")).compareTo(new BigDecimal(Container.get(m).get(modeComTo).R_free0Cycle)) <= 0  ) {
+
+		
+	LogOfRFree5+=e.ToolsNames.get(i) +"\t"+Container.get(i).get(model).PDB_ID+"\t"+	new BigDecimal(Container.get(i).get(model).R_free0Cycle)+"\t"+	e.ToolsNames.get(m)+"\t"+Container.get(m).get(modeComTo).PDB_ID+"\t"	+new BigDecimal(Container.get(m).get(modeComTo).R_free0Cycle)+"\n";				
+
+	CountRFree5++;
+									
+								}		
+								
+						//	if( new BigDecimal(Container.get(i).get(model).R_free0Cycle).subtract(new BigDecimal(Container.get(i).get(model).R_factor0Cycle) ).compareTo(new BigDecimal("0.05")) <= 0 &&  new BigDecimal(Container.get(m).get(modeComTo).R_free0Cycle).subtract(new BigDecimal(Container.get(m).get(modeComTo).R_factor0Cycle) ).compareTo(new BigDecimal("0.05")) <= 0 ) {
+								if( new BigDecimal(Container.get(i).get(model).R_factor0Cycle).compareTo(new BigDecimal(Container.get(m).get(modeComTo).R_factor0Cycle)) == 0  ) {
+		
+								 EquivalentR++;
+									LogOfR0Equivalent+=e.ToolsNames.get(i) +"\t"+Container.get(i).get(model).PDB_ID+"\t"+	new BigDecimal(Container.get(i).get(model).R_factor0Cycle)+"\t"+	e.ToolsNames.get(m)+"\t"+Container.get(m).get(modeComTo).PDB_ID+"\t"	+new BigDecimal(Container.get(m).get(modeComTo).R_factor0Cycle)+"\n";				
+
+							}
+								
+								
+								
+								if( new BigDecimal(Container.get(i).get(model).R_free0Cycle).compareTo(new BigDecimal(Container.get(m).get(modeComTo).R_free0Cycle)) == 0  ) {
+									
+									EquivalentRFree++;
+									LogOfRFree0Equivalent+=e.ToolsNames.get(i) +"\t"+Container.get(i).get(model).PDB_ID+"\t"+	new BigDecimal(Container.get(i).get(model).R_free0Cycle)+"\t"+	e.ToolsNames.get(m)+"\t"+Container.get(m).get(modeComTo).PDB_ID+"\t"	+new BigDecimal(Container.get(m).get(modeComTo).R_free0Cycle)+"\n";				
+
+								}
+							
+								
+if(new BigDecimal(Container.get(i).get(model).R_factor0Cycle).compareTo(new BigDecimal(Container.get(m).get(modeComTo).R_factor0Cycle)) < 0 && new BigDecimal(Container.get(i).get(model).R_factor0Cycle).add(new BigDecimal("0.05")).compareTo(new BigDecimal(Container.get(m).get(modeComTo).R_factor0Cycle)) > 0 &&  new BigDecimal(Container.get(i).get(model).R_factor0Cycle).compareTo(new BigDecimal(Container.get(m).get(modeComTo).R_factor0Cycle))!=0) {
+	System.out.println(e.ToolsNames.get(m));
+									
+	EquivalentR5++;
+	LogOfR5Equivalent+=e.ToolsNames.get(i) +"\t"+Container.get(i).get(model).PDB_ID+"\t"+	Container.get(i).get(model).R_factor0Cycle+"\t"+	e.ToolsNames.get(m)+"\t"+Container.get(m).get(modeComTo).PDB_ID+"\t"	+Container.get(m).get(modeComTo).R_factor0Cycle+"\n";				
+								}
+
+if(new BigDecimal(Container.get(i).get(model).R_free0Cycle).compareTo(new BigDecimal(Container.get(m).get(modeComTo).R_free0Cycle)) < 0 &&new BigDecimal(Container.get(i).get(model).R_free0Cycle).add(new BigDecimal("0.05")).compareTo(new BigDecimal(Container.get(m).get(modeComTo).R_free0Cycle)) > 0 &&  new BigDecimal(Container.get(i).get(model).R_free0Cycle).compareTo(new BigDecimal(Container.get(m).get(modeComTo).R_free0Cycle))!=0) {
+
+	System.out.println(e.ToolsNames.get(m));
+	EquivalentRFree5++;
+	
+	LogOfRFree5Equivalent+=e.ToolsNames.get(i) +"\t"+Container.get(i).get(model).PDB_ID+"\t"+	Container.get(i).get(model).R_free0Cycle+"\t"+	e.ToolsNames.get(m)+"\t"+Container.get(m).get(modeComTo).PDB_ID+"\t"	+Container.get(m).get(modeComTo).R_free0Cycle+"\n";				
+
+									
+								}
+								
 									}
 								}
 							}
 						}
-						if (RowCom0.length() == 0) {
+						/*
+						if (i==m) {
+							
+							RowCom0 += "& \\tiny -" ;
+							//RowCom0 += " \\tiny (=" + decim.format(((EquivalentFor0 * 100) / CountModel)) + "\\%)";
+							 RowCom0Equivalent += "& \\tiny -" ;
+							
+							
+							RowCom5 += "& \\tiny -";
+							
+							
+							 RowCom5Equivalent+= " &\\tiny- ";
+							
+							  RowCom0Models += "& \\tiny -";
+							  RowCom5Models+= "& \\tiny- ";
+							  
+							 
+							  RowR0 += "&  \\tiny -"  ;
+							  
+								  RowR0 += "& \\tiny- " ;
+								//RowCom0 += " \\tiny (=" + decim.format(((EquivalentFor0 * 100) / CountModel)) + "\\%)";
+							  RowR0Equivalent += "& \\tiny- ";
+							  
+							  
+								
+							  RowROverfitting+=   "& \\tiny- ";
+							  
+								
+							  RowR5 += "& \\tiny- " ;
+								 
+									 
+								  
+							
+							  RowR5Overfitting+=   "& \\tiny- " ;
+
+							 
+							  
+							
+						RowRFree0 += "& \\tiny-" ;
+								
+								
+									 RowRFree5 += "& \\tiny - ";
+									
+						}
+						*/
+						 if (RowCom0.length() == 0) {
 							RowCom0 += CountModelCom0;
 							RowCom5 += CountModelCom5;
+							RowR0 += CountModelR;
+							RowROverfitting+=OverfittingR;
+							RowR5+=CountModelR5;
+							RowR5Overfitting+=OverfittingR5;
+							RowR5Equivalent+=EquivalentR5;
+							RowRFree5Equivalent+=EquivalentRFree5;
 						}
-						else {
-							DecimalFormat decim = new DecimalFormat("#.##");
+						 else{
+							//DecimalFormat decim = new DecimalFormat("#.##");
+							DecimalFormat decim = new DecimalFormat("#");
+							if(((CountModelCom0 * 100) / CountModel) >= 30)
+							RowCom0 += "& \\cellcolor{gray!35} \\tiny " + decim.format(((CountModelCom0 * 100) / CountModel)) + "\\% " ;
+							if(((CountModelCom0 * 100) / CountModel) < 30)
+							RowCom0 += "& \\tiny " + decim.format(((CountModelCom0 * 100) / CountModel)) + "\\% " ;
+							//RowCom0 += " \\tiny (=" + decim.format(((EquivalentFor0 * 100) / CountModel)) + "\\%)";
+							 RowCom0Equivalent += "& \\tiny " + decim.format(((EquivalentFor0 * 100) / CountModel)) + "\\%" ;
 							
-							RowCom0 += "& \\tiny " + decim.format(((CountModelCom0 * 100) / CountModel)) + "\\% ";
-							RowCom0 += " \\tiny (=" + decim.format(((EquivalentFor0 * 100) / CountModel)) + "\\%)";
-							RowCom0 += " \\tiny " + EquivalentFor0  + "";
-							
+							if(((CountModelCom5 * 100) / CountModel) >=30)
+								RowCom5 += "& \\cellcolor{gray!35} \\tiny " + decim.format(((CountModelCom5 * 100) / CountModel)) + "\\% ";
+								if(((CountModelCom5 * 100) / CountModel)<30)
 							RowCom5 += "& \\tiny " + decim.format(((CountModelCom5 * 100) / CountModel)) + "\\% ";
-							RowCom5 += " \\tiny (=" + decim.format(((EquivalentFor5 * 100) / CountModel)) + "\\%)";
-							RowCom5 += " \\tiny " + EquivalentFor5  + "";
-						}
+							
+							//RowCom5 += " \\tiny (=" + decim.format(((EquivalentFor5 * 100) / CountModel)) + "\\%)";
+							 RowCom5Equivalent+= " &\\tiny " + decim.format(((EquivalentFor5 * 100) / CountModel)) + "\\%";
+							
+							  RowCom0Models += "& \\tiny "+(int)CountModel;
+							  RowCom5Models+= "& \\tiny "+(int)CountModel;
+							  
+							  if(((CountModelR * 100) / CountModel) >= 30)
+							  RowR0 += "& \\cellcolor{gray!35} \\tiny " + decim.format(((CountModelR * 100) / CountModel)) + "\\% ";
+							  if(((CountModelR * 100) / CountModel) < 30)
+							 RowR0 += "& \\tiny " + decim.format(((CountModelR * 100) / CountModel)) + "\\% " ;
+								//RowCom0 += " \\tiny (=" + decim.format(((EquivalentFor0 * 100) / CountModel)) + "\\%)";
+							  RowR0Equivalent += "& \\tiny " + decim.format(((EquivalentR * 100) / CountModel)) + "\\%";
+							  
+							  if(OverfittingR==0)
+								  RowROverfitting+=   "& \\tiny 0\\%"; 
+								  if(OverfittingR!=0)
+							  RowROverfitting+=   "& \\tiny " + decim.format(((OverfittingR * 100) / CountModelR)) +"\\%";
+							  
+								  if(((CountModelR5 * 100) / CountModel) >= 30)
+							  RowR5 += "& \\cellcolor{gray!35} \\tiny " + decim.format(((CountModelR5 * 100) / CountModel)) + "\\% " ;
+								  if(((CountModelR5 * 100) / CountModel) < 30)
+									  RowR5 += "& \\tiny " + decim.format(((CountModelR5 * 100) / CountModel)) + "\\% " ;
+								  
+							  if(OverfittingR5==0)
+						       RowR5Overfitting+=   "& \\tiny 0 \\%";
+							  if(OverfittingR5!=0)
+							  RowR5Overfitting+=   "& \\tiny " + decim.format(((OverfittingR5 * 100) / CountModelR5)) +"\\%";
+
+							 
+							  
+							  if(((CountRFree0 * 100) / CountModel) >= 30)
+						 RowRFree0 += "& \\cellcolor{gray!35} \\tiny " + decim.format(((CountRFree0 * 100) / CountModel)) + "\\% " ;
+								if(((CountRFree0 * 100) / CountModel) < 30)
+						RowRFree0 += "& \\tiny " + decim.format(((CountRFree0 * 100) / CountModel)) + "\\% " ;
+								
+								 if(((CountRFree5 * 100) / CountModel) >= 30)
+									 RowRFree5 += "& \\cellcolor{gray!35} \\tiny " + decim.format(((CountRFree5 * 100) / CountModel)) + "\\% " ;
+								if(((CountRFree5 * 100) / CountModel) < 30)
+								RowRFree5 += "& \\tiny " + decim.format(((CountRFree5 * 100) / CountModel)) + "\\% " ;	
+							  
+					RowRFree0Equivalent+=	"& \\tiny " + decim.format(((EquivalentRFree * 100) / CountModel)) + "\\%";		
+					
+					 RowR5Equivalent += "& \\tiny " + decim.format(((EquivalentR5 * 100) / CountModel)) + "\\%";
+					
+					 RowRFree5Equivalent+=	"& \\tiny " + decim.format(((EquivalentRFree5 * 100) / CountModel)) + "\\%";
+					
+					 
+					 LogOfCom0+="\n Number of models: "+CountModelCom0+" \n";
+					 
+					 LogOfCom0Equivalent+="\n Number of models: "+EquivalentFor0+" \n";
+					 
+					 LogOfCom5+="\n Number of models: "+CountModelCom5+" \n";
+					 
+					 LogOfCom5Equivalent+="\n Number of models: "+EquivalentFor5+" \n";
+					 LogOfR0+="\n Number of models: "+CountModelR+" \n";
+					 
+					 LogOfRFree0+="\n Number of models: "+CountRFree0+" \n";
+					 
+LogOfR0Equivalent+="\n Number of models: "+EquivalentR+" \n";
+
+					 LogOfRFree0Equivalent+="\n Number of models: "+EquivalentRFree+" \n";
+					 LogOfR5+="\n Number of models: "+CountModelR5+" \n";
+					 
+					 LogOfRFree5+="\n Number of models: "+CountRFree5+" \n";
+					 LogOfRFree5Equivalent+="\n Number of models: "+EquivalentRFree5+" \n";
+						 }
 					}
+					
+					
 					RowCom0 += "\\\\ \\hline \n ";
 					RowCom5 += "\\\\ \\hline \n ";
-
+					
+					RowCom0Equivalent += "\\\\ \\hline \n ";
+					RowCom0Models += "\\\\ \\hline \n ";
+					
+					RowCom5Equivalent += "\\\\ \\hline \n ";
+					RowCom5Models += "\\\\ \\hline \n ";
+					
+					RowR0 += "\\\\  \n ";
+					RowR0+=RowRFree0 +"\\\\ \\hline \n ";
+					//RowR0 += "\\\\ \\hline \n ";
+					
+					
+					RowR0Equivalent += "\\\\  \n ";
+					RowR0Equivalent+=RowRFree0Equivalent +"\\\\ \\hline \n ";
+					
+					
+					//RowR5 += "\\\\ \\hline \n ";
+					RowR5 += "\\\\  \n ";
+					RowR5+=RowRFree5 +"\\\\ \\hline \n ";
+					
+					RowR5Equivalent += "\\\\  \n ";
+					RowR5Equivalent+=RowRFree5Equivalent +"\\\\ \\hline \n ";
+				System.out.println(RowR5Equivalent);
 				}
-				System.out.println(Col);
-				System.out.println(RowCom0);
+				//System.out.println(Col);
+				//System.out.println(RowCom0);
 				Table += Col + "\\\\ \\hline \n ";
 				Table += RowCom0;
-				
+				Table=FormatingPipelinesNames(Table,true);
 				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "Com0.tex", Table);
 			
 				String TableCom5 = Col + "\\\\ \\hline \n ";
 				TableCom5 += RowCom5;
+				TableCom5=FormatingPipelinesNames(TableCom5,true);
 				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "Com5.tex", TableCom5);
+				
+				String TableCom0Equivalent = Col + "\\\\ \\hline \n ";
+				TableCom0Equivalent += RowCom0Equivalent;
+				TableCom0Equivalent=	FormatingPipelinesNames(TableCom0Equivalent,true);
+				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "Com0Equivalent.tex", TableCom0Equivalent);
+				
+				String TableCom5Equivalent = Col + "\\\\ \\hline \n ";
+				TableCom5Equivalent += RowCom5Equivalent;
+				TableCom5Equivalent=	FormatingPipelinesNames(TableCom5Equivalent,true);
+				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "Com5Equivalent.tex", TableCom5Equivalent);
+			
+				String TableCom0Models = Col + "\\\\ \\hline \n ";
+				TableCom0Models += RowCom0Models;
+				TableCom0Models=FormatingPipelinesNames(TableCom0Models,true);
+				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "Com0Models.tex", TableCom0Models);
+				
+				
+				String TableCom5Models = Col + "\\\\ \\hline \n ";
+				TableCom5Models += RowCom5Models;
+				TableCom5Models=FormatingPipelinesNames(TableCom5Models,true);
+				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "Com5Models.tex", TableCom5Models);
+				
+				
+				String TableRModels = Col + "\\\\ \\hline \n ";
+				TableRModels += RowR0;
+				TableRModels=FormatingPipelinesNames(TableRModels,true);
+				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "RModels.tex", TableRModels);
+				
+				
+				String TableRModelsEquivalent = Col + "\\\\ \\hline \n ";
+				TableRModelsEquivalent += RowR0Equivalent;
+				TableRModelsEquivalent=FormatingPipelinesNames(TableRModelsEquivalent,true);
+				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "REquivalentModels.tex", TableRModelsEquivalent);
+			
+			
+				String TableR5Models = Col + "\\\\ \\hline \n ";
+				TableR5Models += RowR5;
+				TableR5Models=FormatingPipelinesNames(TableR5Models,true);
+				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "R5Models.tex", TableR5Models);
+			
+			
+				String TableRModelsEquivalent5 = Col + "\\\\ \\hline \n ";
+				TableRModelsEquivalent5 += RowR5Equivalent;
+				TableRModelsEquivalent5=FormatingPipelinesNames(TableRModelsEquivalent5,true);
+				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "REquivalent5Models.tex", TableRModelsEquivalent5);
+				
+				
+				new RunComparison().CheckDirAndFile("MatricesLogs");
+				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfR5Equivalent.txt", FormatingPipelinesNames(LogOfR5Equivalent,false));
+				
+				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfCom0.txt", FormatingPipelinesNames(LogOfCom0,false));
+
+				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfCom0Equivalent.txt", FormatingPipelinesNames(LogOfCom0Equivalent,false));
+				
+				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfCom5.txt", FormatingPipelinesNames(LogOfCom5,false));
+				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfCom5Equivalent.txt", FormatingPipelinesNames(LogOfCom5Equivalent,false));
+				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfR0.txt", FormatingPipelinesNames(LogOfR0,false));
+				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfRFree0.txt", FormatingPipelinesNames(LogOfRFree0,false));
+
+					  
+				
+				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfR0Equivalent.txt", FormatingPipelinesNames(LogOfR0Equivalent,false));
+						new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfRFree0Equivalent.txt", FormatingPipelinesNames(LogOfRFree0Equivalent,false));
+
+						new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfR5.txt", FormatingPipelinesNames(LogOfR5,false));
+	
+						
+						new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfRFree5.txt", FormatingPipelinesNames(LogOfRFree5,false));
+						
+						new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfRFree5Equivalent.txt", FormatingPipelinesNames(LogOfRFree5Equivalent,false));
+
 			}
 
 		}
 
+	}
+
+	String FormatingPipelinesNames(String Table, boolean RemoveDatasetNames) {
+		if(RemoveDatasetNames==true) {
+		Table=Table.replaceAll("hancs", "");
+		Table=Table.replaceAll("mrncs", "");
+		Table=Table.replaceAll("noncs", "");
+		}
+		
+		Table=Table.replaceAll(".xlsx", "");
+		Table=Table.replaceAll("ARPwARPB25", "ARP(B 25I)");
+		Table=Table.replaceAll("ARPwARPB5", "ARP(B 5I)");
+		Table=Table.replaceAll("ARPwARP", "ARP");
+		Table=Table.replaceAll("Buccaneeri1-25", "i1(25I)");
+		Table=Table.replaceAll("Buccaneeri2-25", "i2(25I)");
+		Table=Table.replaceAll("Buccaneeri1-5", "i1(5I)");
+		Table=Table.replaceAll("Buccaneeri2-5", "i2(5I)");
+		Table=Table.replaceAll("Buccaneeri2W-25", "i2W(25I)");
+		Table=Table.replaceAll("Buccaneeri2W-5", "i2W(5I)");
+		Table=Table.replaceAll("PhenixUnmodifiedPhases", "Phenix U");
+		
+		/*
+		Table=Table.replaceAll(".xlsx", "");
+		Table=Table.replaceAll("ARPwARPB25", "ARP/wARP(i1(25I))");
+		Table=Table.replaceAll("ARPwARPB5", "ARP/wARP(i1(5I))");
+		Table=Table.replaceAll("ARPwARP", "ARP/wARP");
+		Table=Table.replaceAll("Buccaneeri1-25", "Bucc-i1(25I)");
+		Table=Table.replaceAll("Buccaneeri2-25", "Bucc-i2(25I)");
+		Table=Table.replaceAll("Buccaneeri1-5", "Bucc-i1(5I)");
+		Table=Table.replaceAll("Buccaneeri2-5", "Bucc-i2(5I)");
+		Table=Table.replaceAll("Buccaneeri2W-25", "Bucc-i1W(25I)");
+		Table=Table.replaceAll("Buccaneeri2W-5", "Bucc-i2W(5I)");
+		Table=Table.replaceAll("PhenixUnmodifiedPhases", "Phenix(UN)");
+		*/
+		return Table;
 	}
 
 	void LongMatrixOfResults(String ResultsDir) throws IOException {
@@ -929,7 +1376,7 @@ public class ResultsInLatex {
 		
 		Vector<Vector<Vector<DataContainer>>> AllDatasetContainer = new Vector<Vector<Vector<DataContainer>>>();
 		Vector<String> DatasetNames = new Vector<String>();
-		Vector<LoadExcel> ExcelNames = new Vector<LoadExcel>();
+		Vector<ExcelLoader> ExcelNames = new Vector<ExcelLoader>();
 		Vector<String> ExcelNamesAsInTableHeader = new Vector<String>();
 		String TableHeader = "\\tiny Pipelines && ";
 		String ImprovemedBy = "\\tiny Improvemed By & ";
@@ -938,7 +1385,7 @@ public class ResultsInLatex {
 
 			if (Folder.isDirectory() && !Folder.getName().equals("Headers")) {
 
-				LoadExcel e = new LoadExcel();
+				ExcelLoader e = new ExcelLoader();
 
 				Vector<Vector<DataContainer>> CurrentReading = new Vector<Vector<DataContainer>>();
 				for (File Excel : Folder.listFiles()) {
