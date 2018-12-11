@@ -20,6 +20,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.RegexFileFilter;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -27,6 +28,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import Analyser.PipelineLog;
 import NotUsed.ARPResultsAnalysis;
+import Run.Preparer;
 import Run.RunComparison;
 import Run.RunningPram;
 
@@ -191,7 +193,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 		new RunComparison().CheckDirAndFile(PATHLogs);
 		new RunComparison().CheckDirAndFile("./BuccaneerResults/IntermediateLogs");    
 		new RunComparison().CheckDirAndFile("./BuccaneerResults/IntermediatePDBs");   
-		
+		new RunComparison().CheckDirAndFile("ParametersUsed");
 		 Vector<String> FilesNames= new Vector <String>();
 		
 		 File[] processedfiles = new File(PATHLogs).listFiles();
@@ -201,7 +203,15 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 		 }
 		 
 		 
-     File[] files = new File(RunningPram.DataPath).listFiles();
+		 File[] files=null ;
+	     if(new File(RunningPram.DataPath).isDirectory()) {
+	    	 files = new File(RunningPram.DataPath).listFiles();
+	     }
+		if(new File(RunningPram.DataPath).isFile()) {
+			
+			files = ArrayUtils.add(files, new File(RunningPram.DataPath));
+		}
+		
      FilesNames=RBM.AddFileNameToList(FilesNames);
      System.out.println("Data Path "+ RunningPram.DataPath);
 		 for (File file : files) {
@@ -230,7 +240,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 	}
 
 	PipelineLog RunBuccaneer(String FilePathAndName,String FileName) throws InterruptedException{
-		Thread.sleep(60000);// avoiding conflicts between threads in using SQL
+		//Thread.sleep(60000);// avoiding conflicts between threads in using SQL
 		System.out.println(Thread.currentThread().getName()+" Proccessing "+FileName);
 		Timer timer = new Timer();
 		//PDBID=FileName;
@@ -256,14 +266,26 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 			 "--seqin",seqin,
 			 "--colinfo","FP,SIGFP",
 			 "--colinhl","parrot.ABCD.A,parrot.ABCD.B,parrot.ABCD.C,parrot.ABCD.D",
-			 "--iterations","5",
-			 
+			 "--iterations",RunningPram.BuccaneerIterations,
 			 "--mtz-name",FileName,
 			 
 	};
+	 if(RunningPram.UsingRFree.equals("T")) {
+		 String[]callAndArgsWithRfree= {
+				 "ccp4-python",RunningPram.Buccaneeri2PipeLine,
+				 "--mtzin",mtzin,
+				 "--seqin",seqin,
+				 "--colinfo","FP,SIGFP",
+				 "--colinhl","parrot.ABCD.A,parrot.ABCD.B,parrot.ABCD.C,parrot.ABCD.D",
+				 "--colinfree","FreeR_flag",
+				 "--iterations",RunningPram.BuccaneerIterations,
+				 "--mtz-name",FileName,
+				 
+		};
+		 callAndArgs=callAndArgsWithRfree;//update parameters  
+	 }
+	 new Preparer().WriteTxtFile("ParametersUsed/"+FileName+".txt", new Date().toString()+" \n "+ Arrays.toString(callAndArgs));
 
-		
-	 
 	Process p = Runtime.getRuntime().exec(callAndArgs);	             
 
 	BufferedReader stdInput = new BufferedReader(new 

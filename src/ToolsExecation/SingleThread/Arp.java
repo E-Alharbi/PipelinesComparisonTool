@@ -22,6 +22,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.FileFileFilter;
 import org.apache.commons.io.filefilter.RegexFileFilter;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -30,6 +31,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import Analyser.ExcelSheet;
 import Analyser.PipelineLog;
 import NotUsed.ARPResultsAnalysis;
+import Run.Preparer;
 import Run.RunComparison;
 import Run.RunningPram;
 
@@ -182,10 +184,17 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 		new RunComparison().CheckDirAndFile("./wArpResults/WorkingDir");
 		new RunComparison().CheckDirAndFile("./wArpResults/IntermediateLogs");    
 		new RunComparison().CheckDirAndFile("./wArpResults/IntermediatePDBs");
-     Vector<String> FilesNames= new Vector <String>();
-     File[] files = new File(RunningPram.DataPath).listFiles();
-	
-	
+		new RunComparison().CheckDirAndFile("ParametersUsed");
+		Vector<String> FilesNames= new Vector <String>();
+    // File[] files = new File(RunningPram.DataPath).listFiles();
+     File[] files=null ;
+     if(new File(RunningPram.DataPath).isDirectory()) {
+    	 files = new File(RunningPram.DataPath).listFiles();
+     }
+	if(new File(RunningPram.DataPath).isFile()) {
+		
+		files = ArrayUtils.add(files, new File(RunningPram.DataPath));
+	}
 	
 	
      File[] processedfiles = new File(PATHLogs).listFiles();
@@ -198,6 +207,8 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 	 FilesNames=RunArp.AddFileNameToList(FilesNames);
 		 for (File file : files) {
 	String CaseName=file.getName().replaceAll("."+FilenameUtils.getExtension(file.getName()),"");
+	
+	
 	if(!FilesNames.contains(CaseName)){
 		RunArp.WriteFileNameToList(CaseName,"./ProcessedFilesNamesArp.txt");
    // String FileName=file.getParentFile()+"/"+file.getName().substring(0,file.getName().indexOf('.'));
@@ -253,6 +264,7 @@ if(new File(FilePathAndName+".seq").exists())
 seqin=FilePathAndName+".seq";
 String[]ArpParm;
 if(RunningPram.UseBuccModels.trim().equals("T")) {
+	
 	String[]callAndArgs= {
 			// /Applications/arp_warp_7.6/share/auto_tracing.sh 
 		RunningPram.wArpAutotracing,
@@ -269,7 +281,26 @@ if(RunningPram.UseBuccModels.trim().equals("T")) {
 		"seqin",seqin,
 		"modelin",GetModelPath(FileName+".pdb")
 		};
-	 ArpParm=callAndArgs;
+	ArpParm=callAndArgs;
+	if(RunningPram.UsingRFree.equals("F")) {
+		String[]callAndArgsNoRfree= {
+				// /Applications/arp_warp_7.6/share/auto_tracing.sh 
+			RunningPram.wArpAutotracing,
+			"datafile",mtzin,
+			"workdir",System.getProperty("user.dir")+"/wArpResults/WorkingDir",
+			//"phibest","parrot.F_phi.phi",
+			"phibest","hltofom.Phi_fom.phi",
+			//"fom","FOM",
+			"fom","hltofom.Phi_fom.fom",
+			"fp","FP",
+			"sigfp","SIGFP",
+			"jobId",FileName,
+			"seqin",seqin,
+			"modelin",GetModelPath(FileName+".pdb")
+			};
+		 ArpParm=callAndArgsNoRfree;
+	}
+	
 	if(GetModelPath(FileName+".pdb").equals("")) {
 		res.LogFile+="Buccaneer model not found!!";
 		return res;
@@ -295,8 +326,28 @@ else {
 	//"fakedata","0.33;0.75;1"
 	};
 	 ArpParm=callAndArgs;
+	 
+	 if(RunningPram.UsingRFree.equals("F")) {
+		 String[]callAndArgsNoRFree= {
+					// /Applications/arp_warp_7.6/share/auto_tracing.sh 
+				RunningPram.wArpAutotracing,
+				"datafile",mtzin,
+				"workdir",System.getProperty("user.dir")+"/wArpResults/WorkingDir",
+				//"phibest","parrot.F_phi.phi",
+				"phibest","hltofom.Phi_fom.phi",
+				//"fom","FOM",
+				"fom","hltofom.Phi_fom.fom",
+				"fp","FP",
+				"sigfp","SIGFP",
+				"jobId",FileName,
+				"seqin",seqin,
+				//"fakedata","0.33;0.75;1"
+				};
+		 ArpParm=callAndArgsNoRFree;
+	 }
 }
 
+new Preparer().WriteTxtFile("ParametersUsed/"+FileName+".txt", new Date().toString()+" \n "+ Arrays.toString(ArpParm));
 	 Process p = Runtime.getRuntime().exec(ArpParm);
 
 		             
@@ -357,8 +408,19 @@ else {
 	         		res.TimeTaking=TimeTaking;
 	         		res.ProcessStatus="Success";
 	         		
-	         		 FileUtils.copyFile(new File(System.getProperty("user.dir")+"/wArpResults/WorkingDir/"+JobID+"/"+FileName+"_warpNtrace.pdb"),  new File("./wArpResults/PDBs/"+FileName+".pdb"));
-		             while ((st = stdError.readLine()) != null) {
+	         	//	 FileUtils.copyFile(new File(System.getProperty("user.dir")+"/wArpResults/WorkingDir/"+JobID+"/"+FileName+"_warpNtrace.pdb"),  new File("./wArpResults/PDBs/"+FileName+".pdb"));
+	         		 //FileUtils.deleteDirectory(new File(System.getProperty("user.dir")+"/wArpResults/WorkingDir/"+JobID));// removing job dir to save storage   
+	         		
+	         		Collection<File> wPDB = FileUtils.listFiles(
+	        				 new File(System.getProperty("user.dir")+"/wArpResults/WorkingDir/"+JobID+"/"), 
+	        				 new RegexFileFilter(".*_warpNtrace.pdb$"), 
+	        				  FileFileFilter.FILE
+	        				);
+	        		 Vector <File>FinalPDB = new   Vector <File>();
+	        		 FinalPDB.addAll(wPDB);
+	 	       	 FileUtils.copyFile(FinalPDB.get(0),  new File("./wArpResults/PDBs/"+FileName+".pdb"));
+
+	         		 while ((st = stdError.readLine()) != null) {
 
 		                 System.out.println(st);
 

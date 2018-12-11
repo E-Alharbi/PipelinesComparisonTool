@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -154,8 +155,16 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 		new RunComparison().CheckDirAndFile("./CrankResults/WorkingDir");
 		new RunComparison().CheckDirAndFile("./CrankResults/IntermediateLogs");    
 		new RunComparison().CheckDirAndFile("./CrankResults/IntermediatePDBs");
+		new RunComparison().CheckDirAndFile("ParametersUsed");
      Vector<String> FilesNames= new Vector <String>();
-     File[] files = new File(RunningPram.DataPath).listFiles();
+     File[] files=null ;
+     if(new File(RunningPram.DataPath).isDirectory()) {
+    	 files = new File(RunningPram.DataPath).listFiles();
+     }
+	if(new File(RunningPram.DataPath).isFile()) {
+		
+		files = ArrayUtils.add(files, new File(RunningPram.DataPath));
+	}
 	
 	
 	
@@ -240,10 +249,24 @@ seqin=FilePathAndName+".seq";
 		"./CrankResults/PDBs/"+FileName+".pdb",
 		"./CrankResults/MTZout/"+FileName+".mtz",};
 	
+	 if(RunningPram.UsingRFree.equals("F")) {
+		 String[]callAndArgsNoRfree= {
+					"sh","crankNoRfree.sh",
+					//"sh",FileName+"/crank.sh",
+					FileName,
+					RunningPram.CrankPipeLine,
+					seqin,
+					mtzin,
+					"./CrankResults/PDBs/"+FileName+".pdb",
+					"./CrankResults/MTZout/"+FileName+".mtz",};
+		 callAndArgs=callAndArgsNoRfree;
+	 }
 	// ProcessBuilder builder = new ProcessBuilder( FileName);
 	 //builder.directory( new File( "..." ).getAbsoluteFile() );
 System.out.println(FileName);
 	// Process p = Runtime.getRuntime().exec(callAndArgs, null,new File("./"+FileName));
+new Preparer().WriteTxtFile("ParametersUsed/"+FileName+".txt", new Date().toString()+" \n "+ Arrays.toString(callAndArgs));
+
 Process p = Runtime.getRuntime().exec(callAndArgs);
 		             
 

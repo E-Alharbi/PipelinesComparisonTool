@@ -14,6 +14,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.RegexFileFilter;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
@@ -24,6 +25,7 @@ public class Preparer {
 	 *  scripts that need to submit as jobs in the cluster server with minimum effort.
 	 *  Calling this class form RunComparsion    
 	  */
+String ScriptHeader="";	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
@@ -38,6 +40,28 @@ public class Preparer {
 		
 	}
 public void Prepare(Vector<String> Tools) throws IOException {
+	if(RunningPram.ClusterServerGrid=="Slurm") {
+		ScriptHeader="#!/bin/bash \n";
+		//ScriptHeader+="#SBATCH --job-name=Emadjob          # Job name \n";
+		ScriptHeader+="#SBATCH --time=8:00:00                # Time limit hrs:min:sec \n";
+		ScriptHeader+="#SBATCH --mem=4000                     # Total memory limit \n";
+		//ScriptHeader+="#SBATCH -o logs/log_emad_o     # Standard output and error log \n";
+		//ScriptHeader+="#SBATCH -e logs/log_emad_e     # Standard output and error log \n";
+		ScriptHeader+="#SBATCH --mail-type=ALL         # Mail events (NONE, BEGIN, END, FAIL, ALL) \n";
+		ScriptHeader+="#SBATCH --mail-user=emra500@york.ac.uk   # Where to send mail \n";	
+		ScriptHeader+="#SBATCH --ntasks-per-node=1            # How many tasks on each node \n";
+		ScriptHeader+="#SBATCH --account=CS-MPMSEDM-2018 \n";
+		ScriptHeader+="module load chem/ccp4/7.0.066 \n";
+		ScriptHeader+="module load chem/phenix/1.14-3260 \n";
+		
+	}
+	else {
+	ScriptHeader="";
+	ScriptHeader+="#$ -cwd";
+	ScriptHeader+="#$ -V";
+	ScriptHeader+="#$ -l h_vmem=2G";
+	ScriptHeader+="#$ -l h_rt=48:00:00";
+	}
 	
 	String ReadMe= ReadResourceAsString("/ReadMe");
 	WriteTxtFile("./ReadMe.txt",ReadMe);
@@ -51,23 +75,49 @@ public void Prepare(Vector<String> Tools) throws IOException {
 		a.addAll(files);
 		
 		RunningPram.PhenixMolProbity=a.get(0).getAbsolutePath();
+		
+		if(Tools.contains("Buccaneeri1"))
+		   Tools.add("Buccaneeri1I5");
+		if(Tools.contains("Buccaneeri2"))
+		   Tools.add("Buccaneeri2I5");
+		if(Tools.contains("Buccaneeri2W"))
+		   Tools.add("Buccaneeri2WI5");
+		if(Tools.contains("Phenix"))
+			   Tools.add("PhenixHLA");
+		if(Tools.contains("Buccaneeri1I5"))
+		Tools.add("ArpWArpAfterBuccaneeri1I5");
+	
+		
 	 CreaterFolders(Tools);
-	 if(Tools.contains("Phenix"))
-		 PhenixPrepare();
+	 if(Tools.contains("Phenix")) {
+		
+	   PhenixPrepare(RunningPram.PhenixPhases,"Phenix");
+	 }
+	 if(Tools.contains("PhenixHLA"))
+	   PhenixPrepare("PHIB,FOM,HLA,HLB,HLC,HLD","PhenixHLA");
 	 if(Tools.contains("ArpWArp"))
-		 ArpwArpPrepare(false);
+	ArpwArpPrepare(false, null,null);
 	 if(Tools.contains("Buccaneeri1"))
-		 Bucci1Prepare();
+     Bucci1Prepare("25","Buccaneeri1");
+	 if(Tools.contains("Buccaneeri1I5"))
+	 Bucci1Prepare("5","Buccaneeri1I5");
 	 if(Tools.contains("Buccaneeri2"))
-	     Bucci2Prepare(false);
+	 Bucci2Prepare(false,"25","Buccaneeri2");
+	 if(Tools.contains("Buccaneeri2I5"))
+	  Bucci2Prepare(false,"5","Buccaneeri2I5");
 	 if(Tools.contains("Buccaneeri2W"))
-	   Bucci2Prepare(true);
+	 Bucci2Prepare(true,"25","Buccaneeri2W");
+	 if(Tools.contains("Buccaneeri2WI5"))
+	 Bucci2Prepare(true,"5","Buccaneeri2WI5");
 	 if(Tools.contains("Crank"))
 	 Crank();
 	 if(Tools.contains("ArpWArpAfterBuccaneeri1"))
-	ArpwArpPrepare(true);
+	 ArpwArpPrepare(true,"ArpWArpAfterBuccaneeri1","Buccaneeri1");
+	 if(Tools.contains("ArpWArpAfterBuccaneeri1I5"))
+	ArpwArpPrepare(true,"ArpWArpAfterBuccaneeri1I5","Buccaneeri1I5");
+	
 }
-boolean PhenixPrepare() throws IOException {
+boolean PhenixPrepare(String Phases, String WorkFolder) throws IOException {
 	String PHENIX=System.getenv("PHENIX");
 	if(PHENIX.equals(""))
 	{
@@ -95,45 +145,45 @@ return false;
 		int NumberOfFile=new File(RunningPram.ChltomDataPath).listFiles().length;
 		NumberOfFile=NumberOfFile/3;//because mtz,seq and pdb	
 	Vector<String> PhenixScript = new Vector<String>();
-	PhenixScript.add("#$ -cwd");
-	PhenixScript.add("#$ -V");
-	PhenixScript.add("#$ -l h_vmem=2G");
-	PhenixScript.add("#$ -l h_rt=48:00:00");
+	PhenixScript.addAll(Arrays.asList(ScriptHeader.split("\n")));
+	
 	PhenixScript.add("export MALLOC_ARENA_MAX=4");
 	PhenixScript.add("vmArgs=\"-Xmx100m -XX:ParallelGCThreads=1\"");
-	PhenixScript.add("java $vmArgs -jar RunComparison.jar RunPhenix data="+new File(RunningPram.ChltomDataPath).getAbsolutePath()+" PhenixAutobuild="+RunningPram.PhenixAutobuild+" \\ << eor");
+	PhenixScript.add("java $vmArgs -jar RunComparison.jar RunPhenix data="+new File(RunningPram.ChltomDataPath).getAbsolutePath()+" PhenixAutobuild="+RunningPram.PhenixAutobuild+" UsingRFree="+RunningPram.UsingRFree+" Phases="+Phases+" \\ << eor");
 	PhenixScript.add("END");	
 	PhenixScript.add("eor");	
 	String PhenixSh="";
 	for(int i=0 ; i < PhenixScript.size();++i) {
 		PhenixSh+=PhenixScript.get(i)+"\n";
 	}
-	WriteTxtFile("./Phenix/Phenix.sh",PhenixSh);
-	CreateManagerScript(NumberOfFile,"Phenix","Phenix.sh");
+	WriteTxtFile("./"+WorkFolder+"/Phenix.sh",PhenixSh);
+	CreateManagerScript(NumberOfFile,WorkFolder,"Phenix.sh");
 	
 	//Analyser
 	String Analyser= ReadResourceAsString("/Analyser.sh");
+	if(RunningPram.ClusterServerGrid=="Slurm")
+		Analyser= ReadResourceAsString("/AnalyserSlurm.sh");
 	Analyser=Analyser.replace("&ccp4&", System.getenv("CCP4"));
 	Analyser=Analyser.replace("&data&", new File(RunningPram.DataPath).getAbsolutePath());
 	Analyser=Analyser.replace("&cstat&", RunningPram.castat2Path);
-	Analyser=Analyser.replace("&Logs&", "../Phenix/PhenixResults/PhinexLogs");
-	Analyser=Analyser.replace("&PDBs&", "../Phenix/PhenixResults/PDBs/");
+	Analyser=Analyser.replace("&Logs&", "../"+WorkFolder+"/PhenixResults/PhinexLogs");
+	Analyser=Analyser.replace("&PDBs&", "../"+WorkFolder+"/PhenixResults/PDBs/");
 	Analyser=Analyser.replace("&Tool&", "Phenix");
-	Analyser=Analyser.replace("&IPDBs&", "../Phenix/PhenixResults/IntermediatePDBs/");
-	Analyser=Analyser.replace("&ILogs&", "../Phenix/PhenixResults/IntermediateLogs/");
+	Analyser=Analyser.replace("&IPDBs&", "../"+WorkFolder+"/PhenixResults/IntermediatePDBs/");
+	Analyser=Analyser.replace("&ILogs&", "../"+WorkFolder+"/PhenixResults/IntermediateLogs/");
 	Analyser=Analyser.replace("&Mol&", RunningPram.PhenixMolProbity);
 	Analyser=Analyser.replace("&UsingMol&", RunningPram.UsingMolProbity);
 	Analyser=Analyser.replace("&CPhasesMatchPhases&", RunningPram.PhasesUsedCPhasesMatch);
-	WriteTxtFile("./PhenixAnalyser/PhenixAnalyser.sh",Analyser);
+	WriteTxtFile("./"+WorkFolder+"Analyser/PhenixAnalyser.sh",Analyser);
 	return true;
 }
 
 
-boolean ArpwArpPrepare(boolean Bucc) throws IOException {
+boolean ArpwArpPrepare(boolean Bucc, String WorkFolder, String BuccFolder) throws IOException {
 	String warpbin=System.getenv("warpbin");
 	if(warpbin.equals(""))
 	{
-		System.out.println("Unable to find warpbin. Be sure you have Phenix and you set the Phenix variables ");
+		System.out.println("Unable to find warpbin. Be sure you have Arp/wARP and you set the Arp/wARP variables ");
 	return false;
 	}
 			
@@ -141,16 +191,13 @@ boolean ArpwArpPrepare(boolean Bucc) throws IOException {
 	int NumberOfFile=new File(RunningPram.ChltomDataPath).listFiles().length;
 	NumberOfFile=NumberOfFile/3;//because mtz,seq and pdb	
 	Vector<String> Script = new Vector<String>();
-	Script.add("#$ -cwd");
-	Script.add("#$ -V");
-	Script.add("#$ -l h_vmem=2G");
-	Script.add("#$ -l h_rt=48:00:00");
+	Script.addAll(Arrays.asList(ScriptHeader.split("\n")));
 	Script.add("export MALLOC_ARENA_MAX=4");
 	Script.add("vmArgs=\"-Xmx100m -XX:ParallelGCThreads=1\"");
 	if(Bucc==false)
-	Script.add("java $vmArgs -jar RunComparison.jar RunwArp data="+new File(RunningPram.ChltomDataPath).getAbsolutePath()+" wArpAutotracing="+RunningPram.wArpAutotracing+" UseBuccModels=F \\ << eor");
+	Script.add("java $vmArgs -jar RunComparison.jar RunwArp data="+new File(RunningPram.ChltomDataPath).getAbsolutePath()+" wArpAutotracing="+RunningPram.wArpAutotracing+" UsingRFree="+RunningPram.UsingRFree+" UseBuccModels=F \\ << eor");
 	if(Bucc==true)
-    Script.add("java $vmArgs -jar RunComparison.jar RunwArp data="+new File(RunningPram.ChltomDataPath).getAbsolutePath()+" wArpAutotracing="+RunningPram.wArpAutotracing+" UseBuccModels=T BuccModels=../Buccaneeri1/BuccaneerResults/PDBs/ \\ << eor");
+    Script.add("java $vmArgs -jar RunComparison.jar RunwArp data="+new File(RunningPram.ChltomDataPath).getAbsolutePath()+" wArpAutotracing="+RunningPram.wArpAutotracing+" UsingRFree="+RunningPram.UsingRFree+" UseBuccModels=T BuccModels=../"+BuccFolder+"/BuccaneerResults/PDBs/ \\ << eor");
 
 	Script.add("END");	
 	Script.add("eor");	
@@ -164,12 +211,14 @@ boolean ArpwArpPrepare(boolean Bucc) throws IOException {
 	CreateManagerScript(NumberOfFile,"ArpWArp","Arp.sh");
 	}
 	if(Bucc==true) {
-	WriteTxtFile("./ArpWArpAfterBuccaneeri1/Arp.sh",ArpSh);
-	CreateManagerScript(NumberOfFile,"ArpWArpAfterBuccaneeri1","Arp.sh");
+	WriteTxtFile("./"+WorkFolder+"/Arp.sh",ArpSh);
+	CreateManagerScript(NumberOfFile,WorkFolder,"Arp.sh");
 	}
 	
 	//Analyser
 		String Analyser= ReadResourceAsString("/Analyser.sh");
+		if(RunningPram.ClusterServerGrid=="Slurm")
+			Analyser= ReadResourceAsString("/AnalyserSlurm.sh");
 		Analyser=Analyser.replace("&ccp4&", System.getenv("CCP4"));
 		Analyser=Analyser.replace("&data&", new File(RunningPram.DataPath).getAbsolutePath());
 		Analyser=Analyser.replace("&cstat&", RunningPram.castat2Path);
@@ -186,12 +235,12 @@ boolean ArpwArpPrepare(boolean Bucc) throws IOException {
 		WriteTxtFile("./ArpWArpAnalyser/ArpWArpAnalyser.sh",Analyser);
 		}
 		if(Bucc==true) {
-			Analyser=Analyser.replace("&Tool&", "ARPwARPAfterBuccaneeri1");
-			Analyser=Analyser.replace("&Logs&", "../ArpWArpAfterBuccaneeri1/wArpResults/ArpLogs");
-			Analyser=Analyser.replace("&PDBs&", "../ArpWArpAfterBuccaneeri1/wArpResults/PDBs");	
-			Analyser=Analyser.replace("&IPDBs&", "../ArpWArpAfterBuccaneeri1/wArpResults/IntermediatePDBs/");
-			Analyser=Analyser.replace("&ILogs&", "../ArpWArpAfterBuccaneeri1/wArpResults/IntermediateLogs/");
-			WriteTxtFile("./ArpWArpAfterBuccaneeri1Analyser/ArpWArpAnalyser.sh",Analyser);
+			Analyser=Analyser.replace("&Tool&", WorkFolder);
+			Analyser=Analyser.replace("&Logs&", "../"+WorkFolder+"/wArpResults/ArpLogs");
+			Analyser=Analyser.replace("&PDBs&", "../"+WorkFolder+"/wArpResults/PDBs");	
+			Analyser=Analyser.replace("&IPDBs&", "../"+WorkFolder+"/wArpResults/IntermediatePDBs/");
+			Analyser=Analyser.replace("&ILogs&", "../"+WorkFolder+"/wArpResults/IntermediateLogs/");
+			WriteTxtFile("./"+WorkFolder+"Analyser/ArpWArpAnalyser.sh",Analyser);
 		}
 		
 		
@@ -200,44 +249,43 @@ boolean ArpwArpPrepare(boolean Bucc) throws IOException {
 }
 
 
-boolean Bucci1Prepare() throws IOException {
+boolean Bucci1Prepare(String Iterations,String WorkFolder) throws IOException {
 	
 	int NumberOfFile=new File(RunningPram.DataPath).listFiles().length;
 	NumberOfFile=NumberOfFile/3;//because mtz,seq and pdb	
 	Vector<String> Script = new Vector<String>();
-	Script.add("#$ -cwd");
-	Script.add("#$ -V");
-	Script.add("#$ -l h_vmem=2G");
-	Script.add("#$ -l h_rt=48:00:00");
+	Script.addAll(Arrays.asList(ScriptHeader.split("\n")));
 	Script.add("export MALLOC_ARENA_MAX=4");
 	Script.add("vmArgs=\"-Xmx100m -XX:ParallelGCThreads=1\"");
-	Script.add("java $vmArgs -jar RunComparison.jar RunCBuccaneer data="+new File(RunningPram.DataPath).getAbsolutePath()+" \\ << eor");
+	Script.add("java $vmArgs -jar RunComparison.jar RunCBuccaneer data="+new File(RunningPram.DataPath).getAbsolutePath()+" Iterations="+Iterations+" UsingRFree="+RunningPram.UsingRFree+" \\ << eor");
 	Script.add("END");	
 	Script.add("eor");	
 	String Buccaneeri1="";
 	for(int i=0 ; i < Script.size();++i) {
 		Buccaneeri1+=Script.get(i)+"\n";
 	}
-	WriteTxtFile("./Buccaneeri1/Buccaneeri1.sh",Buccaneeri1);
-	CreateManagerScript(NumberOfFile,"Buccaneeri1","Buccaneeri1.sh");
+	WriteTxtFile("./"+WorkFolder+"/Buccaneeri1.sh",Buccaneeri1);
+	CreateManagerScript(NumberOfFile,WorkFolder,"Buccaneeri1.sh");
 	WriteRefMacScriptForBucci1();
 	
 	
 	
 	//Analyser
 	String Analyser= ReadResourceAsString("/Analyser.sh");
+	if(RunningPram.ClusterServerGrid=="Slurm")
+		Analyser= ReadResourceAsString("/AnalyserSlurm.sh");
 	Analyser=Analyser.replace("&ccp4&", System.getenv("CCP4"));
 	Analyser=Analyser.replace("&data&", new File(RunningPram.DataPath).getAbsolutePath());
 	Analyser=Analyser.replace("&cstat&", RunningPram.castat2Path);
-	Analyser=Analyser.replace("&Logs&", "../Buccaneeri1/BuccaneerResults/BuccaneerLogs");
-	Analyser=Analyser.replace("&PDBs&", "../Buccaneeri1/BuccaneerResults/PDBs/");
-	Analyser=Analyser.replace("&Tool&", "Buccaneer");
-	Analyser=Analyser.replace("&IPDBs&", "../Buccaneeri1/BuccaneerResults/IntermediatePDBs/");
-	Analyser=Analyser.replace("&ILogs&", "../Buccaneeri1/BuccaneerResults/IntermediateLogs/");
+	Analyser=Analyser.replace("&Logs&", "../"+WorkFolder+"/BuccaneerResults/BuccaneerLogs");
+	Analyser=Analyser.replace("&PDBs&", "../"+WorkFolder+"/BuccaneerResults/PDBs/");
+	Analyser=Analyser.replace("&Tool&", WorkFolder);
+	Analyser=Analyser.replace("&IPDBs&", "../"+WorkFolder+"/BuccaneerResults/IntermediatePDBs/");
+	Analyser=Analyser.replace("&ILogs&", "../"+WorkFolder+"/BuccaneerResults/IntermediateLogs/");
 	Analyser=Analyser.replace("&Mol&", RunningPram.PhenixMolProbity);
 	Analyser=Analyser.replace("&UsingMol&", RunningPram.UsingMolProbity);
 	Analyser=Analyser.replace("&CPhasesMatchPhases&", RunningPram.PhasesUsedCPhasesMatch);
-	WriteTxtFile("./Buccaneeri1Analyser/Buccaneeri1Analyser.sh",Analyser);
+	WriteTxtFile("./"+WorkFolder+"Analyser/Buccaneeri1Analyser.sh",Analyser);
 	return true;
 }
 boolean Crank() throws IOException {
@@ -248,14 +296,14 @@ boolean Crank() throws IOException {
 	URL inputUrl = getClass().getResource("/crank.sh");
 	File dest = new File("./Crank/crank.sh");
 	FileUtils.copyURLToFile(inputUrl, dest);
+	 inputUrl = getClass().getResource("/crankNoRfree.sh");
+	 dest = new File("./Crank/crankNoRfree.sh");
+	FileUtils.copyURLToFile(inputUrl, dest);
 	Vector<String> Script = new Vector<String>();
-	Script.add("#$ -cwd");
-	Script.add("#$ -V");
-	Script.add("#$ -l h_vmem=2G");
-	Script.add("#$ -l h_rt=48:00:00");
+	Script.addAll(Arrays.asList(ScriptHeader.split("\n")));
 	Script.add("export MALLOC_ARENA_MAX=4");
 	Script.add("vmArgs=\"-Xmx100m -XX:ParallelGCThreads=1\"");
-	Script.add("java $vmArgs -jar RunComparison.jar RunCrank data="+new File(RunningPram.DatafakeAnomalous).getAbsolutePath()+" CrankPipeLine="+RunningPram.ccp4i2Core+"/pipelines/crank2/crank2/crank2.py \\ << eor");
+	Script.add("java $vmArgs -jar RunComparison.jar RunCrank data="+new File(RunningPram.DatafakeAnomalous).getAbsolutePath()+" UsingRFree="+RunningPram.UsingRFree+" CrankPipeLine="+RunningPram.ccp4i2Core+"/pipelines/crank2/crank2/crank2.py \\ << eor");
 	Script.add("END");	
 	Script.add("eor");	
 	String Crank="";
@@ -269,6 +317,8 @@ boolean Crank() throws IOException {
 	
 	//Analyser
 		String Analyser= ReadResourceAsString("/Analyser.sh");
+		if(RunningPram.ClusterServerGrid=="Slurm")
+			Analyser= ReadResourceAsString("/AnalyserSlurm.sh");
 		Analyser=Analyser.replace("&ccp4&", System.getenv("CCP4"));
 		Analyser=Analyser.replace("&data&", new File(RunningPram.DataPath).getAbsolutePath());
 		Analyser=Analyser.replace("&cstat&", RunningPram.castat2Path);
@@ -284,35 +334,37 @@ boolean Crank() throws IOException {
 	
 	return true;
 }
-boolean Bucci2Prepare(boolean Water) throws IOException {
+boolean Bucci2Prepare(boolean Water , String Iterations,String WorkFolder ) throws IOException {
 
 	String bucrefi2= ReadResourceAsString("/bucrefi2.py");
 	bucrefi2=bucrefi2.replace("ccp4i2Core", RunningPram.ccp4i2Core);
 	String PluginUtils= ReadResourceAsString("/PluginUtils.py");
 	PluginUtils=PluginUtils.replace("ccp4i2Core", RunningPram.ccp4i2Core);
+	
 	if(Water==true)
 	{
+	  	
       bucrefi2=bucrefi2.replace("controlParameters.COOT_REALSPACE_OPERATION ='none'", "controlParameters.COOT_REALSPACE_OPERATION ='coot_add_waters'");
-	
-	WriteTxtFile("./Buccaneeri2W/bucrefi2.py",bucrefi2);
-	WriteTxtFile("./Buccaneeri2W/PluginUtils.py",PluginUtils);
+      bucrefi2=bucrefi2.replace("$1", "W");// to solve Viking cluster problem  because sql cannot be created in /scratch 
+
+      
+	WriteTxtFile("./"+WorkFolder+"/bucrefi2.py",bucrefi2);
+	WriteTxtFile("./"+WorkFolder+"/PluginUtils.py",PluginUtils);
 	}
 	else {
-		WriteTxtFile("./Buccaneeri2/bucrefi2.py",bucrefi2);
+		 bucrefi2=bucrefi2.replace("$1", "");
+		WriteTxtFile("./"+WorkFolder+"/bucrefi2.py",bucrefi2);
 		
-		WriteTxtFile("./Buccaneeri2/PluginUtils.py",PluginUtils);
+		WriteTxtFile("./"+WorkFolder+"/PluginUtils.py",PluginUtils);
 	}
 
 	int NumberOfFile=new File(RunningPram.DataPath).listFiles().length;
 	NumberOfFile=NumberOfFile/3;//because mtz,seq and pdb	
 	Vector<String> Script = new Vector<String>();
-	Script.add("#$ -cwd");
-	Script.add("#$ -V");
-	Script.add("#$ -l h_vmem=2G");
-	Script.add("#$ -l h_rt=48:00:00");
+	Script.addAll(Arrays.asList(ScriptHeader.split("\n")));
 	Script.add("export MALLOC_ARENA_MAX=4");
 	Script.add("vmArgs=\"-Xmx100m -XX:ParallelGCThreads=1\"");
-	Script.add("java $vmArgs -jar RunComparison.jar RunBuccaneeri2 data="+new File(RunningPram.DataPath).getAbsolutePath()+" Buccaneeri2=bucrefi2.py \\ << eor");
+	Script.add("java $vmArgs -jar RunComparison.jar RunBuccaneeri2 data="+new File(RunningPram.DataPath).getAbsolutePath()+" Buccaneeri2=bucrefi2.py"+" Iterations="+Iterations+" UsingRFree="+RunningPram.UsingRFree+" \\ << eor");
 	Script.add("END");	
 	Script.add("eor");	
 	String Buccaneeri2="";
@@ -320,18 +372,20 @@ boolean Bucci2Prepare(boolean Water) throws IOException {
 		Buccaneeri2+=Script.get(i)+"\n";
 	}
 	if(Water==true) {
-	WriteTxtFile("./Buccaneeri2W/Buccaneeri2W.sh",Buccaneeri2);
+	WriteTxtFile("./"+WorkFolder+"/Buccaneeri2W.sh",Buccaneeri2);
 	
-	CreateManagerScript(NumberOfFile,"Buccaneeri2W","Buccaneeri2W.sh");
+	CreateManagerScript(NumberOfFile,WorkFolder,"Buccaneeri2W.sh");
 	}
 	else {
 		
-	WriteTxtFile("./Buccaneeri2/Buccaneeri2.sh",Buccaneeri2);
-	CreateManagerScript(NumberOfFile,"Buccaneeri2","Buccaneeri2.sh");
+	WriteTxtFile("./"+WorkFolder+"/Buccaneeri2.sh",Buccaneeri2);
+	CreateManagerScript(NumberOfFile,WorkFolder,"Buccaneeri2.sh");
 	}
 	
 	//Analyser
 			String Analyser= ReadResourceAsString("/Analyser.sh");
+			if(RunningPram.ClusterServerGrid=="Slurm")
+				Analyser= ReadResourceAsString("/AnalyserSlurm.sh");
 			Analyser=Analyser.replace("&ccp4&", System.getenv("CCP4"));
 			Analyser=Analyser.replace("&data&", new File(RunningPram.DataPath).getAbsolutePath());
 			Analyser=Analyser.replace("&cstat&", RunningPram.castat2Path);
@@ -339,20 +393,20 @@ boolean Bucci2Prepare(boolean Water) throws IOException {
 			Analyser=Analyser.replace("&UsingMol&", RunningPram.UsingMolProbity);
 			Analyser=Analyser.replace("&CPhasesMatchPhases&", RunningPram.PhasesUsedCPhasesMatch);
 			if(Water==false) {
-				Analyser=Analyser.replace("&Tool&", "Buccaneeri2");
-				Analyser=Analyser.replace("&Logs&", "../Buccaneeri2/BuccaneerResults/BuccaneerLogs");
-				Analyser=Analyser.replace("&PDBs&", "../Buccaneeri2/BuccaneerResults/PDBs/");
-				Analyser=Analyser.replace("&IPDBs&", "../Buccaneeri2/BuccaneerResults/IntermediatePDBs/");
-				Analyser=Analyser.replace("&ILogs&", "../Buccaneeri2/BuccaneerResults/IntermediateLogs/");
-				WriteTxtFile("./Buccaneeri2Analyser/Buccaneeri2Analyser.sh",Analyser);
+				Analyser=Analyser.replace("&Tool&", WorkFolder);
+				Analyser=Analyser.replace("&Logs&", "../"+WorkFolder+"/BuccaneerResults/BuccaneerLogs");
+				Analyser=Analyser.replace("&PDBs&", "../"+WorkFolder+"/BuccaneerResults/PDBs/");
+				Analyser=Analyser.replace("&IPDBs&", "../"+WorkFolder+"/BuccaneerResults/IntermediatePDBs/");
+				Analyser=Analyser.replace("&ILogs&", "../"+WorkFolder+"/BuccaneerResults/IntermediateLogs/");
+				WriteTxtFile("./"+WorkFolder+"Analyser/Buccaneeri2Analyser.sh",Analyser);
 			}
 			if(Water==true) {
-				Analyser=Analyser.replace("&Tool&", "Buccaneeri2W");
-				Analyser=Analyser.replace("&Logs&", "../Buccaneeri2W/BuccaneerResults/BuccaneerLogs");
-				Analyser=Analyser.replace("&PDBs&", "../Buccaneeri2W/BuccaneerResults/PDBs/");
-				Analyser=Analyser.replace("&IPDBs&", "../Buccaneeri2W/BuccaneerResults/IntermediatePDBs/");
-				Analyser=Analyser.replace("&ILogs&", "../Buccaneeri2W/BuccaneerResults/IntermediateLogs/");
-				WriteTxtFile("./Buccaneeri2WAnalyser/Buccaneeri2WAnalyser.sh",Analyser);
+				Analyser=Analyser.replace("&Tool&", WorkFolder);
+				Analyser=Analyser.replace("&Logs&", "../"+WorkFolder+"/BuccaneerResults/BuccaneerLogs");
+				Analyser=Analyser.replace("&PDBs&", "../"+WorkFolder+"/BuccaneerResults/PDBs/");
+				Analyser=Analyser.replace("&IPDBs&", "../"+WorkFolder+"/BuccaneerResults/IntermediatePDBs/");
+				Analyser=Analyser.replace("&ILogs&", "../"+WorkFolder+"/BuccaneerResults/IntermediateLogs/");
+				WriteTxtFile("./"+WorkFolder+"Analyser/Buccaneeri2WAnalyser.sh",Analyser);
 				
 			}
 			
@@ -422,10 +476,8 @@ void WriteRefMacScriptForBucci1() throws IOException {
 	}	
 	 void CreateManagerScript(int NumberofFiles , String ToolName, String ToolScript) throws IOException {
 		 Vector<String> ManagerScript = new Vector<String>(); 
-		 ManagerScript.add("#$ -cwd");
-		 ManagerScript.add("#$ -V");
-		 ManagerScript.add("#$ -l h_vmem=2G");
-		 ManagerScript.add("#$ -l h_rt=168:00:00");
+		 ManagerScript.addAll(Arrays.asList(ScriptHeader.split("\n")));
+		 
 		 ManagerScript.add("export MALLOC_ARENA_MAX=4");
 		 ManagerScript.add("vmArgs=\"-Xmx100m -XX:ParallelGCThreads=1\"");
 		 ManagerScript.add("java $vmArgs -jar RunComparison.jar ScriptManager shScriptPath="+ToolScript+" NumberofTimes="+NumberofFiles+" \\ << eor");

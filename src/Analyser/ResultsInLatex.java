@@ -8,6 +8,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -44,7 +45,7 @@ public class ResultsInLatex {
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets17";
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/GAResults/Ex5";
 
-		String ExcelDir = "/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Run13/ExFaliedCases/Orginalonlythe54Cases/All";
+		String ExcelDir = "/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Reproducibility2/ExFaliedCases/OriginalExperiment";
 		
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets17";
 
@@ -53,18 +54,93 @@ public class ResultsInLatex {
 
 		// new ResultsInCSV().PDBTable(Container);
 
-		new ResultsInLatex().OverallResults(ExcelDir);
+		//new ResultsInLatex().OverallResults(ExcelDir);
 		// new ResultsInLatex().PDBList(ExcelDir);
 		// new ResultsInLatex().BestAndWorstCases(ExcelDir);
 		// new ResultsInLatex().PrepareExcelForSpss(ExcelDir);
 		// new ResultsInLatex().SpssBootstraping("SpssExcel");
 		// new ResultsInLatex().ReadingSpssBootstraping("SpssExcelResults");
-		new ResultsInLatex().MatrixOfResults(ExcelDir);
+		//new ResultsInLatex().MatrixOfResults(ExcelDir);
 		//new ResultsInLatex().LongMatrixOfResults(ExcelDir);
 
 		// new ResultsInCSV().GroupByPhases(ExcelDir);
+		
+		//new ResultsInLatex().TimeTakingTable(ExcelDir);
+		new ResultsInLatex().CompRTimeAvgTable(ExcelDir);
 	}
+	void CompRTimeAvgTable(String ExcelDir) throws IOException {
+		
+		for (File Folder : new File(ExcelDir).listFiles()) {
+			if(Folder.isDirectory()) {
+				String Table="\\tiny Pipeline & \\tiny Completeness &\\tiny R-work/R-free & \\tiny Time taking \\\\ \\hline \n";
+				String Comments="";
+				Comments+="% "+ new Date().toString() +" \n ";
+				Comments+="% Folder: "+ Folder.getName() +" \n ";
+				Comments+="% Full folder path :  "+ Folder.getAbsolutePath() +" \n ";
+				Comments+="% Excel used  :  "+ " \n ";
+				
+				
+				for(File Excel : Folder.listFiles()) {
+					if(Excel.isFile()) {
+						Comments+="%"+Excel.getAbsolutePath() +" \n ";
+						double Com=0;
+						double Rwork=0;
+						double Rfree=0;
+						double Time=0;
+						ExcelLoader f = new ExcelLoader();
+						Vector<DataContainer> Container = f.ReadExcel(Excel.getAbsolutePath());
+						for(int i=0; i < Container.size() ; ++i) {
+							Com+=Double.parseDouble(Container.get(i).Completeness);
+							Rwork+=Double.parseDouble(Container.get(i).R_factor0Cycle);
+							Rfree+=Double.parseDouble(Container.get(i).R_free0Cycle);
+							Time+=Double.parseDouble(Container.get(i).TimeTaking);
+						}
+						DecimalFormat df = new DecimalFormat("#.##");
+						df.setRoundingMode(RoundingMode.HALF_UP);
+						
+						
+						Table+="\\tiny "+Excel.getName()+" & \\tiny "+Math.round((Com/Container.size())) +" & \\tiny "+ df.format(BigDecimal.valueOf(Double.valueOf((Rwork/Container.size()))))+"/"+df.format(BigDecimal.valueOf(Double.valueOf((Rfree/Container.size()))))+" & \\tiny "+Math.round((Time/Container.size())) +"\\\\ \\hline \n";
+					}
+				}
+				new Preparer().WriteTxtFile("Latex/ReproducibilityTable" + Folder.getName() + ".tex", FormatingPipelinesNames(Table,true) + "\n"+Comments);
 
+			}
+		}
+	}
+void TimeTakingTable(String ExcelDir) throws IOException {
+	
+	for (File Folder : new File(ExcelDir).listFiles()) {
+		if(Folder.isDirectory()) {
+			String Table="\\tiny Pipeline & \\tiny Min &\\tiny Max & \\tiny Avg. \\\\ \\hline \n";
+			String Comments="";
+			Comments+="% "+ new Date().toString() +" \n ";
+			Comments+="% Folder: "+ Folder.getName() +" \n ";
+			Comments+="% Full folder path :  "+ Folder.getAbsolutePath() +" \n ";
+			Comments+="% Excel used  :  "+ " \n ";
+			for(File Excel : Folder.listFiles()) {
+				if(Excel.isFile()) {
+					Comments+="%"+Excel.getAbsolutePath() +" \n ";
+					ExcelLoader f = new ExcelLoader();
+					Vector<DataContainer> Container = f.ReadExcel(Excel.getAbsolutePath());
+					double min=Double.parseDouble(Container.get(0).TimeTaking);
+					double max=Double.parseDouble(Container.get(0).TimeTaking);
+					double total=0;
+					for(int i=0; i < Container.size() ; ++i) {
+						if(Double.parseDouble(Container.get(i).TimeTaking) > max)
+							max=Double.parseDouble(Container.get(i).TimeTaking);
+						if(Double.parseDouble(Container.get(i).TimeTaking) < min)
+							min=Double.parseDouble(Container.get(i).TimeTaking);
+						total+=Double.parseDouble(Container.get(i).TimeTaking);
+					}
+					Table+=" \\tiny "+Excel.getName()+" & \\tiny "+Math.round(min)+" & \\tiny "+Math.round(max)+" & \\tiny "+ +Math.round((total/Container.size()))+" \\\\ \\hline \n";
+				}
+				
+			}
+			System.out.println(Table);
+			new Preparer().WriteTxtFile("Latex/TimeTakingTable" + Folder.getName() + ".tex", FormatingPipelinesNames(Table,true) + "\n"+Comments);
+		}
+	}
+}
 	void PDBTable(Vector<Vector<DataContainer>> Container) throws IOException {
 		// Sorting by Resolution
 		Vector<String> PDB = new Vector<String>();
@@ -94,11 +170,15 @@ public class ResultsInLatex {
 		File[] Folders = new File(ResultsDir).listFiles();
 		ExcelLoader e = new ExcelLoader();
 		Vector<Vector<DataContainer>> Container = new Vector<Vector<DataContainer>>();
+		String Comments="% "+new Date().toString() +" \n";
 		for (File Folder : Folders) {
 			if (Folder.isDirectory()) {
-				
+				Comments+="% Folder "+Folder.getName() +" \n";
+				Comments+="% Full folder path "+Folder.getAbsolutePath() +" \n";
+				Comments+="% Excel used:  \n";
 				for (File Excel : Folder.listFiles()) {
 					if(Excel.isFile()) { // Because this folder might contains Bucc54 folder
+						Comments+="% "+Excel.getAbsolutePath()+"  \n";
 					Container.add(e.ReadExcel(Excel.getAbsolutePath()));
 					e.ToolsNames.add(Excel.getName() + Folder.getName());}
 				}
@@ -136,7 +216,7 @@ public class ResultsInLatex {
 		System.out.println(CSV);
 		new Preparer().WriteTxtFile("CSV/Overall.csv", CSV);
 		Vector<String> CheckedFiles = new Vector<String>();
-		String Table = "\\tiny Pipeline &&\\tiny Hancs &&&&\\tiny Mrncs &&&& \\tiny Noncs\\\\ \n" + 
+		String Table = "\\tiny Pipeline &&\\tiny HA-NCS &&&&\\tiny MR-NCS &&&& \\tiny NO-NCS\\\\ \n" + 
 				"&&\\tiny Compelete & \\tiny Intermediate& \\tiny Falied&&\\tiny Compelete &\\tiny Intermediate& \\tiny Falied&& \\tiny Compelete & \\tiny Intermediate& \\tiny Falied\\\\ \\hline";
 		for (int i = 0; i < Results.size(); ++i) {
 			// System.out.println(Results.get(i).DM);
@@ -164,6 +244,7 @@ public class ResultsInLatex {
 						}
 					}
 				}
+				
 				// System.out.println(Results.get(i).FileName);
 				// System.out.println(Results.get(i).DM);
 
@@ -175,8 +256,54 @@ public class ResultsInLatex {
 			}
 			CheckedFiles.add(Results.get(i).FileName);
 		}
+		int NumberofConsideredCasesHancs=0;
+		int NumberofConsideredCasesMrncs=0;
+		int NumberofConsideredCasesNoncs=0;
+		for (int i = 0; i < Container.size(); ++i) {
+			if(e.ToolsNames.get(i).contains("hancs") && NumberofConsideredCasesHancs==0) {
+				ExcelLoader f = new ExcelLoader();
+				Vector<Vector<DataContainer>> AllToolsData = new Vector<Vector<DataContainer>>();
+				for(int m =0 ; m < Container.size() ; ++m ) {
+					if(e.ToolsNames.get(m).contains("hancs"))
+					AllToolsData.add(Container.get(m));
+				}
+				Vector <DataContainer> AfterExBuccDev= new Exculding54Dataset().Exculding(Container.get(i), true);
+				NumberofConsideredCasesHancs=f.CheckPDBexists(AllToolsData,AfterExBuccDev).size();
+				System.out.println(e.ToolsNames.get(i) +" NumberofConsideredCases "+NumberofConsideredCasesHancs);
+				System.out.println(e.ToolsNames.get(i) +" AfterExBuccDev "+AfterExBuccDev.size());
+				
+			}
+if(e.ToolsNames.get(i).contains("mrncs") && NumberofConsideredCasesMrncs==0) {
+	ExcelLoader f = new ExcelLoader();
+	Vector<Vector<DataContainer>> AllToolsData = new Vector<Vector<DataContainer>>();
+	for(int m =0 ; m < Container.size() ; ++m ) {
+		if(e.ToolsNames.get(m).contains("mrncs"))
+		AllToolsData.add(Container.get(m));
+	}
+	Vector <DataContainer> AfterExBuccDev= new Exculding54Dataset().Exculding(Container.get(i), true);
+	NumberofConsideredCasesMrncs=f.CheckPDBexists(AllToolsData,AfterExBuccDev).size();
+	System.out.println(e.ToolsNames.get(i) +" NumberofConsideredCases "+NumberofConsideredCasesMrncs);
+	System.out.println(e.ToolsNames.get(i) +" AfterExBuccDev "+AfterExBuccDev.size());
+			}
+if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
+	ExcelLoader f = new ExcelLoader();
+	Vector<Vector<DataContainer>> AllToolsData = new Vector<Vector<DataContainer>>();
+	for(int m =0 ; m < Container.size() ; ++m ) {
+		if(e.ToolsNames.get(m).contains("noncs"))
+		AllToolsData.add(Container.get(m));
+	}
+	Vector <DataContainer> AfterExBuccDev= new Exculding54Dataset().Exculding(Container.get(i), true);
+	NumberofConsideredCasesNoncs=f.CheckPDBexists(AllToolsData,AfterExBuccDev).size();
+	System.out.println(e.ToolsNames.get(i) +" NumberofConsideredCases "+NumberofConsideredCasesNoncs);
+	System.out.println(e.ToolsNames.get(i) +" AfterExBuccDev "+AfterExBuccDev.size());
+}
+		}
+		Table += " \\multicolumn{10}{c}{\\tiny{ Considered models: "  + NumberofConsideredCasesHancs + " HA-NCS, " + NumberofConsideredCasesMrncs + " MR-NCS and " + NumberofConsideredCasesNoncs + " NO-NCS.}}"
+				+ " \n";
+	
+		
 		Table=FormatingPipelinesNames(Table,true);
-		new Preparer().WriteTxtFile("Latex/TheNumberOfCompletedCases.tex", Table.replace(".xlsx", ""));
+		new Preparer().WriteTxtFile("Latex/TheNumberOfCompletedCases.tex", Table.replace(".xlsx", "") +" \n "+Comments);
 	}
 
 	void PDBList(String ResultsDir) throws IOException {
@@ -815,10 +942,15 @@ public class ResultsInLatex {
 			if (Folder.isDirectory()) {
 				Vector<Vector<DataContainer>> Container = new Vector<Vector<DataContainer>>();
 				ExcelLoader e = new ExcelLoader();
-
+				String Comments="";
+				Comments = "% "+new Date().toString()+" \n";
+				Comments += "% This table generated from \n % Folder :"+Folder.getName()+" \n";
+				Comments += "% Full folder path :"+Folder.getAbsolutePath()+" \n";
+				Comments += "% Excel used : \n ";
 				for (File Excel : Folder.listFiles()) {
 					if(Excel.isFile()) {
 					System.out.println(Excel.getAbsolutePath());
+					Comments += " %  "+Excel.getAbsolutePath() +" \n";
 					Container.add(e.ReadExcel(Excel.getAbsolutePath()));
 					e.ToolsNames.add(Excel.getName() + Folder.getName());
 					}
@@ -900,20 +1032,20 @@ public class ResultsInLatex {
 					 RowCom5Models+= "\\tiny " + e.ToolsNames.get(i);
 					 
 					 
-					 RowR0 += "\\tiny " + e.ToolsNames.get(i)+"_R";
-					 RowR0Equivalent+= "\\tiny " + e.ToolsNames.get(i)+"_R";
+					 RowR0 += "\\tiny " + e.ToolsNames.get(i)+" _{R-work}";
+					 RowR0Equivalent+= "\\tiny " + e.ToolsNames.get(i)+" _{R-work}";
 					 RowROverfitting="\\tiny Overfitting" ;
-					 RowR5 += "\\tiny " + e.ToolsNames.get(i)+"_R";
+					 RowR5 += "\\tiny " + e.ToolsNames.get(i)+" _{R-work}";
 					 RowR5Overfitting="\\tiny Overfitting" ;
 					 
-					  RowRFree0 ="\\tiny " + e.ToolsNames.get(i)+"_R_{free}";
+					  RowRFree0 ="\\tiny " + e.ToolsNames.get(i)+" _R_{-free}";
 					  
-					  RowRFree5 = "\\tiny " + e.ToolsNames.get(i)+"_R_{free}";
+					  RowRFree5 = "\\tiny " + e.ToolsNames.get(i)+" _R_{-free}";
 					  
-					  RowRFree0Equivalent="\\tiny " + e.ToolsNames.get(i)+"_R_{free}";
+					  RowRFree0Equivalent="\\tiny " + e.ToolsNames.get(i)+" _R_{-free}";
 				
-					   RowRFree5Equivalent = "\\tiny " + e.ToolsNames.get(i)+"_R_{free}";
-					   RowR5Equivalent += "\\tiny " + e.ToolsNames.get(i)+"_R";
+					   RowRFree5Equivalent = "\\tiny " + e.ToolsNames.get(i)+" _R_{-free}";
+					   RowR5Equivalent += "\\tiny " + e.ToolsNames.get(i)+" _{R-work}";
 					for (int m = 0; m < Container.size(); ++m) {
 
 						if (Col.length() == 0) {
@@ -1139,63 +1271,63 @@ if(new BigDecimal(Container.get(i).get(model).R_free0Cycle).compareTo(new BigDec
 						 else{
 							//DecimalFormat decim = new DecimalFormat("#.##");
 							DecimalFormat decim = new DecimalFormat("#");
-							if(((CountModelCom0 * 100) / CountModel) >= 30)
-							RowCom0 += "& \\cellcolor{gray!35} \\tiny " + decim.format(((CountModelCom0 * 100) / CountModel)) + "\\% " ;
-							if(((CountModelCom0 * 100) / CountModel) < 30)
-							RowCom0 += "& \\tiny " + decim.format(((CountModelCom0 * 100) / CountModel)) + "\\% " ;
+							//if(((CountModelCom0 * 100) / CountModel) >= 30)
+							//RowCom0 += "& \\cellcolor{gray!35} \\tiny " + decim.format(((CountModelCom0 * 100) / CountModel)) + "\\% " ;
+							//if(((CountModelCom0 * 100) / CountModel) < 30)
+							RowCom0 += " &  " + decim.format(((CountModelCom0 * 100) / CountModel))  ;
 							//RowCom0 += " \\tiny (=" + decim.format(((EquivalentFor0 * 100) / CountModel)) + "\\%)";
-							 RowCom0Equivalent += "& \\tiny " + decim.format(((EquivalentFor0 * 100) / CountModel)) + "\\%" ;
+							 RowCom0Equivalent += " &  " + decim.format(((EquivalentFor0 * 100) / CountModel))  ;
 							
-							if(((CountModelCom5 * 100) / CountModel) >=30)
-								RowCom5 += "& \\cellcolor{gray!35} \\tiny " + decim.format(((CountModelCom5 * 100) / CountModel)) + "\\% ";
-								if(((CountModelCom5 * 100) / CountModel)<30)
-							RowCom5 += "& \\tiny " + decim.format(((CountModelCom5 * 100) / CountModel)) + "\\% ";
+							//if(((CountModelCom5 * 100) / CountModel) >=30)
+							//	RowCom5 += "& \\cellcolor{gray!35} \\tiny " + decim.format(((CountModelCom5 * 100) / CountModel)) + "\\% ";
+							//	if(((CountModelCom5 * 100) / CountModel)<30)
+							RowCom5 += " &  " + decim.format(((CountModelCom5 * 100) / CountModel));
 							
 							//RowCom5 += " \\tiny (=" + decim.format(((EquivalentFor5 * 100) / CountModel)) + "\\%)";
-							 RowCom5Equivalent+= " &\\tiny " + decim.format(((EquivalentFor5 * 100) / CountModel)) + "\\%";
+							 RowCom5Equivalent+= " & " + decim.format(((EquivalentFor5 * 100) / CountModel));
 							
-							  RowCom0Models += "& \\tiny "+(int)CountModel;
-							  RowCom5Models+= "& \\tiny "+(int)CountModel;
+							  RowCom0Models += " &  "+(int)CountModel;
+							  RowCom5Models+= " &  "+(int)CountModel;
 							  
-							  if(((CountModelR * 100) / CountModel) >= 30)
-							  RowR0 += "& \\cellcolor{gray!35} \\tiny " + decim.format(((CountModelR * 100) / CountModel)) + "\\% ";
-							  if(((CountModelR * 100) / CountModel) < 30)
-							 RowR0 += "& \\tiny " + decim.format(((CountModelR * 100) / CountModel)) + "\\% " ;
+							//  if(((CountModelR * 100) / CountModel) >= 30)
+							//  RowR0 += "& \\cellcolor{gray!35} \\tiny " + decim.format(((CountModelR * 100) / CountModel)) + "\\% ";
+							//  if(((CountModelR * 100) / CountModel) < 30)
+							 RowR0 += " &  " + decim.format(((CountModelR * 100) / CountModel))  ;
 								//RowCom0 += " \\tiny (=" + decim.format(((EquivalentFor0 * 100) / CountModel)) + "\\%)";
-							  RowR0Equivalent += "& \\tiny " + decim.format(((EquivalentR * 100) / CountModel)) + "\\%";
+							  RowR0Equivalent += " &  " + decim.format(((EquivalentR * 100) / CountModel)) ;
 							  
 							  if(OverfittingR==0)
-								  RowROverfitting+=   "& \\tiny 0\\%"; 
+								  RowROverfitting+=   "& "; 
 								  if(OverfittingR!=0)
-							  RowROverfitting+=   "& \\tiny " + decim.format(((OverfittingR * 100) / CountModelR)) +"\\%";
+							  RowROverfitting+=   " &  " + decim.format(((OverfittingR * 100) / CountModelR));
 							  
-								  if(((CountModelR5 * 100) / CountModel) >= 30)
-							  RowR5 += "& \\cellcolor{gray!35} \\tiny " + decim.format(((CountModelR5 * 100) / CountModel)) + "\\% " ;
-								  if(((CountModelR5 * 100) / CountModel) < 30)
-									  RowR5 += "& \\tiny " + decim.format(((CountModelR5 * 100) / CountModel)) + "\\% " ;
+								//  if(((CountModelR5 * 100) / CountModel) >= 30)
+							//  RowR5 += "& \\cellcolor{gray!35} \\tiny " + decim.format(((CountModelR5 * 100) / CountModel)) + "\\% " ;
+								  //if(((CountModelR5 * 100) / CountModel) < 30)
+									  RowR5 += " &  " + decim.format(((CountModelR5 * 100) / CountModel))  ;
 								  
 							  if(OverfittingR5==0)
-						       RowR5Overfitting+=   "& \\tiny 0 \\%";
+						       RowR5Overfitting+=   " &  0";
 							  if(OverfittingR5!=0)
-							  RowR5Overfitting+=   "& \\tiny " + decim.format(((OverfittingR5 * 100) / CountModelR5)) +"\\%";
+							  RowR5Overfitting+=   " &  " + decim.format(((OverfittingR5 * 100) / CountModelR5)) ;
 
 							 
 							  
-							  if(((CountRFree0 * 100) / CountModel) >= 30)
-						 RowRFree0 += "& \\cellcolor{gray!35} \\tiny " + decim.format(((CountRFree0 * 100) / CountModel)) + "\\% " ;
-								if(((CountRFree0 * 100) / CountModel) < 30)
-						RowRFree0 += "& \\tiny " + decim.format(((CountRFree0 * 100) / CountModel)) + "\\% " ;
+							//  if(((CountRFree0 * 100) / CountModel) >= 30)
+						// RowRFree0 += "& \\cellcolor{gray!35} \\tiny " + decim.format(((CountRFree0 * 100) / CountModel)) + "\\% " ;
+							//	if(((CountRFree0 * 100) / CountModel) < 30)
+						RowRFree0 += " &  " + decim.format(((CountRFree0 * 100) / CountModel))  ;
 								
-								 if(((CountRFree5 * 100) / CountModel) >= 30)
-									 RowRFree5 += "& \\cellcolor{gray!35} \\tiny " + decim.format(((CountRFree5 * 100) / CountModel)) + "\\% " ;
-								if(((CountRFree5 * 100) / CountModel) < 30)
-								RowRFree5 += "& \\tiny " + decim.format(((CountRFree5 * 100) / CountModel)) + "\\% " ;	
+								// if(((CountRFree5 * 100) / CountModel) >= 30)
+								//	 RowRFree5 += "& \\cellcolor{gray!35} \\tiny " + decim.format(((CountRFree5 * 100) / CountModel)) + "\\% " ;
+								//if(((CountRFree5 * 100) / CountModel) < 30)
+								RowRFree5 += " &  " + decim.format(((CountRFree5 * 100) / CountModel))  ;	
 							  
-					RowRFree0Equivalent+=	"& \\tiny " + decim.format(((EquivalentRFree * 100) / CountModel)) + "\\%";		
+					RowRFree0Equivalent+=	" & " + decim.format(((EquivalentRFree * 100) / CountModel));		
 					
-					 RowR5Equivalent += "& \\tiny " + decim.format(((EquivalentR5 * 100) / CountModel)) + "\\%";
+					 RowR5Equivalent += " & " + decim.format(((EquivalentR5 * 100) / CountModel)) ;
 					
-					 RowRFree5Equivalent+=	"& \\tiny " + decim.format(((EquivalentRFree5 * 100) / CountModel)) + "\\%";
+					 RowRFree5Equivalent+=	" &  " + decim.format(((EquivalentRFree5 * 100) / CountModel)) ;
 					
 					 
 					 LogOfCom0+="\n Number of models: "+CountModelCom0+" \n";
@@ -1220,87 +1352,87 @@ LogOfR0Equivalent+="\n Number of models: "+EquivalentR+" \n";
 					}
 					
 					
-					RowCom0 += "\\\\ \\hline \n ";
-					RowCom5 += "\\\\ \\hline \n ";
+					RowCom0 += " \\\\ \\hline \n ";
+					RowCom5 += " \\\\ \\hline \n ";
 					
-					RowCom0Equivalent += "\\\\ \\hline \n ";
-					RowCom0Models += "\\\\ \\hline \n ";
+					RowCom0Equivalent += " \\\\ \\hline \n ";
+					RowCom0Models += " \\\\ \\hline \n ";
 					
-					RowCom5Equivalent += "\\\\ \\hline \n ";
-					RowCom5Models += "\\\\ \\hline \n ";
+					RowCom5Equivalent += " \\\\ \\hline \n ";
+					RowCom5Models += " \\\\ \\hline \n ";
 					
-					RowR0 += "\\\\  \n ";
-					RowR0+=RowRFree0 +"\\\\ \\hline \n ";
+					RowR0 += " \\\\  \n ";
+					RowR0+=RowRFree0 +" \\\\ \\hline \n ";
 					//RowR0 += "\\\\ \\hline \n ";
 					
 					
-					RowR0Equivalent += "\\\\  \n ";
-					RowR0Equivalent+=RowRFree0Equivalent +"\\\\ \\hline \n ";
+					RowR0Equivalent += " \\\\  \n ";
+					RowR0Equivalent+=RowRFree0Equivalent +" \\\\ \\hline \n ";
 					
 					
 					//RowR5 += "\\\\ \\hline \n ";
-					RowR5 += "\\\\  \n ";
-					RowR5+=RowRFree5 +"\\\\ \\hline \n ";
+					RowR5 += " \\\\  \n ";
+					RowR5+=RowRFree5 +" \\\\ \\hline \n ";
 					
-					RowR5Equivalent += "\\\\  \n ";
-					RowR5Equivalent+=RowRFree5Equivalent +"\\\\ \\hline \n ";
-				System.out.println(RowR5Equivalent);
+					RowR5Equivalent += " \\\\  \n ";
+					RowR5Equivalent+=RowRFree5Equivalent +" \\\\ \\hline \n ";
+				//System.out.println(RowR5Equivalent);
 				}
 				//System.out.println(Col);
 				//System.out.println(RowCom0);
-				Table += Col + "\\\\ \\hline \n ";
+				Table += Col + " \\\\ \\hline \n ";
 				Table += RowCom0;
-				Table=FormatingPipelinesNames(Table,true);
+				Table=ShadedTable(FormatingPipelinesNames(Table,true))+" \n "+Comments;
 				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "Com0.tex", Table);
 			
 				String TableCom5 = Col + "\\\\ \\hline \n ";
 				TableCom5 += RowCom5;
-				TableCom5=FormatingPipelinesNames(TableCom5,true);
+				TableCom5=ShadedTable(FormatingPipelinesNames(TableCom5,true))+" \n "+Comments; 
 				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "Com5.tex", TableCom5);
 				
 				String TableCom0Equivalent = Col + "\\\\ \\hline \n ";
 				TableCom0Equivalent += RowCom0Equivalent;
-				TableCom0Equivalent=	FormatingPipelinesNames(TableCom0Equivalent,true);
+				TableCom0Equivalent=	ShadedTable(FormatingPipelinesNames(TableCom0Equivalent,true)) +" \n "+Comments;
 				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "Com0Equivalent.tex", TableCom0Equivalent);
 				
 				String TableCom5Equivalent = Col + "\\\\ \\hline \n ";
 				TableCom5Equivalent += RowCom5Equivalent;
-				TableCom5Equivalent=	FormatingPipelinesNames(TableCom5Equivalent,true);
+				TableCom5Equivalent=	ShadedTable(FormatingPipelinesNames(TableCom5Equivalent,true)) +" \n "+Comments;
 				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "Com5Equivalent.tex", TableCom5Equivalent);
 			
 				String TableCom0Models = Col + "\\\\ \\hline \n ";
 				TableCom0Models += RowCom0Models;
-				TableCom0Models=FormatingPipelinesNames(TableCom0Models,true);
+				TableCom0Models=ShadedTable(FormatingPipelinesNames(TableCom0Models,true)) +" \n "+Comments;
 				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "Com0Models.tex", TableCom0Models);
 				
 				
 				String TableCom5Models = Col + "\\\\ \\hline \n ";
 				TableCom5Models += RowCom5Models;
-				TableCom5Models=FormatingPipelinesNames(TableCom5Models,true);
+				TableCom5Models=ShadedTable(FormatingPipelinesNames(TableCom5Models,true)) +" \n "+Comments;
 				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "Com5Models.tex", TableCom5Models);
 				
 				
 				String TableRModels = Col + "\\\\ \\hline \n ";
 				TableRModels += RowR0;
-				TableRModels=FormatingPipelinesNames(TableRModels,true);
+				TableRModels=ShadedTable(FormatingPipelinesNames(TableRModels,true)) +" \n "+Comments;
 				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "RModels.tex", TableRModels);
 				
 				
 				String TableRModelsEquivalent = Col + "\\\\ \\hline \n ";
 				TableRModelsEquivalent += RowR0Equivalent;
-				TableRModelsEquivalent=FormatingPipelinesNames(TableRModelsEquivalent,true);
+				TableRModelsEquivalent=ShadedTable(FormatingPipelinesNames(TableRModelsEquivalent,true)) +" \n "+Comments;
 				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "REquivalentModels.tex", TableRModelsEquivalent);
 			
 			
 				String TableR5Models = Col + "\\\\ \\hline \n ";
 				TableR5Models += RowR5;
-				TableR5Models=FormatingPipelinesNames(TableR5Models,true);
+				TableR5Models=ShadedTable(FormatingPipelinesNames(TableR5Models,true)) +" \n "+Comments;
 				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "R5Models.tex", TableR5Models);
 			
 			
 				String TableRModelsEquivalent5 = Col + "\\\\ \\hline \n ";
 				TableRModelsEquivalent5 += RowR5Equivalent;
-				TableRModelsEquivalent5=FormatingPipelinesNames(TableRModelsEquivalent5,true);
+				TableRModelsEquivalent5=ShadedTable(FormatingPipelinesNames(TableRModelsEquivalent5,true)) +" \n "+Comments;
 				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "REquivalent5Models.tex", TableRModelsEquivalent5);
 				
 				
@@ -1333,7 +1465,108 @@ LogOfR0Equivalent+="\n Number of models: "+EquivalentR+" \n";
 		}
 
 	}
+	String AddingAvgToTheTable(String Table) {
+		 String a = Table;
+		 String [] Lines= a.split("\n");
+		 Vector<String> LinesAvg = new Vector<String>(); 
+		 int i=0;
+		
+		 for(String Line : Lines) {
+			 System.out.println(Line);
+			 double sumofTheLine=0;
+			 double NumberOfPipelien=0;
+			 if(i!=0 && Line.trim().length()!=0) {
+			 for(String Number : Line.split(" ")) {
+				 if(Number.matches("[0-9]+")){
+					 sumofTheLine+= Integer.valueOf(Number);
+					 NumberOfPipelien++;
+				 }
+			 }
+			 LinesAvg.add(String.valueOf(Math.round((sumofTheLine/NumberOfPipelien))));
+			 }
+			 ++i;
+		 }
+		 i=0;
+		 String FormattedTable="";
+		 int IndexOFAvg=0;
+		 for(String Line : Lines) {
+			 if(Line.trim().length()!=0) {
+				 Line=Line.replaceAll("\\\\\\\\", "");
+				 boolean ContainsHline=false;
+				 if(Line.contains("\\hline"))
+					 ContainsHline=true;
+				 Line=Line.replaceAll("\\\\hline", "");
+			 if(i==0) {
+				 if(ContainsHline==true) {
+				 FormattedTable+=Line+"& \\tiny Avg. \\\\ \\hline \n"; 
+				 }
+				 else {
+					 FormattedTable+=Line+"& \\tiny Avg. \\\\  \n"; 
+				 }
+			 }
+			 else {
+				 if(ContainsHline==true) {
+				 FormattedTable+=Line+"& \\tiny "+LinesAvg.get(IndexOFAvg) +" \\\\ \\hline \n"; }
+				 else {
+					 FormattedTable+=Line+"& \\tiny "+LinesAvg.get(IndexOFAvg) +" \\\\ \n";  }
+				 IndexOFAvg++;
+			 }
+			 
+			 }
+			 ++i;
+			 
+		 }
+		 return FormattedTable;
+	}
+	 String ShadedTable (String Table) {
+		// TODO Auto-generated method stub
+		
+		 Table=AddingAvgToTheTable(Table);
+		 
+System.out.println("ShadedTable");
+String a = Table;
+System.out.println(a);
+//a=a.replaceAll("\\\\%", "");
+//a=a.replaceAll("\\btiny\\b", "");
+//a=a.replace("\\b\\\\b", "");
+String [] numbers= a.split(" ");
+int Sum=0;
+int NumberCount=0;
+for(String n : numbers) {
+	if(n.matches("[0-9]+")) {
+	
+	Sum+=Integer.valueOf(n);
+	NumberCount++;
+	}
+}
+String [] Elements= a.split(" ");
+String FormattedTable="";
+for(String e : Elements) {
+	if(e.matches("[0-9]+") && Integer.valueOf(e)  == Math.round(Sum/NumberCount)) {
+		//FormattedTable+="\\cellcolor{black!35} \\tiny "+e+" ";
+		FormattedTable+=" \\tiny "+e+" ";
+		
+	}
+	else if(e.matches("[0-9]+") && Integer.valueOf(e)  > Math.round(Sum/NumberCount)) {
+	//FormattedTable+="\\cellcolor{gray!35} \\tiny "+e+" ";
+	FormattedTable+=" \\tiny "+e+" ";
+		
+	
+}
+else {
+	if(!e.matches("[0-9]+"))
+	FormattedTable+=e+" ";
+	else
+		FormattedTable+=" \\tiny "+e+" ";
+}
+}
+System.out.println(FormattedTable);
+return FormattedTable;
 
+//System.out.println(Sum);
+//System.out.println(NumberCount);
+//System.out.println(Sum/NumberCount);
+	}
 	String FormatingPipelinesNames(String Table, boolean RemoveDatasetNames) {
 		if(RemoveDatasetNames==true) {
 		Table=Table.replaceAll("hancs", "");
@@ -1342,16 +1575,17 @@ LogOfR0Equivalent+="\n Number of models: "+EquivalentR+" \n";
 		}
 		
 		Table=Table.replaceAll(".xlsx", "");
-		Table=Table.replaceAll("ARPwARPB25", "ARP(B 25I)");
-		Table=Table.replaceAll("ARPwARPB5", "ARP(B 5I)");
-		Table=Table.replaceAll("ARPwARP", "ARP");
-		Table=Table.replaceAll("Buccaneeri1-25", "i1(25I)");
-		Table=Table.replaceAll("Buccaneeri2-25", "i2(25I)");
-		Table=Table.replaceAll("Buccaneeri1-5", "i1(5I)");
-		Table=Table.replaceAll("Buccaneeri2-5", "i2(5I)");
-		Table=Table.replaceAll("Buccaneeri2W-25", "i2W(25I)");
-		Table=Table.replaceAll("Buccaneeri2W-5", "i2W(5I)");
-		Table=Table.replaceAll("PhenixUnmodifiedPhases", "Phenix U");
+		Table=Table.replaceAll("\\bARPwARPB25\\b", "ARP(B 25I)");
+		Table=Table.replaceAll("\\bARPwARPB5\\b", "ARP(B 5I)");
+		Table=Table.replaceAll("\\bARPwARP\\b", "ARP");
+		Table=Table.replaceAll("\\bBuccaneeri1-25\\b", "i1(25I)");
+		Table=Table.replaceAll("\\bBuccaneeri2-25\\b", "i2(25I)");
+		Table=Table.replaceAll("\\bBuccaneeri1-5\\b", "i1(5I)");
+		Table=Table.replaceAll("\\bBuccaneeri2-5\\b", "i2(5I)");
+		Table=Table.replaceAll("\\bBuccaneeri2W-25\\b", "i2W(25I)");
+		Table=Table.replaceAll("\\bBuccaneeri2W-5\\b", "i2W(5I)");
+		Table=Table.replaceAll("\\bPhenix\\b", "Phenix/Parrot");
+		Table=Table.replaceAll("\\bPhenixUnmodifiedPhases\\b", "Phenix");
 		
 		/*
 		Table=Table.replaceAll(".xlsx", "");

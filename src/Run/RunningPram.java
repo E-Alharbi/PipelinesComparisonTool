@@ -53,4 +53,11 @@ public class RunningPram {
 	public static String UsingMolProbity="T"; // Using Mol Probity in the Analyser. Default is False
 	//public static String PhasesUsedCPhasesMatch="parrot.ABCD.A,parrot.ABCD.B,parrot.ABCD.C,parrot.ABCD.D";// Default is parrot phases.
 	public static String PhasesUsedCPhasesMatch="HLA,HLB,HLC,HLD";// Default is parrot phases.
+	
+	public static String ClusterServerGrid="Slurm";
+	public static String ExperimentType="Both";
+	public static String UsingRFree="T";
+	
+	public static String BuccaneerIterations="25";
+	public static String PhenixPhases="hltofom.Phi_fom.phi,hltofom.Phi_fom.fom,parrot.ABCD.A,parrot.ABCD.B,parrot.ABCD.C,parrot.ABCD.D";
 }

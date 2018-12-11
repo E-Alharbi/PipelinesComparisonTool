@@ -153,6 +153,7 @@ public class ExcelLoader {
 				*/
 				if (ThisToolDataPDB.equals(AllToolsDataPDB) &&AllToolsData.get(i).get(m).BuiltPDB.equals("T")) {
 					PDFFoundInThis=true;
+					break;
 
 				}
 				
@@ -162,8 +163,8 @@ public class ExcelLoader {
 				PDFFoundInAll=false;
               break;
 			}
-			else
-				PDFFoundInAll=true;
+			//else
+				//PDFFoundInAll=true;
 		}
 		if(PDFFoundInAll==true) 
 			Container.add(ThisToolData.get(t));

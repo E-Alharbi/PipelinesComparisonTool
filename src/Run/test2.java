@@ -1,59 +1,189 @@
 package Run;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.Vector;
 
-import org.apache.commons.io.FilenameUtils;
-
-import NotUsed.ARPResultsAnalysis;
+import Analyser.DataContainer;
+import Analyser.ExcelLoader;
 
 public class test2 {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		 Vector<String> FilesNames= new Vector <String>();
-			File[] processedfiles = new File("/Volumes/PhDHardDrive/TempResults/Pipelines/Phenix/PhenixLogsHancs").listFiles();
-				 for (File file : processedfiles) {
-					 FilesNames.add(file.getName().replaceAll("."+FilenameUtils.getExtension(file.getName()),""));
-					 System.out.println(file.getName().replaceAll("."+FilenameUtils.getExtension(file.getName()),""));
-				 }
-				 File[] files = new File("/Volumes/PhDHardDrive/jcsg1200/hancsWithMissingCases").listFiles();
-				 System.out.println(FilesNames.size());
-				 FilesNames=AddFileNameToList(FilesNames);
-				 System.out.println(FilesNames.size());
-				int count=0;
-						 for (File file : files) {
-							 FilesNames=AddFileNameToList(FilesNames);
-							 String CaseName=file.getName().replaceAll("."+FilenameUtils.getExtension(file.getName()),"");
-					
-							 if(!FilesNames.contains(CaseName)){
-								 WriteFileNameToList(CaseName);
-						System.out.println("File Name "+CaseName);
-						count++;
+		ExcelLoader e = new ExcelLoader();
+		Vector<DataContainer> ArpWithRFree = e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Run13UpdatingReso/All/OrginalAndSynthetic/noncs/ARPwARP.xlsx.xlsx");
+		
+		Vector<DataContainer> ArpWithNoRFree = e.ReadExcel("/Users/emadalharbi/Desktop/Arp/ExcludedBuccaneerDevSet/noncs/ARPwARPNoRFree.xlsx.xlsx.xlsx");
+		
+		int better=0;
+		int better10=0;
+		int better20=0;
+		int better30=0;
+		int better40=0;
+		int better50=0;
+		int worse =0;
+		int worse10 =0;
+		int worse20 =0;
+		int worse30 =0;
+		int worse40 =0;
+		int worse50 =0;
+		int Equal =0;
+		int EqualRworkAndRfree=0;
+		int EqualRworkLowerRfree=0;
+		int EqualRworkHigherRfree=0;
+		double WithRFree=0;
+		double WithNoRFree=0;
+		for (DataContainer d : ArpWithRFree) {
+			
+			for (DataContainer dd : ArpWithNoRFree) {
+				if(d.PDB_ID.equals(dd.PDB_ID) && !dd.Completeness.equals("None") && dd.Intermediate.equals("F") && dd.BuiltPDB.equals("T")) {
+					 WithRFree+=Math.round(Double.valueOf(d.Completeness));
+					 WithNoRFree+=Math.round(Double.valueOf(dd.Completeness));
+					if(Math.round(Double.parseDouble(d.Completeness)) < Math.round(Double.parseDouble(dd.Completeness) )) {
+						better++;
+						/*
+						System.out.println(d.PDB_ID);
+						System.out.println(dd.Resolution);
+						System.out.println(d.Completeness);
+						System.out.println(dd.Completeness);
+						System.out.println(d.TimeTaking);
+						System.out.println(dd.TimeTaking);
+						*/
 					}
-						 }
-						 System.out.println(count);
+					if(Math.round(Double.parseDouble(d.Completeness)) < Math.round(Double.parseDouble(dd.Completeness) ) -10) {
+						better10++;
+						/*
+						System.out.println(d.PDB_ID);
+						System.out.println(dd.Resolution);
+						System.out.println(d.Completeness);
+						System.out.println(dd.Completeness);
+						System.out.println(d.TimeTaking);
+						System.out.println(dd.TimeTaking);
+						*/
+					}
+					if(Math.round(Double.parseDouble(d.Completeness)) < Math.round(Double.parseDouble(dd.Completeness) ) -20) {
+						better20++;
+						/*
+						System.out.println(d.PDB_ID);
+						System.out.println(dd.Resolution);
+						System.out.println(d.Completeness);
+						System.out.println(dd.Completeness);
+						System.out.println(d.TimeTaking);
+						System.out.println(dd.TimeTaking);
+						*/
+					}
+					if(Math.round(Double.parseDouble(d.Completeness)) < Math.round(Double.parseDouble(dd.Completeness) ) -30) {
+						better30++;
+						/*
+						System.out.println(d.PDB_ID);
+						System.out.println(dd.Resolution);
+						System.out.println(d.Completeness);
+						System.out.println(dd.Completeness);
+						System.out.println(d.TimeTaking);
+						System.out.println(dd.TimeTaking);
+						*/
+					}
+					if(Math.round(Double.parseDouble(d.Completeness)) < Math.round(Double.parseDouble(dd.Completeness) ) -40) {
+						better40++;
+						/*
+						System.out.println(d.PDB_ID);
+						System.out.println(dd.Resolution);
+						System.out.println(d.Completeness);
+						System.out.println(dd.Completeness);
+						System.out.println(d.TimeTaking);
+						System.out.println(dd.TimeTaking);
+						*/
+					}
+					if(Math.round(Double.parseDouble(d.Completeness)) < Math.round(Double.parseDouble(dd.Completeness) ) -50) {
+						better50++;
+						/*
+						System.out.println(d.PDB_ID);
+						System.out.println(dd.Resolution);
+						System.out.println(d.Completeness);
+						System.out.println(dd.Completeness);
+						System.out.println(d.TimeTaking);
+						System.out.println(dd.TimeTaking);
+						*/
+					}
+					 if(Math.round(Double.parseDouble(d.Completeness)) > Math.round(Double.parseDouble(dd.Completeness))) {
+					
+						worse++;
+						
+						
+					}
+					 if(Math.round(Double.parseDouble(d.Completeness)) -10 > Math.round(Double.parseDouble(dd.Completeness))) {
+							
+							worse10++;
+							
+							
+						}
+					 if(Math.round(Double.parseDouble(d.Completeness)) -20 > Math.round(Double.parseDouble(dd.Completeness))) {
+							
+							worse20++;
+							
+							
+						}
+					 if(Math.round(Double.parseDouble(d.Completeness)) -30 > Math.round(Double.parseDouble(dd.Completeness))) {
+							
+							worse30++;
+							
+							
+						}
+					 if(Math.round(Double.parseDouble(d.Completeness)) -40 > Math.round(Double.parseDouble(dd.Completeness))) {
+							
+							worse40++;
+							
+							
+						}
+					 if(Math.round(Double.parseDouble(d.Completeness)) -50 > Math.round(Double.parseDouble(dd.Completeness))) {
+							
+							worse50++;
+							System.out.println(d.PDB_ID);
+							System.out.println(dd.Resolution);
+							System.out.println(d.Completeness);
+							System.out.println(dd.Completeness);
+							System.out.println(d.TimeTaking);
+							System.out.println(dd.TimeTaking);
+							
+						}
+					 if(Math.round(Double.parseDouble(d.Completeness)) == Math.round(Double.parseDouble(dd.Completeness)))  {
+						 Equal++;
+						
+					 }
+					 System.out.println(Double.valueOf(dd.R_factor0Cycle));
+					 System.out.println("RFree "+Double.valueOf(dd.R_free0Cycle));
+					 if(Double.parseDouble(dd.R_factor0Cycle) == Double.parseDouble(dd.R_free0Cycle))  {
+						 EqualRworkAndRfree++;
+						
+					 }
+					 
+					 if(Double.parseDouble(dd.R_factor0Cycle) > Double.parseDouble(dd.R_free0Cycle))  {
+						 EqualRworkHigherRfree++;
+						
+					 }
+					 
+					 if(Double.parseDouble(dd.R_factor0Cycle) < Double.parseDouble(dd.R_free0Cycle))  {
+						 EqualRworkLowerRfree++;
+						
+					 }
+					 
+				}
+			}
+		}
+		System.out.println(    WithRFree / ArpWithRFree.size());
+		System.out.println(    WithNoRFree / ArpWithNoRFree.size());
+		System.out.println("improved by" +"\t"+ "1%" + "\t"+ "10%" + "\t"+ "20%" + "\t"+ "30%" + "\t"+ "40%" + "\t"+ "50%" + "\t");
+		System.out.println("\t\t"+better + "\t"+ better10 + "\t"+ better20 + "\t"+ better30 + "\t"+ better40 + "\t"+ better50 + "\t");
+		System.out.println("got worse"  +"\t"+ "1%" + "\t"+ "10%" + "\t"+ "20%" + "\t"+ "30%" + "\t"+ "40%" + "\t"+ "50%" + "\t");
+		System.out.println("\t\t"+worse + "\t"+ worse10 + "\t"+ worse20 + "\t"+ worse30 + "\t"+ worse40 + "\t"+ worse50 + "\t");
+		//System.out.println(worse);
+		System.out.println("Equivalent"+"\t"+Equal);
 		
-	}
-	static Vector<String> AddFileNameToList( Vector<String> FilesNames) throws IOException{
-		File yourFile = new File("ProcessedFilesNamesPhenix.txt");
-		yourFile.createNewFile();
-		 String FileNamesTxt=new ARPResultsAnalysis().readFileAsString("ProcessedFilesNamesPhenix.txt");
-		 FilesNames.addAll(Arrays.asList(FileNamesTxt.split("\n")));
-		 return FilesNames;
+		System.out.println("R-work == R-free"+"\t"+EqualRworkAndRfree);
+		System.out.println("R-work > R-free "+"\t"+EqualRworkHigherRfree);
+		System.out.println("R-work < R-free "+"\t"+EqualRworkLowerRfree);
 		
-	}
-	static void WriteFileNameToList(String Name) throws IOException{
-		File yourFile = new File("ProcessedFilesNamesPhenix.txt");
-		yourFile.createNewFile();
-		 BufferedWriter output;
-		 output = new BufferedWriter(new FileWriter("ProcessedFilesNamesPhenix.txt", true));
-		 output.append(Name+"\n");
-		 output.close();
+		
+		
 	}
 
 }

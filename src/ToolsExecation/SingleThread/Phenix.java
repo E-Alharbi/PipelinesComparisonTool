@@ -21,6 +21,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.FileFileFilter;
 import org.apache.commons.io.filefilter.RegexFileFilter;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -29,6 +30,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import Analyser.ExcelSheet;
 import Analyser.PipelineLog;
 import NotUsed.ARPResultsAnalysis;
+import Run.Preparer;
 import Run.RunComparison;
 import Run.RunningPram;
 
@@ -164,6 +166,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 		new RunComparison().CheckDirAndFile("./PhenixResults/WorkingDir");
 		new RunComparison().CheckDirAndFile("./PhenixResults/IntermediateLogs");    
 		new RunComparison().CheckDirAndFile("./PhenixResults/IntermediatePDBs");
+		new RunComparison().CheckDirAndFile("ParametersUsed");
 		 Vector<String> FilesNames= new Vector <String>();
 		File[] processedfiles = new File(PATHLogs).listFiles();
 			 for (File file : processedfiles) {
@@ -176,7 +179,14 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 	
    
     
-	File[] files = new File(RunningPram.DataPath).listFiles();
+			 File[] files=null ;
+		     if(new File(RunningPram.DataPath).isDirectory()) {
+		    	 files = new File(RunningPram.DataPath).listFiles();
+		     }
+			if(new File(RunningPram.DataPath).isFile()) {
+				
+				files = ArrayUtils.add(files, new File(RunningPram.DataPath));
+			}
     FilesNames=AddFileNameToList(FilesNames);
 		 for (File file : files) {
 			 String CaseName=file.getName().replaceAll("."+FilenameUtils.getExtension(file.getName()),"");
@@ -253,10 +263,27 @@ seqin=FilePathAndName+".seq";
 	"data=",mtzin,
 	"seq_file=",seqin,
 	//"input_labels="," FP SIGFP PHIB FOM HLA HLB HLC HLD", 
-	"input_labels=","FP SIGFP hltofom.Phi_fom.phi hltofom.Phi_fom.fom parrot.ABCD.A parrot.ABCD.B parrot.ABCD.C parrot.ABCD.D FreeR_flag",
+	//"input_labels=","FP SIGFP hltofom.Phi_fom.phi hltofom.Phi_fom.fom parrot.ABCD.A parrot.ABCD.B parrot.ABCD.C parrot.ABCD.D FreeR_flag",
+	"input_labels=","FP SIGFP "+RunningPram.PhenixPhases+" FreeR_flag",
+
+	
 	"clean_up=","True"
 	 };
-	 
+	 if(RunningPram.UsingRFree.equals("F")) {
+		 String[]callAndArgsNoRfree= {
+				 RunningPram.PhenixAutobuild,
+		"data=",mtzin,
+		"seq_file=",seqin,
+		//"input_labels="," FP SIGFP PHIB FOM HLA HLB HLC HLD", 
+		"input_labels=","FP SIGFP "+RunningPram.PhenixPhases,
+		//"input_labels=","FP SIGFP hltofom.Phi_fom.phi hltofom.Phi_fom.fom parrot.ABCD.A parrot.ABCD.B parrot.ABCD.C parrot.ABCD.D",
+
+		"clean_up=","True"
+		 };
+		 callAndArgs= callAndArgsNoRfree;
+	 }
+	 new Preparer().WriteTxtFile("ParametersUsed/"+FileName+".txt", new Date().toString()+" \n "+ Arrays.toString(callAndArgs));
+
 	 Process p = Runtime.getRuntime().exec(callAndArgs);
 
 		             

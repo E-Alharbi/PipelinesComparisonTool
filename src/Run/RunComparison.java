@@ -212,6 +212,11 @@ public class RunComparison {
 						 RunningPram.CrankPipeLine=checkArg(Parm,"CrankPipeLine");
 						
 					 }
+					 
+					 if(checkArg(Parm,"UsingRFree")!=null){
+						 RunningPram.UsingRFree=checkArg(Parm,"UsingRFree");
+						
+					 }
 				//	new CrankRunner().RunCrank(new CrankRunner().PickACase());	
 					 //new ThreadsRunner().Threads(new CrankRunner());
 					 new Crank().RunCrank();
@@ -235,6 +240,16 @@ public class RunComparison {
 					 }
 					 if(checkArg(Parm,"Buccaneeri2")!=null){
 						 RunningPram.Buccaneeri2PipeLine=checkArg(Parm,"Buccaneeri2");
+						
+					 }
+					 
+					 if(checkArg(Parm,"UsingRFree")!=null){
+						 RunningPram.UsingRFree=checkArg(Parm,"UsingRFree");
+						
+					 }
+					 
+					 if(checkArg(Parm,"Iterations")!=null){
+						 RunningPram.BuccaneerIterations=checkArg(Parm,"Iterations");
 						
 					 }
 					//new Buccaneeri2().RunBuccaneerTool(new Buccaneeri2().PickACase());	
@@ -295,12 +310,74 @@ public class RunComparison {
 						 RunningPram.PhasesUsedCPhasesMatch=checkArg(Parm,"PhasesUsedCPhasesMatch");
 						
 					 }
+					 if(checkArg(Parm,"UsingRfree")!=null){
+						 RunningPram.UsingRFree=checkArg(Parm,"UsingRfree");
+						
+					 }
 					 Vector <String>PipelinesNames=  new Vector<String>(Arrays.asList(RunningPram.Pipelines.split(",")));
 					
 					new Preparer().Prepare(PipelinesNames);	
 			 }
 			 
-			 
+			 else if(args[0].equals("JobsCreater")){
+					
+				 
+					
+				 Parm.addAll(Arrays.asList(args));
+			
+				if(checkArg(Parm,"ToolName")==null){
+					System.out.println("One or more of the required parameters is missing! ");
+					System.out.println("The required parameters are : ");
+					System.out.println("ToolName= the path for tool script");
+					System.out.println("PDBDir= the path for tool PDBs. If not provided, will create scripts for the all files");
+					System.exit(-1);
+				}
+				if(checkArg(Parm,"PDBDir")!=null)	 
+					RunningPram.PDBsDir=checkArg(Parm,"PDBDir");
+				if(checkArg(Parm,"PDBDir")==null)
+					RunningPram.PDBsDir=null;
+				
+					new JobCreater().CreateJobs(checkArg(Parm,"ToolName"));
+			 }
+			  
+			 else if(args[0].equals("Cleaner")){
+					
+				 
+					
+				 Parm.addAll(Arrays.asList(args));
+			
+				if(checkArg(Parm,"LogsDir")==null || checkArg(Parm,"PDBDir")==null || checkArg(Parm,"LogsDirInter")==null || checkArg(Parm,"PDBDirInter")==null){
+					System.out.println("One or more of the required parameters is missing! ");
+					System.out.println("The required parameters are : ");
+					System.out.println("LogsDir= the path for the log files");
+					System.out.println("PDBDir= the path for the PDB files");
+					System.out.println("LogsDirInter= the path for the log files");
+					System.out.println("PDBDirInter= the path for the PDB files");
+					System.exit(-1);
+				}
+				
+				if(checkArg(Parm,"PDBDir")!=null)	 
+					RunningPram.PDBsDir=checkArg(Parm,"PDBDir");
+				if(checkArg(Parm,"PDBDir")==null)
+					RunningPram.PDBsDir=null;
+				
+				if(checkArg(Parm,"LogsDir")!=null)	 
+					RunningPram.LogsDir=checkArg(Parm,"LogsDir");
+				if(checkArg(Parm,"LogsDir")==null)
+					RunningPram.LogsDir=null;
+				
+				if(checkArg(Parm,"LogsDirInter")!=null)	 
+					RunningPram.IntermediateLogs=checkArg(Parm,"LogsDirInter");
+				if(checkArg(Parm,"LogsDirInter")==null)
+					RunningPram.IntermediateLogs=null;
+				
+				if(checkArg(Parm,"PDBDirInter")!=null)	 
+					RunningPram.IntermediatePDBs=checkArg(Parm,"PDBDirInter");
+				if(checkArg(Parm,"PDBDirInter")==null)
+					RunningPram.IntermediatePDBs=null;
+				
+					new CleanerForRunner().Clean();
+			 }
 			 
 			 else if(args[0].equals("ScriptManager")){
 					
@@ -331,14 +408,24 @@ public class RunComparison {
 					
 				 Parm.addAll(Arrays.asList(args));
 			
-				if(checkArg(Parm,"data")==null){
+				if(checkArg(Parm,"data")==null || checkArg(Parm,"Iterations")==null){
 					System.out.println("One or more of the required parameters is missing! ");
 					System.out.println("The required parameters are : ");
 					System.out.println("data= the path for data folder");
+					System.out.println("Iterations= number of iterations");
 					System.exit(-1);
 				}
 					 if(checkArg(Parm,"data")!=null){
 						 RunningPram.DataPath=checkArg(Parm,"data");
+						
+					 }
+					 if(checkArg(Parm,"Iterations")!=null){
+						 RunningPram.BuccaneerIterations=checkArg(Parm,"Iterations");
+						
+					 }
+					 
+					 if(checkArg(Parm,"UsingRFree")!=null){
+						 RunningPram.UsingRFree=checkArg(Parm,"UsingRFree");
 						
 					 }
 					//new RunCBuccaneer().RunBuccaneerTool(	new RunCBuccaneer().PickACase());
@@ -421,6 +508,11 @@ public class RunComparison {
 						 RunningPram.BuccModels=checkArg(Parm,"BuccModels");
 						
 					 }
+					 
+					 if(checkArg(Parm,"UsingRFree")!=null){
+						 RunningPram.UsingRFree=checkArg(Parm,"UsingRFree");
+						
+					 }
 
 					// new RunArp().RunwArpTool(new RunArp().PickACase());
 					// new ThreadsRunner().Threads(new ArpRunner());
@@ -472,7 +564,7 @@ public class RunComparison {
 					System.out.println("One or more of the required parameters is missing! ");
 					System.out.println("The required parameters are : ");
 					System.out.println("data= the path for data folder");
-					
+	
 					System.out.println("PhenixAutobuild= the path for Phenix.autobuild");
 				
 					System.exit(-1);
@@ -486,6 +578,15 @@ public class RunComparison {
 						 RunningPram.PhenixAutobuild=checkArg(Parm,"PhenixAutobuild");
 						
 					 }
+					 if(checkArg(Parm,"UsingRFree")!= null){
+						 RunningPram.UsingRFree=checkArg(Parm,"UsingRFree");
+						
+					 }
+					 if(checkArg(Parm,"Phases")!= null){
+						 RunningPram.PhenixPhases=checkArg(Parm,"Phases");
+						 
+					 }
+					 RunningPram.PhenixPhases= RunningPram.PhenixPhases.replaceAll(",", " ");
 					 System.out.println("data = "+RunningPram.DataPath);
 					 System.out.println("PhenixAutobuild = "+RunningPram.PhenixAutobuild);
 					//new RunPhenixThreads().PhenixThread(); 

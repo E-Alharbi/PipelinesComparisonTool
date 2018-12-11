@@ -3,7 +3,7 @@
 import argparse
 import os
 import sys
-
+from os.path import expanduser
 parser = argparse.ArgumentParser(description='Runs the buccaneer i2 pipeline')
 parser.add_argument('--mtzin', required=True, metavar='FILE', help='required')
 parser.add_argument('--seqin', required=True, metavar='FILE', help='required')
@@ -24,9 +24,13 @@ print sys.path
 from core import CCP4XtalData
 from PluginUtils import smartSplitMTZ, makeASUContentFile, Runner
 print "os.getcwd() "
+args.mtz_name=args.mtz_name+"$1"
 print args.mtz_name
-os.mkdir(args.mtz_name)
-dbFile=os.path.join(os.getcwd()+"/"+args.mtz_name, "db.sqlite")
+#os.mkdir(args.mtz_name)
+if not os.path.exists(str(expanduser("~"))+"/Buccaneeri2"):
+    print ("Buccaneeri2 folder not created in "+str(expanduser("~"))+" Create a folder with name Buccaneeri2")
+os.mkdir(str(expanduser("~"))+"/Buccaneeri2/"+args.mtz_name+"I"+str(args.iterations))
+dbFile=os.path.join(str(expanduser("~"))+"/Buccaneeri2/"+args.mtz_name+"I"+str(args.iterations), "db.sqlite")
 runner = Runner(dbFile=dbFile)
 
 cOpenJob = runner.jobForTaskInProjectName(projectName="project"+args.mtz_name, taskName="buccaneer_build_refine_mr")
