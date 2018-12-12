@@ -234,6 +234,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 
 	PipelineLog Run(String FilePathAndName,String FileName){
 		Timer timer = new Timer();
+		 new RunComparison().CheckDirAndFile(FileName);
 		//  PDBID=FileName;
 		 String st = null;
 		 Date ProStartTime = new java.util.Date();
@@ -266,7 +267,7 @@ seqin=FilePathAndName+".seq";
 	//"input_labels=","FP SIGFP hltofom.Phi_fom.phi hltofom.Phi_fom.fom parrot.ABCD.A parrot.ABCD.B parrot.ABCD.C parrot.ABCD.D FreeR_flag",
 	"input_labels=","FP SIGFP "+RunningPram.PhenixPhases+" FreeR_flag",
 
-	
+
 	"clean_up=","True"
 	 };
 	 if(RunningPram.UsingRFree.equals("F")) {
@@ -277,15 +278,16 @@ seqin=FilePathAndName+".seq";
 		//"input_labels="," FP SIGFP PHIB FOM HLA HLB HLC HLD", 
 		"input_labels=","FP SIGFP "+RunningPram.PhenixPhases,
 		//"input_labels=","FP SIGFP hltofom.Phi_fom.phi hltofom.Phi_fom.fom parrot.ABCD.A parrot.ABCD.B parrot.ABCD.C parrot.ABCD.D",
-
+		
 		"clean_up=","True"
 		 };
 		 callAndArgs= callAndArgsNoRfree;
 	 }
 	 new Preparer().WriteTxtFile("ParametersUsed/"+FileName+".txt", new Date().toString()+" \n "+ Arrays.toString(callAndArgs));
-
-	 Process p = Runtime.getRuntime().exec(callAndArgs);
-
+	
+	// Process p = Runtime.getRuntime().exec(callAndArgs);
+	 Process p=Runtime.getRuntime().exec(callAndArgs,
+		        null, new File(FileName));
 		             
 
 	BufferedReader stdInput = new BufferedReader(new 
