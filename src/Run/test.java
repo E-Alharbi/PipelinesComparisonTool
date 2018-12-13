@@ -20,7 +20,13 @@ public class test {
 
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
+	
 		
+		System.out.println(new File(test.class.getProtectionDomain().
+				 getCodeSource().
+				 getLocation().
+				 getPath()).getName());
+		/*
 		 Collection<File> Logs = FileUtils.listFiles(
 				 new File("/Volumes/PhDHardDrive/VikingSync/1vku-4.0-parrot-noncs/"), 
 				 new RegexFileFilter(".*_warpNtrace.pdb$"), 
@@ -31,6 +37,7 @@ public class test {
 		 System.out.println(LogsFiles.size());
 		 for(int i=0 ; i < LogsFiles.size() ; ++i)
 			 System.out.println(LogsFiles.get(i).getAbsolutePath());
+			 */
 		/*
 		RunningPram.DataPath="/Volumes/PhDHardDrive/jcsg1200/mrncs/1o6a-1.9-parrot-mrncs.mtz";
 		File[] files=null ;
