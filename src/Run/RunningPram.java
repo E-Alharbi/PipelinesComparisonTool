@@ -1,5 +1,9 @@
 package Run;
-
+/**
+*
+* @author Emad Alharbi
+* University of York
+*/
 public class RunningPram {
 
 	//All the parameters that used by this scripts from the command line 

@@ -1,5 +1,9 @@
 package Analyser;
-
+/**
+*
+* @author Emad Alharbi
+* University of York
+*/
 public class Factors {
 
 	// Used to save the data from refmac. 

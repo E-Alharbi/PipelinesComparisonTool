@@ -1,4 +1,9 @@
 package NotUsed;
+/**
+*
+* @author Emad Alharbi
+* University of York
+*/
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

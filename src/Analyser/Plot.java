@@ -1,4 +1,9 @@
 package Analyser;
+/**
+*
+* @author Emad Alharbi
+* University of York
+*/
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Shape;

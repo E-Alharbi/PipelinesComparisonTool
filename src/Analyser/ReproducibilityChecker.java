@@ -1,5 +1,9 @@
 package Analyser;
-
+/**
+*
+* @author Emad Alharbi
+* University of York
+*/
 import java.io.File;
 import java.util.Vector;
 

@@ -1,4 +1,9 @@
 package Run;
+/**
+*
+* @author Emad Alharbi
+* University of York
+*/
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -121,6 +126,26 @@ public class RunComparison {
 					
 				 }
 					new CAD().RunCAD(DataPath);
+			 }
+ else if(args[0].equals("ReRun")){
+					
+				 
+				 String DataPath="";
+				 Parm.addAll(Arrays.asList(args));
+			
+				if(checkArg(Parm,"Path")==null){
+					
+					System.out.println("One or more of the required parameters is missing! ");
+					System.out.println("The required parameters are : ");
+					System.out.println("Path= the path for the folder that contains pipelines");
+					System.exit(-1);
+					
+				}
+				if(checkArg(Parm,"Path")!=null){
+					DataPath=checkArg(Parm,"Path");
+					
+				 }
+					new PipeliensReRun().ReRun(DataPath);
 			 }
 			 
                 else if(args[0].equals("CfakeAnom")){

@@ -1,5 +1,9 @@
 package ToolsExecation.SingleThread;
-
+/**
+*
+* @author Emad Alharbi
+* University of York
+*/
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

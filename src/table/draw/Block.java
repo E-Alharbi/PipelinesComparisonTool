@@ -14,7 +14,9 @@ import java.util.Objects;
 /**
  *
  * @author Thedath Oudarya
+ * https://github.com/thedathoudarya/WAGU-data-in-table-view
  */
+
 public final class Block {
 
     protected static int nextIndex = 0;

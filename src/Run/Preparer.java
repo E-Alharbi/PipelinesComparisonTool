@@ -1,5 +1,9 @@
 package Run;
-
+/**
+*
+* @author Emad Alharbi
+* University of York
+*/
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -24,7 +28,7 @@ public class Preparer {
 	 * Due to the large number of runs which used different tools and parameters. This Preparer creates all necessary
 	 *  scripts that need to submit as jobs in the cluster server with minimum effort.
 	 *  Calling this class form RunComparsion    
-	  */
+	 */
 String ScriptHeader="";	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -83,9 +87,9 @@ public void Prepare(Vector<String> Tools) throws IOException {
 		if(Tools.contains("Buccaneeri2W"))
 		   Tools.add("Buccaneeri2WI5");
 		if(Tools.contains("Phenix"))
-			   Tools.add("PhenixHLA");
+		   Tools.add("PhenixHLA");
 		if(Tools.contains("Buccaneeri1I5"))
-		Tools.add("ArpWArpAfterBuccaneeri1I5");
+		   Tools.add("ArpWArpAfterBuccaneeri1I5");
 	
 		
 	 CreaterFolders(Tools);
@@ -114,7 +118,7 @@ public void Prepare(Vector<String> Tools) throws IOException {
 	 if(Tools.contains("ArpWArpAfterBuccaneeri1"))
 	 ArpwArpPrepare(true,"ArpWArpAfterBuccaneeri1","Buccaneeri1");
 	 if(Tools.contains("ArpWArpAfterBuccaneeri1I5"))
-	ArpwArpPrepare(true,"ArpWArpAfterBuccaneeri1I5","Buccaneeri1I5");
+	 ArpwArpPrepare(true,"ArpWArpAfterBuccaneeri1I5","Buccaneeri1I5");
 	
 }
 boolean PhenixPrepare(String Phases, String WorkFolder) throws IOException {

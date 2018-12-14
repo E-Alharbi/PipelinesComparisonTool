@@ -1,4 +1,9 @@
 package Utilities;
+/**
+*
+* @author Emad Alharbi
+* University of York
+*/
 import java.io.File;
 import java.io.IOException;
 

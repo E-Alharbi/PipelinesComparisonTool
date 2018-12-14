@@ -6,9 +6,10 @@
 package table.draw;
 
 /**
- *
- * @author Thedath Oudarya
- */
+*
+* @author Thedath Oudarya
+* https://github.com/thedathoudarya/WAGU-data-in-table-view
+*/
 class Charr {
     
     protected static final char S = ' ';

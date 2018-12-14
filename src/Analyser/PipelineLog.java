@@ -1,5 +1,9 @@
 package Analyser;
-
+/**
+*
+* @author Emad Alharbi
+* University of York
+*/
 public class PipelineLog {
 
 	// The results that obtained from the log file during building

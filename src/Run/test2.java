@@ -1,5 +1,9 @@
 package Run;
-
+/**
+*
+* @author Emad Alharbi
+* University of York
+*/
 import java.util.Vector;
 
 import Analyser.DataContainer;

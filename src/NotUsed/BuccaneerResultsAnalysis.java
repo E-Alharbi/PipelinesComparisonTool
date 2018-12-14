@@ -1,4 +1,9 @@
 package NotUsed;
+/**
+*
+* @author Emad Alharbi
+* University of York
+*/
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;

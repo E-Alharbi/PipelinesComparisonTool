@@ -1,5 +1,9 @@
 package Analyser;
-
+/**
+*
+* @author Emad Alharbi
+* University of York
+*/
 public class SPSSDescriptivesTable {
  // structure of descriptives table in SPSS
 	

@@ -1,5 +1,9 @@
 package Utilities;
-
+/**
+*
+* @author Emad Alharbi
+* University of York
+*/
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Vector;

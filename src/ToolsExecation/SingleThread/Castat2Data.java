@@ -1,5 +1,9 @@
 package ToolsExecation.SingleThread;
-
+/**
+*
+* @author Emad Alharbi
+* University of York
+*/
 public class Castat2Data {
 
 	public String NumberOfAtomsInFirstPDB="None";

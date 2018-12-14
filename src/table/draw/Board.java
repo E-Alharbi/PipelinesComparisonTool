@@ -9,9 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * @author Thedath Oudarya
- */
+*
+* @author Thedath Oudarya
+* https://github.com/thedathoudarya/WAGU-data-in-table-view
+*/
 public class Board {
     
     protected boolean showBlockIndex;

@@ -1,5 +1,9 @@
 package Analyser;
-
+/**
+*
+* @author Emad Alharbi
+* University of York
+*/
 import java.util.Comparator;
 import java.util.Vector;
 
