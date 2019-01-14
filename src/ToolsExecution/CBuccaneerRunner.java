@@ -27,7 +27,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import Analyser.Factors;
+import Analyser.FactorsFlags;
 import Analyser.PipelineLog;
 import NotUsed.ARPResultsAnalysis;
 import Run.RunComparison;
@@ -234,7 +234,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 		             }
 
 		              RunningPram.RefmacPath=System.getenv("CCP4")+"/bin/refmac5";
-			        Factors F=  new Refmac().RunRefmac(FilePathAndName+".mtz", WorkingDir+"/build.pdb",  RunningPram.RefmacPath, "CBuccaneer", WorkingDir+"/"+FileName,LIBINRefMac);
+			        FactorsFlags F=  new Refmac().RunRefmac(FilePathAndName+".mtz", WorkingDir+"/build.pdb",  RunningPram.RefmacPath, "CBuccaneer", WorkingDir+"/"+FileName,LIBINRefMac);
 			        res.LogFile+=F.Log;
 			            for (int i =1 ; i< 25 ; ++i ) {
 			            	System.out.println("########## Cycle "+i+" ##########");

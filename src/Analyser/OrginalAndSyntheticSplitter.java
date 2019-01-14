@@ -20,7 +20,7 @@ public class OrginalAndSyntheticSplitter {
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		// TODO Auto-generated method stub
 	
-		File [] DatasetFolders = new File("/Users/emadalharbi/Desktop/Arp").listFiles();
+		File [] DatasetFolders = new File("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun1ArpNoFree").listFiles();
 		for(File Folder : DatasetFolders) {
 			if(Folder.isDirectory()) {
 				//String OrginalPath=Folder.getAbsolutePath()+"/Orginal/";

@@ -49,7 +49,7 @@ public class ResultsInLatex {
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets17";
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/GAResults/Ex5";
 
-		String ExcelDir = "/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Reproducibility2/ExFaliedCases/OriginalExperiment";
+		String ExcelDir = "/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun1ArpNoFree/Synthetic";
 		
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets17";
 
@@ -58,19 +58,23 @@ public class ResultsInLatex {
 
 		// new ResultsInCSV().PDBTable(Container);
 
-		//new ResultsInLatex().OverallResults(ExcelDir);
+		new ResultsInLatex().OverallResults(ExcelDir);
 		// new ResultsInLatex().PDBList(ExcelDir);
 		// new ResultsInLatex().BestAndWorstCases(ExcelDir);
 		// new ResultsInLatex().PrepareExcelForSpss(ExcelDir);
 		// new ResultsInLatex().SpssBootstraping("SpssExcel");
 		// new ResultsInLatex().ReadingSpssBootstraping("SpssExcelResults");
+		
 		//new ResultsInLatex().MatrixOfResults(ExcelDir);
+		
 		//new ResultsInLatex().LongMatrixOfResults(ExcelDir);
 
 		// new ResultsInCSV().GroupByPhases(ExcelDir);
 		
 		//new ResultsInLatex().TimeTakingTable(ExcelDir);
-		new ResultsInLatex().CompRTimeAvgTable(ExcelDir);
+		
+		
+		//new ResultsInLatex().CompRTimeAvgTable(ExcelDir);
 	}
 	void CompRTimeAvgTable(String ExcelDir) throws IOException {
 		
@@ -1088,6 +1092,7 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 									if (Container.get(i).get(model).BuiltPDB.equals("T")
 											&& Container.get(m).get(modeComTo).BuiltPDB.equals("T")) {
 										CountModel++;
+										
 										if (  new BigDecimal(Container.get(i).get(model).Completeness).setScale(0, RoundingMode.HALF_UP).subtract( 
 												new BigDecimal(Container.get(m).get(modeComTo).Completeness).setScale(0, RoundingMode.HALF_UP)).compareTo(new BigDecimal("1")) >=0)  {
 										
@@ -1572,6 +1577,7 @@ return FormattedTable;
 //System.out.println(Sum/NumberCount);
 	}
 	String FormatingPipelinesNames(String Table, boolean RemoveDatasetNames) {
+	
 		if(RemoveDatasetNames==true) {
 		Table=Table.replaceAll("hancs", "");
 		Table=Table.replaceAll("mrncs", "");
@@ -1579,17 +1585,34 @@ return FormattedTable;
 		}
 		
 		Table=Table.replaceAll(".xlsx", "");
-		Table=Table.replaceAll("\\bARPwARPB25\\b", "ARP(B 25I)");
-		Table=Table.replaceAll("\\bARPwARPB5\\b", "ARP(B 5I)");
+		//Table=Table.replaceAll("\\bARPwARPB25\\b", "ARP(B 25I)");
+		Table=Table.replaceAll("\\bArpWArpAfterBuccaneeri1\\b", "ARP(B 25I)");
+		//Table=Table.replaceAll("\\bARPwARPB5\\b", "ARP(B 5I)");
+		
+		Table=Table.replaceAll("\\bArpWArpAfterBuccaneeri1I5\\b", "ARP(B 5I)");
 		Table=Table.replaceAll("\\bARPwARP\\b", "ARP");
-		Table=Table.replaceAll("\\bBuccaneeri1-25\\b", "i1(25I)");
-		Table=Table.replaceAll("\\bBuccaneeri2-25\\b", "i2(25I)");
-		Table=Table.replaceAll("\\bBuccaneeri1-5\\b", "i1(5I)");
-		Table=Table.replaceAll("\\bBuccaneeri2-5\\b", "i2(5I)");
-		Table=Table.replaceAll("\\bBuccaneeri2W-25\\b", "i2W(25I)");
-		Table=Table.replaceAll("\\bBuccaneeri2W-5\\b", "i2W(5I)");
+		
+		//Table=Table.replaceAll("\\bBuccaneeri1-25\\b", "i1(25I)");
+		Table=Table.replaceAll("\\bBuccaneeri1\\b", "i1(25I)");
+		//Table=Table.replaceAll("\\bBuccaneeri2-25\\b", "i2(25I)");
+		Table=Table.replaceAll("\\bBuccaneeri2\\b", "i2(25I)");
+		//Table=Table.replaceAll("\\bBuccaneeri1-5\\b", "i1(5I)");
+		Table=Table.replaceAll("\\bBuccaneeri1I5\\b", "i1(5I)");
+		//Table=Table.replaceAll("\\bBuccaneeri2-5\\b", "i2(5I)");
+		Table=Table.replaceAll("\\bBuccaneeri2I5\\b", "i2(5I)");
+		//Table=Table.replaceAll("\\bBuccaneeri2W-25\\b", "i2W(25I)");
+		Table=Table.replaceAll("\\bBuccaneeri2W\\b", "i2W(25I)");
+		//Table=Table.replaceAll("\\bBuccaneeri2W-5\\b", "i2W(5I)");
+		Table=Table.replaceAll("\\bBuccaneeri2WI5\\b", "i2W(5I)");
 		Table=Table.replaceAll("\\bPhenix\\b", "Phenix/Parrot");
-		Table=Table.replaceAll("\\bPhenixUnmodifiedPhases\\b", "Phenix");
+		//Table=Table.replaceAll("\\bPhenixUnmodifiedPhases\\b", "Phenix");
+		Table=Table.replaceAll("\\bPhenixHAL\\b", "Phenix");
+		
+		Table=Table.replaceAll("\\bBuccaneeri1I1GA\\b", "i1(I1GA)");
+		Table=Table.replaceAll("\\bBuccaneeri1I2GA\\b", "i1(I2GA)");
+		Table=Table.replaceAll("\\bBuccaneeri1I3GA\\b", "i1(I3GA)");
+		Table=Table.replaceAll("\\bBuccaneeri1I4GA\\b", "i1(I4GA)");
+		Table=Table.replaceAll("\\bBuccaneeri1I5GA\\b", "i1(I5GA)");
 		
 		/*
 		Table=Table.replaceAll(".xlsx", "");

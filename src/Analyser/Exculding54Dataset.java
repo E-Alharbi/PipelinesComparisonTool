@@ -13,7 +13,7 @@ import Run.RunComparison;
 
 public class Exculding54Dataset {
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		String PathToDM="/Users/emadalharbi/Desktop/Arp/ExFaliedCases";
+		String PathToDM="/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun1ArpNoFree/SyntheticExFaliedCases";
 		boolean Exculded=true;
 		String FolderName="";
 		if(Exculded==true)

@@ -64,4 +64,6 @@ public class RunningPram {
 	
 	public static String BuccaneerIterations="25";
 	public static String PhenixPhases="hltofom.Phi_fom.phi,hltofom.Phi_fom.fom,parrot.ABCD.A,parrot.ABCD.B,parrot.ABCD.C,parrot.ABCD.D";
+	public static String DensityModifiedPhenix="F";
+
 }

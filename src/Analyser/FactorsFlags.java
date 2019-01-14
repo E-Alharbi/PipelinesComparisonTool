@@ -4,7 +4,7 @@ package Analyser;
 * @author Emad Alharbi
 * University of York
 */
-public class Factors {
+public class FactorsFlags {
 
 	// Used to save the data from refmac. 
 	

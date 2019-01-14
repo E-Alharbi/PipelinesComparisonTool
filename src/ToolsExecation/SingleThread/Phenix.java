@@ -14,9 +14,11 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
@@ -268,9 +270,11 @@ seqin=FilePathAndName+".seq";
 			 RunningPram.PhenixAutobuild,
 	"data=",mtzin,
 	"seq_file=",seqin,
-	//"input_labels="," FP SIGFP PHIB FOM HLA HLB HLC HLD", 
+	"input_labels="," FP SIGFP PHIB FOM HLA HLB HLC HLD FreeR_flag", 
+	
 	//"input_labels=","FP SIGFP hltofom.Phi_fom.phi hltofom.Phi_fom.fom parrot.ABCD.A parrot.ABCD.B parrot.ABCD.C parrot.ABCD.D FreeR_flag",
-	"input_labels=","FP SIGFP "+RunningPram.PhenixPhases+" FreeR_flag",
+	
+	//"input_labels=","FP SIGFP "+RunningPram.PhenixPhases+" FreeR_flag",
 
 
 	"clean_up=","True"
@@ -280,14 +284,37 @@ seqin=FilePathAndName+".seq";
 				 RunningPram.PhenixAutobuild,
 		"data=",mtzin,
 		"seq_file=",seqin,
-		//"input_labels="," FP SIGFP PHIB FOM HLA HLB HLC HLD", 
-		"input_labels=","FP SIGFP "+RunningPram.PhenixPhases,
+		"input_labels="," FP SIGFP PHIB FOM HLA HLB HLC HLD", 
+		
+		//"input_labels=","FP SIGFP "+RunningPram.PhenixPhases,
+		
 		//"input_labels=","FP SIGFP hltofom.Phi_fom.phi hltofom.Phi_fom.fom parrot.ABCD.A parrot.ABCD.B parrot.ABCD.C parrot.ABCD.D",
 		
 		"clean_up=","True"
 		 };
 		 callAndArgs= callAndArgsNoRfree;
 	 }
+	 
+	 if(RunningPram.DensityModifiedPhenix.equals("T")) {
+		 List<String> a = new ArrayList<String>();
+		 a.addAll(Arrays.asList(callAndArgs));
+		 a.add("input_map_file=");
+		 a.add(mtzin);
+		 
+		 a.add("map_file_is_density_modified=");
+		 a.add("True");
+		 
+		 a.add("input_map_labels=");
+		 a.add("FP hltofom.Phi_fom.phi hltofom.Phi_fom.fom");
+		 
+		 
+		 String[] myArray = new String[a.size()];
+		 a.toArray(myArray);
+		 callAndArgs=myArray;
+		 System.out.println(Arrays.toString(callAndArgs));
+	 }
+	 
+	 
 	 new Preparer().WriteTxtFile("ParametersUsed/"+FileName+".txt", new Date().toString()+" \n "+ Arrays.toString(callAndArgs));
 	
 	// Process p = Runtime.getRuntime().exec(callAndArgs);

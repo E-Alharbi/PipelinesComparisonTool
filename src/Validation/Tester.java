@@ -23,7 +23,7 @@ public class Tester {
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		
-		 File[] Dataset = new File("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Run12/All").listFiles();
+		 File[] Dataset = new File("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun1ArpNoFree/").listFiles();
 		 File[] Dataset2 = new File("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Run8/All").listFiles();
 		 /*
  for (File folder : Dataset) {
@@ -51,10 +51,10 @@ public class Tester {
 			 if(folder.isDirectory()) {
 				 System.out.println("Dataset "+folder.getName());
 				 for(File Excel : folder.listFiles()) {
-					 /*
+					 
 					 System.out.println("Excel "+Excel.getName());
 					 ExcelLoader e = new ExcelLoader();
-					
+					 /*
 					 System.out.println("------- Number of Records Test -------");
 					 new Tester().NumberOfRecords(e.ReadExcel(Excel.getAbsolutePath()));
 					 
@@ -64,7 +64,7 @@ public class Tester {
 					 System.out.println("------- RFactor Checking Test -------");
 					 
 					 System.out.println(new Tester().RFactorAnd0CycleRFactor(e.ReadExcel(Excel.getAbsolutePath()))? "Pass" : "Fail");
-					 
+					 */
 					System.out.println("------- RFactor None Checking Test -------");
 					System.out.println(new Tester().CheckingRNoneCol(e.ReadExcel(Excel.getAbsolutePath()))? "Pass" : "Fail");
 					
@@ -73,14 +73,15 @@ public class Tester {
 					System.out.println( new Tester().CheckingSeqNoneCol(e.ReadExcel(Excel.getAbsolutePath()))? "Pass" : "Fail");
 					//System.out.println( new Tester().DuplicateRecord(e.ReadExcel(Excel.getAbsolutePath())));
 					
-                     System.out.println("------- Seq In Depoisted Model Not Less Than Seq In Built Model Test -------");
+                    // System.out.println("------- Seq In Depoisted Model Not Less Than Seq In Built Model Test -------");
 					
-					System.out.println( new Tester().SeqInDepoistedModelNotLessThanSeqInBuiltModel(e.ReadExcel(Excel.getAbsolutePath()))? "Pass" : "Fail");
-					*/
+					//System.out.println( new Tester().SeqInDepoistedModelNotLessThanSeqInBuiltModel(e.ReadExcel(Excel.getAbsolutePath()))? "Pass" : "Fail");
+					
 				 
 				 }
 			 }
 		 }
+		 /*
 		  Dataset = new File("/Volumes/PhDHardDrive/jcsg1200Results/Results23:10:2018Fasta/hancs").listFiles();
 		System.out.println("Particular Pipeliens Tests ");
 		 for (File folder : Dataset) {
@@ -94,6 +95,7 @@ public class Tester {
 				 }
 			 
 		 }
+		 */
 	}
 
 	

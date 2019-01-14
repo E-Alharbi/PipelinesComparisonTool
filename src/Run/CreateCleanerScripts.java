@@ -1,4 +1,5 @@
 package Run;
+import java.io.File;
 /**
 *
 * @author Emad Alharbi
@@ -19,9 +20,10 @@ public class CreateCleanerScripts {
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 
+		String Path="/Volumes/PhDHardDrive/VikingSync/CleanerNoR.sh";
+		String Commands=new ResultsAnalyserMultiThreads().readFileAsString(Path);
 		
-		String Commands=new ResultsAnalyserMultiThreads().readFileAsString("/Volumes/PhDHardDrive/VikingSync/Cleaner.sh");
-	
+		new RunComparison().CheckDirAndFile(new File(Path).getParent()+"/"+"CleanerScript");
 	
 	String [] ScriptCommands=Commands.split("\n");
 	System.out.println(ScriptCommands.length);
@@ -40,11 +42,11 @@ public class CreateCleanerScripts {
 				"#SBATCH --mail-user=emra500@york.ac.uk   # Where to send mail\n" + 
 				"#SBATCH --ntasks-per-node=1            # How many tasks on each node\n" + 
 				"#SBATCH --account=CS-MPMSEDM-2018";
-		new RunComparison().CheckDirAndFile("CleanerScripts");
-		new Preparer().WriteTxtFile("CleanerScripts/Cleaner"+String.valueOf(i)+".sh", Script+"\n"+ScriptCommands[i]);
+		
+		new Preparer().WriteTxtFile(new File(Path).getParent()+"/"+"CleanerScript"+"/Cleaner"+String.valueOf(i)+".sh", Script+"\n"+ScriptCommands[i]);
 		Qsub+="sbatch Cleaner"+String.valueOf(i)+".sh \n";
 	System.out.println("qsub Cleaner"+String.valueOf(i)+".sh");
-	}new Preparer().WriteTxtFile("CleanerScripts/Submit.sh", Qsub);
+	}new Preparer().WriteTxtFile(new File(Path).getParent()+"/"+"CleanerScript"+"/Submit.sh", Qsub);
 	
 	}
 

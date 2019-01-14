@@ -13,7 +13,11 @@ import org.apache.commons.io.FilenameUtils;
 import Analyser.ResultsAnalyserMultiThreads;
 
 public class JobCreater {
-
+String PathToWrite="./"; // default 
+public void CreateJobs (String ToolName , String Path) throws IOException{
+	PathToWrite=Path+"/";
+	CreateJobs(PathToWrite+ToolName);
+}
 	public void CreateJobs (String ToolName) throws IOException {
 		// TODO Auto-generated method stub
 		
@@ -39,7 +43,7 @@ for (File file : files) {
 		Script=Script.replaceAll(DataPath, DataPath+"/"+file.getName());
 		//System.out.println(Script);
 		FilesNames.add(CaseName);
-		new Preparer().WriteTxtFile("J"+CaseName+".sh",Script);
+		new Preparer().WriteTxtFile(PathToWrite+"J"+CaseName+".sh",Script);
 		if(RunningPram.ClusterServerGrid=="Slurm")
 			Qsub+="sbatch J"+CaseName+".sh \n";
 		else
@@ -47,7 +51,7 @@ for (File file : files) {
 		Script=ScriptAnotherCopy;
 	}
 }
-new Preparer().WriteTxtFile("Qsub.sh",Qsub);
+new Preparer().WriteTxtFile(PathToWrite+"Qsub.sh",Qsub);
 
 	}
 

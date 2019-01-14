@@ -268,7 +268,7 @@ DC.WarringLogFile="F";
 			String Line="";
 			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "Parsing both R and Rfree from log file ", "Running ...",headersList);
 
-			if(RunningPram.ToolName.equals("Buccaneer") || RunningPram.ToolName.equals("Buccaneeri2") || RunningPram.ToolName.equals("Buccaneeri2W")) {
+			if(RunningPram.ToolName.equals("Buccaneeri1") || RunningPram.ToolName.equals("Buccaneeri2") || RunningPram.ToolName.equals("Buccaneeri2W") || RunningPram.ToolName.equals("Buccaneeri1I5") ||  RunningPram.ToolName.equals("Buccaneeri2I5") || RunningPram.ToolName.equals("Buccaneeri2WI5")) {
 			
 				for(int s=0 ; s<LogTxt.length();++s){
 				Line+=LogTxt.charAt(s);
@@ -288,12 +288,12 @@ DC.WarringLogFile="F";
 				}
 			}
 			} 
-			if(RunningPram.ToolName.equals("ARPwARP") || RunningPram.ToolName.equals("ARPwARPAfterBuccaneeri1")) {
+			if(RunningPram.ToolName.equals("ARPwARP") || RunningPram.ToolName.equals("ArpWArpAfterBuccaneeri1") || RunningPram.ToolName.equals("ArpWArpAfterBuccaneeri1I5")) {
 				
 				for(int s=0 ; s<LogTxt.length();++s){
 					Line+=LogTxt.charAt(s);
 					if(LogTxt.charAt(s)=='\n'){
-						if(Line.contains("R =")){
+						if(Line.contains(" R =")){
 							RFactor=Line;
 							
 						}
@@ -305,12 +305,24 @@ DC.WarringLogFile="F";
 					}
 				}
 				if(!RFactor.equals("Not Found") && !RFree.equals("Not Found")) {
-				RFactor=RFactor.substring(RFactor.indexOf("R ="));
-				RFactor=RFactor.substring(3,RFactor.indexOf("(")).trim();
+					
+					System.out.println("RFactor: "+RFactor);
+				RFactor=RFactor.substring(RFactor.indexOf(" R = "));
 				
-				RFree=RFree.substring(RFree.indexOf("Rfree ="));
+				//RFactor=RFactor.substring(3,RFactor.indexOf("(")).trim();
+				System.out.println("RFactor: "+RFactor);
+				RFactor=RFactor.split(" ")[3];
+				System.out.println("RFactor: "+RFactor);
 				
-				RFree=RFree.substring(7,RFree.indexOf(")")).trim();
+				RFree=RFree.substring(RFree.indexOf("Rfree = "));
+				System.out.println("Rfree :"+RFree);
+				RFree=RFree.split(" ")[2];
+				RFree=RFree.replaceAll("\\)", "");
+				System.out.println("Rfree :"+RFree);
+				
+				if(RFactor.trim().length()==0)// in very few cases when R work is empty ARP/wARP
+					RFactor="Not Found";
+				//RFree=RFree.substring(7,RFree.indexOf(")")).trim();
 				}
 			}
 			if(RunningPram.ToolName.equals("Phenix")) {
@@ -388,7 +400,7 @@ DC.WarringLogFile="F";
 
 			
 			
-			Factors F = new Refmac().RunRefmac(RunningPram.DataPath+"/"+DC.PDB_ID+".mtz", PDB.getAbsolutePath(), RunningPram.RefmacPath, RunningPram.ToolName, DC.PDB_ID,"");
+			FactorsFlags F = new Refmac().RunRefmac(RunningPram.DataPath+"/"+DC.PDB_ID+".mtz", PDB.getAbsolutePath(), RunningPram.RefmacPath, RunningPram.ToolName, DC.PDB_ID,"");
 			
 			if(!F.RFactor.equals("None")) {
 			DC.R_factor0Cycle=df.format(BigDecimal.valueOf(Double.valueOf(F.RFactor)));
@@ -419,7 +431,7 @@ DC.WarringLogFile="F";
 			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "castat2 ", "Done" ,headersList);
 
 			
-			if(RunningPram.ToolName.equals("Buccaneeri2W") && Cas.n1m2.equals("None")) { // this occurs in very few cases when the water chain ID is Z and the PDB has many chains 
+			if((RunningPram.ToolName.equals("Buccaneeri2W") || RunningPram.ToolName.equals("Buccaneeri2WI5"))  && Cas.n1m2.equals("None")) { // this occurs in very few cases when the water chain ID is Z and the PDB has many chains 
 				new RunComparison().CheckDirAndFile("PDBsWithEmptyWaterChainID");
 				FileUtils.copyToDirectory(PDB, new File("PDBsWithEmptyWaterChainID"));
 				new RemovingWaterChainID().RemoveWaterChainID("PDBsWithEmptyWaterChainID"+"/"+PDB.getName());
@@ -478,7 +490,7 @@ DC.WarringLogFile="F";
 		}
 		
 		if(DC.Resolution.equals("None")) { // it is rare to happen, but if might occurred when there is built PDB and refmac throw and error 
-		Factors F = new Refmac().RunRefmac(RunningPram.DataPath+"/"+DC.PDB_ID+".mtz", RunningPram.DataPath+"/"+DC.PDB_ID+".pdb", RunningPram.RefmacPath, RunningPram.ToolName, DC.PDB_ID,"");
+		FactorsFlags F = new Refmac().RunRefmac(RunningPram.DataPath+"/"+DC.PDB_ID+".mtz", RunningPram.DataPath+"/"+DC.PDB_ID+".pdb", RunningPram.RefmacPath, RunningPram.ToolName, DC.PDB_ID,"");
 		DC.Resolution=F.Reso;	
 		}
 		

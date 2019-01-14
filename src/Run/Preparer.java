@@ -162,7 +162,7 @@ return false;
 	}
 	WriteTxtFile("./"+WorkFolder+"/Phenix.sh",PhenixSh);
 	CreateManagerScript(NumberOfFile,WorkFolder,"Phenix.sh");
-	
+	new JobCreater().CreateJobs("Phenix.sh", "./"+WorkFolder);
 	//Analyser
 	String Analyser= ReadResourceAsString("/Analyser.sh");
 	if(RunningPram.ClusterServerGrid=="Slurm")
@@ -213,10 +213,12 @@ boolean ArpwArpPrepare(boolean Bucc, String WorkFolder, String BuccFolder) throw
 	if(Bucc==false) {
 	WriteTxtFile("./ArpWArp/Arp.sh",ArpSh);
 	CreateManagerScript(NumberOfFile,"ArpWArp","Arp.sh");
+	new JobCreater().CreateJobs("Arp.sh", "./"+"ArpWArp");
 	}
 	if(Bucc==true) {
 	WriteTxtFile("./"+WorkFolder+"/Arp.sh",ArpSh);
 	CreateManagerScript(NumberOfFile,WorkFolder,"Arp.sh");
+	new JobCreater().CreateJobs("Arp.sh", "./"+WorkFolder);
 	}
 	
 	//Analyser
@@ -271,7 +273,7 @@ boolean Bucci1Prepare(String Iterations,String WorkFolder) throws IOException {
 	WriteTxtFile("./"+WorkFolder+"/Buccaneeri1.sh",Buccaneeri1);
 	CreateManagerScript(NumberOfFile,WorkFolder,"Buccaneeri1.sh");
 	WriteRefMacScriptForBucci1();
-	
+	new JobCreater().CreateJobs("Buccaneeri1.sh", "./"+WorkFolder);
 	
 	
 	//Analyser
@@ -318,7 +320,7 @@ boolean Crank() throws IOException {
 	NumberOfFile=NumberOfFile/3;//because mtz,seq and pdb	
 	WriteTxtFile("./Crank/CrankJava.sh",Crank);
 	CreateManagerScript(NumberOfFile,"Crank","CrankJava.sh");
-	
+	new JobCreater().CreateJobs("CrankJava.sh", "./"+"Crank");
 	//Analyser
 		String Analyser= ReadResourceAsString("/Analyser.sh");
 		if(RunningPram.ClusterServerGrid=="Slurm")
@@ -379,11 +381,13 @@ boolean Bucci2Prepare(boolean Water , String Iterations,String WorkFolder ) thro
 	WriteTxtFile("./"+WorkFolder+"/Buccaneeri2W.sh",Buccaneeri2);
 	
 	CreateManagerScript(NumberOfFile,WorkFolder,"Buccaneeri2W.sh");
+	new JobCreater().CreateJobs("Buccaneeri2W.sh", "./"+WorkFolder);
 	}
 	else {
 		
 	WriteTxtFile("./"+WorkFolder+"/Buccaneeri2.sh",Buccaneeri2);
 	CreateManagerScript(NumberOfFile,WorkFolder,"Buccaneeri2.sh");
+	new JobCreater().CreateJobs("Buccaneeri2.sh", "./"+WorkFolder);
 	}
 	
 	//Analyser

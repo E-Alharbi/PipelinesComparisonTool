@@ -19,7 +19,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import Analyser.DataContainer;
 import Analyser.ExcelSheet;
-import Analyser.Factors;
+import Analyser.FactorsFlags;
 import Run.RunningPram;
 import ToolsExecation.SingleThread.Castat2Data;
 import ToolsExecation.SingleThread.CphasesMatch;
@@ -93,7 +93,7 @@ public class ArpResultsAnalysis2 {
 				//System.out.println(Reso);
 				//new LogFile().Log("wArp/Arp", file.getName(), countFiles+" out of "+files.length, " Parsing Resolution", Reso);
 				String TimeTakig="-1";
-				Factors F=null;
+				FactorsFlags F=null;
 				
 				if(LogTxt.contains("TimeTaking")){
 					

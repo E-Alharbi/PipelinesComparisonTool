@@ -19,7 +19,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import Analyser.DataContainer;
 import Analyser.ExcelSheet;
-import Analyser.Factors;
+import Analyser.FactorsFlags;
 import Run.RunningPram;
 import ToolsExecation.SingleThread.Castat2Data;
 import ToolsExecation.SingleThread.CphasesMatch;
@@ -160,7 +160,7 @@ public class BuccaneerResultsAnalysis extends Thread {
 					DC.Overfitting=String.valueOf((OverfiitingPercentage>0.05)?"T":"F");
 				//	new LogFile().Log("Buccaneer", file.getName(), countFiles+" out of "+files.length, "Run Refmac 0 cycle ", "Running ...");
 
-					Factors F = new Refmac().RunRefmac(DataPath+"/"+NameOfFile+".mtz", PDBsDir+"/"+NameOfFile+".pdb", RefmacPath, "Buccaneer", NameOfFile,LIBIN);
+					FactorsFlags F = new Refmac().RunRefmac(DataPath+"/"+NameOfFile+".mtz", PDBsDir+"/"+NameOfFile+".pdb", RefmacPath, "Buccaneer", NameOfFile,LIBIN);
 					
 					DC.R_factor0Cycle=F.RFactor;
 					

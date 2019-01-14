@@ -82,6 +82,15 @@ public class RunComparison {
 				 }
 				 
 			 }
+			 System.out.println("Parameters read correctly: ");
+ for (int i=0 ; i < Parm.size()-1 ; i=i+2){
+				 
+				System.out.println("Parm "+Parm.get(i) + " value "+ Parm.get(i+1));
+					 
+					
+				 
+				 
+			 }
 			 
 			 
 			  if(args[0].equals("chltofom")){
@@ -299,6 +308,7 @@ public class RunComparison {
 					System.out.println("cstat2= path for cstat2 core folder");
 					System.out.println("UsingMolProbity= T or F");
 					System.out.println("PhasesUsedCPhasesMatch= Default is (parrot.ABCD.A,parrot.ABCD.B,parrot.ABCD.C,parrot.ABCD.D)");
+					System.out.println("UsingRfree= T or F");
 					System.exit(-1);
 				}
 					 if(checkArg(Parm,"Pipelines")!=null){
@@ -611,6 +621,13 @@ public class RunComparison {
 						 RunningPram.PhenixPhases=checkArg(Parm,"Phases");
 						 
 					 }
+					 
+					 
+					 if(checkArg(Parm,"DensityModified")!= null){
+						 RunningPram.DensityModifiedPhenix=checkArg(Parm,"DensityModified");
+						 
+					 }
+					 
 					 RunningPram.PhenixPhases= RunningPram.PhenixPhases.replaceAll(",", " ");
 					 System.out.println("data = "+RunningPram.DataPath);
 					 System.out.println("PhenixAutobuild = "+RunningPram.PhenixAutobuild);

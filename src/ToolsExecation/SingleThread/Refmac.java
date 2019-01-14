@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.Vector;
 
-import Analyser.Factors;
+import Analyser.FactorsFlags;
 import Run.RunComparison;
 import Utilities.FilesManagements;
 
@@ -34,7 +34,7 @@ public class Refmac {
 		*/
 	}
 
-	public Factors RunRefmac (String mtzPath , String pdbPath, String RefmacPath,String ToolName, String FileName, String LIBIN) throws IOException{
+	public FactorsFlags RunRefmac (String mtzPath , String pdbPath, String RefmacPath,String ToolName, String FileName, String LIBIN) throws IOException{
 		
 		 String st = null;
 		
@@ -69,7 +69,7 @@ public class Refmac {
 
 
 					String LogTxt="";
-					Factors F= new Factors();
+					FactorsFlags F= new FactorsFlags();
 					boolean IsReadRfactor=false;
 						             while ((st = stdInput.readLine()) != null) {
 						            	//System.out.println(st);

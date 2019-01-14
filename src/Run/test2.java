@@ -14,9 +14,10 @@ public class test2 {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		ExcelLoader e = new ExcelLoader();
-		Vector<DataContainer> ArpWithRFree = e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Run13UpdatingReso/All/OrginalAndSynthetic/noncs/ARPwARP.xlsx.xlsx");
 		
-		Vector<DataContainer> ArpWithNoRFree = e.ReadExcel("/Users/emadalharbi/Desktop/Arp/ExcludedBuccaneerDevSet/noncs/ARPwARPNoRFree.xlsx.xlsx.xlsx");
+		Vector<DataContainer> ArpWithRFree = e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun1/noncs/Buccaneeri1.xlsx");
+		
+		Vector<DataContainer> ArpWithNoRFree = e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun1NoRFree/noncsExcel/Buccaneeri1.xlsx");
 		
 		int better=0;
 		int better10=0;
@@ -36,13 +37,25 @@ public class test2 {
 		int EqualRworkHigherRfree=0;
 		double WithRFree=0;
 		double WithNoRFree=0;
+		double TotalComACO=0;
+		double TotalCom=0;
+		int numberOfCases=0;
+		
+		
+		int Rwork=0;
+		int Rfree=0;
+		
+		
 		for (DataContainer d : ArpWithRFree) {
 			
 			for (DataContainer dd : ArpWithNoRFree) {
-				if(d.PDB_ID.equals(dd.PDB_ID) && !dd.Completeness.equals("None") && dd.Intermediate.equals("F") && dd.BuiltPDB.equals("T")) {
+				if(d.PDB_ID.equals(dd.PDB_ID) && !d.Completeness.equals("None")&& !dd.Completeness.equals("None") && dd.Intermediate.equals("F") && dd.BuiltPDB.equals("T")) {
 					 WithRFree+=Math.round(Double.valueOf(d.Completeness));
 					 WithNoRFree+=Math.round(Double.valueOf(dd.Completeness));
-					if(Math.round(Double.parseDouble(d.Completeness)) < Math.round(Double.parseDouble(dd.Completeness) )) {
+					 numberOfCases++;
+					 TotalComACO+=Math.round(Double.parseDouble(dd.Completeness));
+					 TotalCom+=Math.round(Double.parseDouble(d.Completeness));
+					 if(Math.round(Double.parseDouble(d.Completeness)) < Math.round(Double.parseDouble(dd.Completeness) )) {
 						better++;
 						/*
 						System.out.println(d.PDB_ID);
@@ -123,6 +136,12 @@ public class test2 {
 					 if(Math.round(Double.parseDouble(d.Completeness)) -20 > Math.round(Double.parseDouble(dd.Completeness))) {
 							
 							worse20++;
+							System.out.println(d.PDB_ID);
+							System.out.println(dd.Resolution);
+							System.out.println(d.Completeness);
+							System.out.println(dd.Completeness);
+							System.out.println(d.TimeTaking);
+							System.out.println(dd.TimeTaking);
 							
 							
 						}
@@ -141,20 +160,15 @@ public class test2 {
 					 if(Math.round(Double.parseDouble(d.Completeness)) -50 > Math.round(Double.parseDouble(dd.Completeness))) {
 							
 							worse50++;
-							System.out.println(d.PDB_ID);
-							System.out.println(dd.Resolution);
-							System.out.println(d.Completeness);
-							System.out.println(dd.Completeness);
-							System.out.println(d.TimeTaking);
-							System.out.println(dd.TimeTaking);
+							
 							
 						}
 					 if(Math.round(Double.parseDouble(d.Completeness)) == Math.round(Double.parseDouble(dd.Completeness)))  {
 						 Equal++;
 						
 					 }
-					 System.out.println(Double.valueOf(dd.R_factor0Cycle));
-					 System.out.println("RFree "+Double.valueOf(dd.R_free0Cycle));
+					// System.out.println(Double.valueOf(dd.R_factor0Cycle));
+					// System.out.println("RFree "+Double.valueOf(dd.R_free0Cycle));
 					 if(Double.parseDouble(dd.R_factor0Cycle) == Double.parseDouble(dd.R_free0Cycle))  {
 						 EqualRworkAndRfree++;
 						
@@ -167,6 +181,15 @@ public class test2 {
 					 
 					 if(Double.parseDouble(dd.R_factor0Cycle) < Double.parseDouble(dd.R_free0Cycle))  {
 						 EqualRworkLowerRfree++;
+						
+					 }
+					 
+					 if(Double.parseDouble(dd.R_factor0Cycle) == Double.parseDouble(d.R_factor0Cycle))  {
+						 Rwork++;
+						
+					 }
+					 if(Double.parseDouble(dd.R_free0Cycle) == Double.parseDouble(d.R_free0Cycle))  {
+						 Rfree++;
 						
 					 }
 					 
@@ -186,6 +209,16 @@ public class test2 {
 		System.out.println("R-work > R-free "+"\t"+EqualRworkHigherRfree);
 		System.out.println("R-work < R-free "+"\t"+EqualRworkLowerRfree);
 		
+		
+		
+		System.out.println("Avg ACO "+ (TotalComACO/numberOfCases));
+		System.out.println("Avg  "+ (TotalCom/numberOfCases));
+		System.out.println("numberOfCases  "+ numberOfCases);
+		System.out.println("TotalComACO  "+ TotalComACO);
+		System.out.println("TotalCom  "+ TotalCom);
+		
+		System.out.println("R-work == R-work"+"\t"+Rwork);
+		System.out.println("Rfree == R-free "+"\t"+Rfree);
 		
 		
 	}

@@ -12,7 +12,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import Analyser.DataContainer;
 import Analyser.ExcelSheet;
-import Analyser.Factors;
+import Analyser.FactorsFlags;
 import Analyser.ResultsAnalyserMultiThreads;
 import Run.RunningPram;
 import ToolsExecation.SingleThread.CphasesMatch;
@@ -43,7 +43,7 @@ public class DataSetChecking {
 			DataContainer DC = new DataContainer();
 			DC.PDB_ID=ExFileName;
 			DC.PDBIDTXT=ExFileName.substring(0,4);
-			Factors F = new Refmac().RunRefmac(DataSetPath+"/"+ExFileName+".mtz", DataSetPath+"/"+ExFileName+".pdb", RunningPram.RefmacPath, RunningPram.ToolName, ExFileName,"");
+			FactorsFlags F = new Refmac().RunRefmac(DataSetPath+"/"+ExFileName+".mtz", DataSetPath+"/"+ExFileName+".pdb", RunningPram.RefmacPath, RunningPram.ToolName, ExFileName,"");
             DC.Resolution=F.Reso;
 			if(new File(RunningPram.IntermediatePDBs+"/"+ExFileName+".pdb").exists()) {
 				PDB=new File(RunningPram.IntermediatePDBs+"/"+ExFileName+".pdb");

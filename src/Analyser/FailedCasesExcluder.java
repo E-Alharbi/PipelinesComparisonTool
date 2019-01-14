@@ -16,7 +16,7 @@ public class FailedCasesExcluder {
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		// TODO Auto-generated method stub
-        String Path="/Users/emadalharbi/Desktop/Arp";
+        String Path="/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun1ArpNoFree/Synthetic";
 		
 		
 		File [] DatasetFolders = new File(Path).listFiles();
