@@ -112,6 +112,7 @@ public class Buccaneeri1 {
 		//String BuccaneerPipeLine=args[1];
 		//System.out.print("DataPath: "+DataPath);
 		//System.out.print("BuccaneerPipeLine: "+BuccaneerPipeLine);
+		
 		String PATHLogs = "./BuccaneerResults/BuccaneerLogs";// LogsFilesPath
 		new RunComparison().CheckDirAndFile("BuccaneerResults");
 		new RunComparison().CheckDirAndFile("./BuccaneerResults/PDBs");

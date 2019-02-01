@@ -30,6 +30,7 @@ public class ResultsInLatex {
 
 	// Creating many types of tables in latex format for results representation
 
+String PathToLatexFolder="./";
 	public static void main(String[] args) throws IOException, StatsException {
 		// TODO Auto-generated method stub
 		
@@ -49,7 +50,7 @@ public class ResultsInLatex {
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets17";
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/GAResults/Ex5";
 
-		String ExcelDir = "/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun1ArpNoFree/Synthetic";
+		String ExcelDir = "/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun3ArpNoFree";
 		
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets17";
 
@@ -110,7 +111,7 @@ public class ResultsInLatex {
 						Table+="\\tiny "+Excel.getName()+" & \\tiny "+Math.round((Com/Container.size())) +" & \\tiny "+ df.format(BigDecimal.valueOf(Double.valueOf((Rwork/Container.size()))))+"/"+df.format(BigDecimal.valueOf(Double.valueOf((Rfree/Container.size()))))+" & \\tiny "+Math.round((Time/Container.size())) +"\\\\ \\hline \n";
 					}
 				}
-				new Preparer().WriteTxtFile("Latex/ReproducibilityTable" + Folder.getName() + ".tex", FormatingPipelinesNames(Table,true) + "\n"+Comments);
+				new Preparer().WriteTxtFile(PathToLatexFolder+"/ReproducibilityTable" + Folder.getName() + ".tex", FormatingPipelinesNames(Table,true) + "\n"+Comments);
 
 			}
 		}
@@ -145,7 +146,8 @@ void TimeTakingTable(String ExcelDir) throws IOException {
 				
 			}
 			System.out.println(Table);
-			new Preparer().WriteTxtFile("Latex/TimeTakingTable" + Folder.getName() + ".tex", FormatingPipelinesNames(Table,true) + "\n"+Comments);
+			
+			new Preparer().WriteTxtFile(PathToLatexFolder+"/TimeTakingTable" + Folder.getName() + ".tex", FormatingPipelinesNames(Table,true) + "\n"+Comments);
 		}
 	}
 }
@@ -311,7 +313,7 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 	
 		
 		Table=FormatingPipelinesNames(Table,true);
-		new Preparer().WriteTxtFile("Latex/TheNumberOfCompletedCases.tex", Table.replace(".xlsx", "") +" \n "+Comments);
+		new Preparer().WriteTxtFile(PathToLatexFolder+"/TheNumberOfCompletedCases.tex", Table.replace(".xlsx", "") +" \n "+Comments);
 	}
 
 	void PDBList(String ResultsDir) throws IOException {
@@ -404,7 +406,7 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 		}
 		Collections.sort(CheckedPDB, DataContainer.DataContainerComparator);
 		System.out.println(CheckedPDB.size());
-		new Preparer().WriteTxtFile("Latex/PDBList.tex", TableContext);
+		new Preparer().WriteTxtFile(PathToLatexFolder+"/PDBList.tex", TableContext);
 
 	}
 
@@ -473,14 +475,14 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 			ResoTable += " &" + " \\scriptsize From " + Reso.get(m) + " to less than " + (Reso.get(m) + 1)
 					+ " & \\scriptsize " + NumReso.get(m) + " \\\\ \n";
 		}
-		if (!new File("Latex/ResoTable.tex").exists()) {
+		if (!new File(PathToLatexFolder+"/ResoTable.tex").exists()) {
 
-			new Preparer().WriteTxtFile("Latex/ResoTable.tex", ResoTable);
+			new Preparer().WriteTxtFile(PathToLatexFolder+"/ResoTable.tex", ResoTable);
 
 		} else {
 
-			new File("Latex/ResoTable.tex").delete();
-			new Preparer().WriteTxtFile("Latex/ResoTable.tex", ResoTable);
+			new File(PathToLatexFolder+"/ResoTable.tex").delete();
+			new Preparer().WriteTxtFile(PathToLatexFolder+"/ResoTable.tex", ResoTable);
 		}
 
 		System.out.println(ResoTable);
@@ -636,7 +638,7 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 					}
 				}
 				// System.out.println(TableOfBestCases);
-				new Preparer().WriteTxtFile("Latex/" + Folder.getName() + "BestAndWorstTable.tex", TableOfBestCases);
+				new Preparer().WriteTxtFile(PathToLatexFolder+"/" + Folder.getName() + "BestAndWorstTable.tex", TableOfBestCases);
 			}
 
 		}
@@ -845,7 +847,7 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 			}
 		}
 
-		new Preparer().WriteTxtFile("Latex/" + "TheComparsionResults.tex", TheFullTable);
+		new Preparer().WriteTxtFile(PathToLatexFolder+"/" + "TheComparsionResults.tex", TheFullTable);
 
 	}
 
@@ -926,14 +928,14 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 			ResoTable += " &" + " \\tiny From " + Reso.get(m) + " to less than " + (Reso.get(m) + 1) + " & \\tiny "
 					+ NumReso.get(m) + " \\\\ \n";
 		}
-		if (!new File("Latex/ResoTable.tex").exists()) {
+		if (!new File(PathToLatexFolder+"/ResoTable.tex").exists()) {
 
-			new Preparer().WriteTxtFile("Latex/ResoTable.tex", ResoTable);
+			new Preparer().WriteTxtFile(PathToLatexFolder+"/ResoTable.tex", ResoTable);
 
 		} else {
 
-			new File("Latex/ResoTable.tex").delete();
-			new Preparer().WriteTxtFile("Latex/ResoTable.tex", ResoTable);
+			new File(PathToLatexFolder+"/ResoTable.tex").delete();
+			new Preparer().WriteTxtFile(PathToLatexFolder+"/ResoTable.tex", ResoTable);
 		}
 
 		System.out.println(ResoTable);
@@ -1392,57 +1394,57 @@ LogOfR0Equivalent+="\n Number of models: "+EquivalentR+" \n";
 				Table += Col + " \\\\ \\hline \n ";
 				Table += RowCom0;
 				Table=ShadedTable(FormatingPipelinesNames(Table,true))+" \n "+Comments;
-				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "Com0.tex", Table);
+				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatrixOfResults" + Folder.getName() + "Com0.tex", Table);
 			
 				String TableCom5 = Col + "\\\\ \\hline \n ";
 				TableCom5 += RowCom5;
 				TableCom5=ShadedTable(FormatingPipelinesNames(TableCom5,true))+" \n "+Comments; 
-				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "Com5.tex", TableCom5);
+				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatrixOfResults" + Folder.getName() + "Com5.tex", TableCom5);
 				
 				String TableCom0Equivalent = Col + "\\\\ \\hline \n ";
 				TableCom0Equivalent += RowCom0Equivalent;
 				TableCom0Equivalent=	ShadedTable(FormatingPipelinesNames(TableCom0Equivalent,true)) +" \n "+Comments;
-				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "Com0Equivalent.tex", TableCom0Equivalent);
+				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatrixOfResults" + Folder.getName() + "Com0Equivalent.tex", TableCom0Equivalent);
 				
 				String TableCom5Equivalent = Col + "\\\\ \\hline \n ";
 				TableCom5Equivalent += RowCom5Equivalent;
 				TableCom5Equivalent=	ShadedTable(FormatingPipelinesNames(TableCom5Equivalent,true)) +" \n "+Comments;
-				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "Com5Equivalent.tex", TableCom5Equivalent);
+				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatrixOfResults" + Folder.getName() + "Com5Equivalent.tex", TableCom5Equivalent);
 			
 				String TableCom0Models = Col + "\\\\ \\hline \n ";
 				TableCom0Models += RowCom0Models;
 				TableCom0Models=ShadedTable(FormatingPipelinesNames(TableCom0Models,true)) +" \n "+Comments;
-				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "Com0Models.tex", TableCom0Models);
+				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatrixOfResults" + Folder.getName() + "Com0Models.tex", TableCom0Models);
 				
 				
 				String TableCom5Models = Col + "\\\\ \\hline \n ";
 				TableCom5Models += RowCom5Models;
 				TableCom5Models=ShadedTable(FormatingPipelinesNames(TableCom5Models,true)) +" \n "+Comments;
-				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "Com5Models.tex", TableCom5Models);
+				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatrixOfResults" + Folder.getName() + "Com5Models.tex", TableCom5Models);
 				
 				
 				String TableRModels = Col + "\\\\ \\hline \n ";
 				TableRModels += RowR0;
 				TableRModels=ShadedTable(FormatingPipelinesNames(TableRModels,true)) +" \n "+Comments;
-				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "RModels.tex", TableRModels);
+				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatrixOfResults" + Folder.getName() + "RModels.tex", TableRModels);
 				
 				
 				String TableRModelsEquivalent = Col + "\\\\ \\hline \n ";
 				TableRModelsEquivalent += RowR0Equivalent;
 				TableRModelsEquivalent=ShadedTable(FormatingPipelinesNames(TableRModelsEquivalent,true)) +" \n "+Comments;
-				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "REquivalentModels.tex", TableRModelsEquivalent);
+				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatrixOfResults" + Folder.getName() + "REquivalentModels.tex", TableRModelsEquivalent);
 			
 			
 				String TableR5Models = Col + "\\\\ \\hline \n ";
 				TableR5Models += RowR5;
 				TableR5Models=ShadedTable(FormatingPipelinesNames(TableR5Models,true)) +" \n "+Comments;
-				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "R5Models.tex", TableR5Models);
+				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatrixOfResults" + Folder.getName() + "R5Models.tex", TableR5Models);
 			
 			
 				String TableRModelsEquivalent5 = Col + "\\\\ \\hline \n ";
 				TableRModelsEquivalent5 += RowR5Equivalent;
 				TableRModelsEquivalent5=ShadedTable(FormatingPipelinesNames(TableRModelsEquivalent5,true)) +" \n "+Comments;
-				new Preparer().WriteTxtFile("Latex/MatrixOfResults" + Folder.getName() + "REquivalent5Models.tex", TableRModelsEquivalent5);
+				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatrixOfResults" + Folder.getName() + "REquivalent5Models.tex", TableRModelsEquivalent5);
 				
 				
 				new RunComparison().CheckDirAndFile("MatricesLogs");
@@ -2148,8 +2150,8 @@ for(int i=0; i < CurrentReading.size() ; ++i) {
 		}
 
 		System.out.println(Rows);
-		new Preparer().WriteTxtFile("Latex/LongMatrixCompleteness" + ".tex", Rows);
-		new Preparer().WriteTxtFile("Latex/LongMatrixRfactor" + ".tex", RowsRFactor);
+		new Preparer().WriteTxtFile(PathToLatexFolder+"/LongMatrixCompleteness" + ".tex", Rows);
+		new Preparer().WriteTxtFile(PathToLatexFolder+"/LongMatrixRfactor" + ".tex", RowsRFactor);
 	}
 }
 

@@ -20,10 +20,10 @@ public class ResoUpdater {
 	/*
 	 * This class  updates reso based on the MTZ not refmac   
 	 */
-	public static void main(String[] args) throws FileNotFoundException, IOException {
+	public  void Update(String Path) throws FileNotFoundException, IOException {
 		// TODO Auto-generated method stub
 
-		File [] ExcelPath=new File("/Users/emadalharbi/Desktop/Arp/").listFiles();
+		File [] ExcelPath=new File(Path).listFiles();
 		
 		for(File Folder : ExcelPath) {
 			if(Folder.isDirectory()) {

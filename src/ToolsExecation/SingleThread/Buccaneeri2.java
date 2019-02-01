@@ -14,9 +14,12 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
@@ -31,6 +34,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import Analyser.Bucaneeri2LogGenerator;
 import Analyser.PipelineLog;
 import NotUsed.ARPResultsAnalysis;
 import Run.Preparer;
@@ -66,10 +70,13 @@ public class Buccaneeri2 {
 				  new RegexFileFilter("log.txt"), 
 				  DirectoryFileFilter.DIRECTORY
 				);
+		 List list = new ArrayList(Logs);
+		 Collections.sort(list);
 		 
 		 Vector <File>LogsFiles = new   Vector <File>();
-		 LogsFiles.addAll(Logs);
-		
+		 //LogsFiles.addAll(Logs);
+		 LogsFiles.addAll(list);
+		 Collections.sort(LogsFiles, Bucaneeri2LogGenerator.SortingFiles);
 		 String LogTxt="";
 		 for(int i=0; i<LogsFiles.size();++i ) {
 			 

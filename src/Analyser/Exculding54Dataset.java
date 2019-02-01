@@ -12,26 +12,27 @@ import java.util.Vector;
 import Run.RunComparison;
 
 public class Exculding54Dataset {
-	public static void main(String[] args) throws FileNotFoundException, IOException {
-		String PathToDM="/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun1ArpNoFree/SyntheticExFaliedCases";
-		boolean Exculded=true;
+	public  void Exculde(String Path , boolean Exculded) throws FileNotFoundException, IOException {
+		String PathToDM=Path;
+		
 		String FolderName="";
 		if(Exculded==true)
 			FolderName="ExcludedBuccaneerDevSet";
 		if(Exculded==false)
 			FolderName="IncludedBuccaneerDevSet";
 		File [] Folders= new File(PathToDM).listFiles();
-		new RunComparison().CheckDirAndFile(PathToDM+"/"+FolderName);
+		String PathToWrite=new File(PathToDM).getParent()+"/"+new File(PathToDM).getName()+FolderName;
+		new RunComparison().CheckDirAndFile(PathToWrite);
 		for(File Folder : Folders) {
 			if(Folder.isDirectory()) {
-				new RunComparison().CheckDirAndFile(PathToDM+"/"+FolderName+"/"+Folder.getName());
+				new RunComparison().CheckDirAndFile(PathToWrite+"/"+Folder.getName());
 				for(File Excel : Folder.listFiles()) {
 					if(Excel.isFile()) {
 					System.out.println(Excel.getAbsolutePath());
 					ExcelLoader e = new ExcelLoader();
 					Vector<DataContainer> BuccContainer = e.ReadExcel(Excel.getAbsolutePath());
 					BuccContainer=new Exculding54Dataset().Exculding(BuccContainer,Exculded);
-					new ExcelSheet().FillInExcel(BuccContainer, PathToDM+"/"+FolderName+"/"+Folder.getName()+"/"+Excel.getName());}
+					new ExcelSheet().FillInExcel(BuccContainer, PathToWrite+"/"+Folder.getName()+"/"+Excel.getName());}
 				}
 					
 			}

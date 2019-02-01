@@ -23,8 +23,9 @@ public class Tester {
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		
-		 File[] Dataset = new File("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun1ArpNoFree/").listFiles();
-		 File[] Dataset2 = new File("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Run8/All").listFiles();
+		  File[] Dataset = new File("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun3ArpNoFree").listFiles();
+		
+		 // File[] Dataset2 = new File("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Run8/All").listFiles();
 		 /*
  for (File folder : Dataset) {
 	 ExcelLoader e = new ExcelLoader();
@@ -54,19 +55,19 @@ public class Tester {
 					 
 					 System.out.println("Excel "+Excel.getName());
 					 ExcelLoader e = new ExcelLoader();
-					 /*
-					 System.out.println("------- Number of Records Test -------");
-					 new Tester().NumberOfRecords(e.ReadExcel(Excel.getAbsolutePath()));
 					 
-					 System.out.println("------- Duplicate Records Test -------");
-					 System.out.println(new Tester().DuplicateRecord(e.ReadExcel(Excel.getAbsolutePath()))? "Pass" : "Fail");
+					// System.out.println("------- Number of Records Test -------");
+					// new Tester().NumberOfRecords(e.ReadExcel(Excel.getAbsolutePath()));
+					
+					// System.out.println("------- Duplicate Records Test -------");
+					// System.out.println(new Tester().DuplicateRecord(e.ReadExcel(Excel.getAbsolutePath()))? "Pass" : "Fail");
 					 
-					 System.out.println("------- RFactor Checking Test -------");
+					// System.out.println("------- RFactor Checking Test -------");
 					 
-					 System.out.println(new Tester().RFactorAnd0CycleRFactor(e.ReadExcel(Excel.getAbsolutePath()))? "Pass" : "Fail");
-					 */
+					 //System.out.println(new Tester().RFactorAnd0CycleRFactor(e.ReadExcel(Excel.getAbsolutePath()))? "Pass" : "Fail");
+					 
 					System.out.println("------- RFactor None Checking Test -------");
-					System.out.println(new Tester().CheckingRNoneCol(e.ReadExcel(Excel.getAbsolutePath()))? "Pass" : "Fail");
+					System.out.println(new Tester().CheckingRNoneCol(e.ReadExcel(Excel.getAbsolutePath()))? "Pass" :  "Fail");
 					
 					System.out.println("------- Seq None Checking Test -------");
 					
@@ -182,11 +183,13 @@ public class Tester {
 	
  boolean SeqInDepoistedModelNotLessThanSeqInBuiltModel(Vector<DataContainer> Pipeline) {
 		boolean NoNone=true;
-		
+		int count=0;
 		for(DataContainer DC : Pipeline) {
-			if(DC.BuiltPDB.equals("T")&& Integer.parseInt(DC.n1m2) > Integer.parseInt(DC.n2m1))
+			if(DC.BuiltPDB.equals("T")&& Integer.parseInt(DC.n1m2) != Integer.parseInt(DC.n2m1)) {
 				NoNone=false;
+			count++;}
 		}
+		System.out.println(count);
 		return NoNone;
 	}
  
@@ -235,4 +238,7 @@ public class Tester {
 		return Passed;
 		
 	}
+ 
+ 
+ 
 }

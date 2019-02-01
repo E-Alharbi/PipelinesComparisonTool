@@ -17,10 +17,10 @@ import Run.RunningPram;
 
 public class OrginalAndSyntheticSplitter {
 
-	public static void main(String[] args) throws FileNotFoundException, IOException {
+	public  void Split(String PathToExperimentExcel) throws FileNotFoundException, IOException {
 		// TODO Auto-generated method stub
 	
-		File [] DatasetFolders = new File("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun1ArpNoFree").listFiles();
+		File [] DatasetFolders = new File(PathToExperimentExcel).listFiles();
 		for(File Folder : DatasetFolders) {
 			if(Folder.isDirectory()) {
 				//String OrginalPath=Folder.getAbsolutePath()+"/Orginal/";
@@ -69,35 +69,62 @@ public class OrginalAndSyntheticSplitter {
 					SyntheticContainer.clear();
 				}
 				}
+				
 				File [] BuccExcel=new File(OrginalPath).listFiles();
-				new RunComparison().CheckDirAndFile(OrginalPath+"/BuccEx54");
+				//new RunComparison().CheckDirAndFile(OrginalPath+"/BuccEx54");
+				String OrginalPathBuccEx54=Folder.getParent()+"/OrginalBuccEx54/";
+				new RunComparison().CheckDirAndFile(OrginalPathBuccEx54);
+				new RunComparison().CheckDirAndFile(OrginalPathBuccEx54+"/"+Folder.getName());
 				for(File BExcel : BuccExcel) {
-					
-					//if(BExcel.isFile() && BExcel.getName().contains("Buccaneer")) {
 						ExcelLoader e = new ExcelLoader();
 						Vector<DataContainer> BuccContainer = new Exculding54Dataset().Exculding(e.ReadExcel(BExcel.getAbsolutePath()),true);
-						new ExcelSheet().FillInExcel(BuccContainer, OrginalPath+"/BuccEx54/"+BExcel.getName()+"Ex54");
-
-					//}
-					//else {
-					//	 FileUtils.copyFile(BExcel,  new File(OrginalPath+"/BuccEx54/"+BExcel.getName()));
-					//}
+						new ExcelSheet().FillInExcel(BuccContainer, OrginalPathBuccEx54+"/"+Folder.getName()+"/"+BExcel.getName());
+	
 				}
 				
+				String OrginalPathBuccInc54=Folder.getParent()+"/OrginalBuccInc54/";
+				new RunComparison().CheckDirAndFile(OrginalPathBuccInc54);
+				new RunComparison().CheckDirAndFile(OrginalPathBuccInc54+"/"+Folder.getName());
 				
-				new RunComparison().CheckDirAndFile(OrginalPath+"/BuccInc54");
 				for(File BExcel : BuccExcel) {
 					
-					//if(BExcel.isFile() && BExcel.getName().contains("Buccaneer")) {
+					
 						ExcelLoader e = new ExcelLoader();
 						Vector<DataContainer> BuccContainer = new Exculding54Dataset().Exculding(e.ReadExcel(BExcel.getAbsolutePath()),false);
-						new ExcelSheet().FillInExcel(BuccContainer, OrginalPath+"/BuccInc54/"+BExcel.getName()+"Ex54");
+						new ExcelSheet().FillInExcel(BuccContainer, OrginalPathBuccInc54+"/"+Folder.getName()+"/"+BExcel.getName());
 
-					//}
-					//else {
-					//	 FileUtils.copyFile(BExcel,  new File(OrginalPath+"/BuccEx54/"+BExcel.getName()));
-					//}
+					
 				}
+				
+				
+				
+				File [] SyntheticPathExcel=new File(SyntheticPath).listFiles();
+				//new RunComparison().CheckDirAndFile(OrginalPath+"/BuccEx54");
+				String SyntheticPathBuccEx54=Folder.getParent()+"/SyntheticBuccEx54/";
+				new RunComparison().CheckDirAndFile(SyntheticPathBuccEx54);
+				new RunComparison().CheckDirAndFile(SyntheticPathBuccEx54+"/"+Folder.getName());
+				for(File BExcel : SyntheticPathExcel) {
+						ExcelLoader e = new ExcelLoader();
+						Vector<DataContainer> BuccContainer = new Exculding54Dataset().Exculding(e.ReadExcel(BExcel.getAbsolutePath()),true);
+						new ExcelSheet().FillInExcel(BuccContainer, SyntheticPathBuccEx54+"/"+Folder.getName()+"/"+BExcel.getName());
+	
+				}
+				
+				String SyntheticPathBuccInc54=Folder.getParent()+"/SyntheticBuccInc54/";
+				new RunComparison().CheckDirAndFile(SyntheticPathBuccInc54);
+				new RunComparison().CheckDirAndFile(SyntheticPathBuccInc54+"/"+Folder.getName());
+				
+				for(File BExcel : SyntheticPathExcel) {
+					
+					
+						ExcelLoader e = new ExcelLoader();
+						Vector<DataContainer> BuccContainer = new Exculding54Dataset().Exculding(e.ReadExcel(BExcel.getAbsolutePath()),false);
+						new ExcelSheet().FillInExcel(BuccContainer, SyntheticPathBuccInc54+"/"+Folder.getName()+"/"+BExcel.getName());
+
+					
+				}
+				
+				
 			}
 		}
 	}

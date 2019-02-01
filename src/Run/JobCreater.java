@@ -36,7 +36,13 @@ if(RunningPram.PDBsDir!=null){
 	for(File PDB : PDBs)
 	  FilesNames.addElement(PDB.getName().replaceAll("."+FilenameUtils.getExtension(PDB.getName()),""));
 }
-String Qsub="";
+String Qsub="#!/bin/bash \n" + 
+		"#SBATCH --time=48:00:00                # Time limit hrs:min:sec \n" + 
+		"#SBATCH --mem=1000                     # Total memory limit \n" + 
+		"#SBATCH --mail-type=ALL         # Mail events (NONE, BEGIN, END, FAIL, ALL) \n" + 
+		"#SBATCH --mail-user=emra500@york.ac.uk   # Where to send mail \n" + 
+		"#SBATCH --ntasks-per-node=1            # How many tasks on each node \n" + 
+		"#SBATCH --account=CS-MPMSEDM-2018 \n";
 for (File file : files) {
 	String CaseName=file.getName().replaceAll("."+FilenameUtils.getExtension(file.getName()),"");
 	if(!FilesNames.contains(CaseName)) {

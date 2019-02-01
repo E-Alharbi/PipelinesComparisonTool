@@ -14,17 +14,20 @@ import Run.RunningPram;
 
 public class FailedCasesExcluder {
 
-	public static void main(String[] args) throws FileNotFoundException, IOException {
+	public void Exclude(String Path) throws FileNotFoundException, IOException {
 		// TODO Auto-generated method stub
-        String Path="/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun1ArpNoFree/Synthetic";
+		
+       // String Path="/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun1ArpNoFree/Synthetic";
 		
 		
 		File [] DatasetFolders = new File(Path).listFiles();
-		new RunComparison().CheckDirAndFile(Path+"/ExFaliedCases");
+		//new RunComparison().CheckDirAndFile(Path+"/ExFaliedCases");
+		String PathToWrite=new File(Path).getParent()+"/"+new File(Path).getName()+"ExFaliedCases";
+		new RunComparison().CheckDirAndFile(PathToWrite);
 		for(File Folder : DatasetFolders) {
 			if(Folder.isDirectory()) {
 				System.out.println("Folder "+Folder.getName() );
-				new RunComparison().CheckDirAndFile(Path+"/ExFaliedCases/"+Folder.getName());
+				new RunComparison().CheckDirAndFile(PathToWrite+"/"+Folder.getName());
 				Vector<Vector<DataContainer>> AllToolsData = new Vector<Vector<DataContainer>>();
 				ExcelLoader e = new ExcelLoader();
 				for(File Excel : Folder.listFiles()) {
@@ -39,7 +42,7 @@ public class FailedCasesExcluder {
 					System.out.println("Excel "+Excel.getName());
 					Vector<DataContainer> ModifiedExcel=e.CheckPDBexists(AllToolsData, e.ReadExcel(Excel.getAbsolutePath()));
 					System.out.println("ModifiedExcel "+ModifiedExcel.size());
-					new ExcelSheet().FillInExcel(ModifiedExcel, Path+"/ExFaliedCases/"+Folder.getName()+"/"+Excel.getName());
+					new ExcelSheet().FillInExcel(ModifiedExcel, PathToWrite+"/"+Folder.getName()+"/"+Excel.getName());
 				}
 				
 			}

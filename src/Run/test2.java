@@ -15,9 +15,9 @@ public class test2 {
 		// TODO Auto-generated method stub
 		ExcelLoader e = new ExcelLoader();
 		
-		Vector<DataContainer> ArpWithRFree = e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun1/noncs/Buccaneeri1.xlsx");
+		Vector<DataContainer> ArpWithRFree = e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun1/noncs/PhenixHAL.xlsx");
 		
-		Vector<DataContainer> ArpWithNoRFree = e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun1NoRFree/noncsExcel/Buccaneeri1.xlsx");
+		Vector<DataContainer> ArpWithNoRFree = e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun2/noncs/Phenix.xlsx");
 		
 		int better=0;
 		int better10=0;

@@ -25,17 +25,17 @@ public class Bucaneeri2LogGenerator {
 
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-String JobDir="/Volumes/PhDHardDrive/Run7Temp/project2pnk-3.8-parrot-hancs/CCP4_JOBS/job_1";
+String JobDir="/Users/emadalharbi/Downloads/project2pnk-3.6-parrot-hancsW/CCP4_JOBS/job_1";
 
-try(  PrintWriter out = new PrintWriter("/Volumes/PhDHardDrive/Run7Temp/2pnk-3.8-parrot-hancs.txt" )  ){
+try(  PrintWriter out = new PrintWriter("/Users/emadalharbi/Downloads/2pnk-3.6-parrot-hancs.txt" )  ){
     out.println(new Bucaneeri2LogGenerator().Log(JobDir) );
 }
 	}
 	String Log(String JobDirectory) throws IOException {
 		 Collection<File> Logs = FileUtils.listFiles(
 				 new File(JobDirectory), 
-				  new RegexFileFilter("log.txt"), 
-				  DirectoryFileFilter.DIRECTORY
+				 new RegexFileFilter("log.txt"), 
+				 DirectoryFileFilter.DIRECTORY
 				);
 		 List list = new ArrayList(Logs);
 		 Collections.sort(list);
