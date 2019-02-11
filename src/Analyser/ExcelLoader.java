@@ -42,9 +42,9 @@ public class ExcelLoader {
 	public Vector<String> ToolsNames = new Vector<String>();
 	
 	
-	public Vector<DataContainer> ReadExcel(String Excel) {
+	public Vector<ExcelContents> ReadExcel(String Excel) {
 	      System.out.println(Excel);
-			Vector<DataContainer> Container = new Vector<DataContainer>();
+			Vector<ExcelContents> Container = new Vector<ExcelContents>();
 			try {
 
 				FileInputStream excelFile = new FileInputStream(new File(Excel));
@@ -61,7 +61,7 @@ public class ExcelLoader {
 					Row currentRow = iterator.next();
 
 					// Cell currentCell = cellIterator.next();
-					DataContainer C = new DataContainer();
+					ExcelContents C = new ExcelContents();
 					// System.out.print(currentCell.getStringCellValue() + "--");
 					C.PDB_ID = currentRow.getCell(0).getStringCellValue();
 					C.Resolution = currentRow.getCell(1).getStringCellValue();
@@ -131,9 +131,9 @@ public class ExcelLoader {
 			return Container;
 		}
 	
-	Vector<DataContainer> CheckPDBexists(Vector<Vector<DataContainer>> AllToolsData, Vector<DataContainer> ThisToolData) {
+	Vector<ExcelContents> CheckPDBexists(Vector<Vector<ExcelContents>> AllToolsData, Vector<ExcelContents> ThisToolData) {
 		//System.out.println(Phenixx.size());
-		Vector<DataContainer> Container = new Vector<DataContainer>();
+		Vector<ExcelContents> Container = new Vector<ExcelContents>();
 		for (int t = 0; t < ThisToolData.size(); ++t) {
 			boolean PDFFoundInAll=true;
 		for (int i = 0; i < AllToolsData.size(); ++i) {

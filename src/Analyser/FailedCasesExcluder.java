@@ -28,7 +28,7 @@ public class FailedCasesExcluder {
 			if(Folder.isDirectory()) {
 				System.out.println("Folder "+Folder.getName() );
 				new RunComparison().CheckDirAndFile(PathToWrite+"/"+Folder.getName());
-				Vector<Vector<DataContainer>> AllToolsData = new Vector<Vector<DataContainer>>();
+				Vector<Vector<ExcelContents>> AllToolsData = new Vector<Vector<ExcelContents>>();
 				ExcelLoader e = new ExcelLoader();
 				for(File Excel : Folder.listFiles()) {
 					System.out.println(Excel.getAbsolutePath());
@@ -40,7 +40,7 @@ public class FailedCasesExcluder {
 				for(File Excel : Folder.listFiles()) {
 					AllToolsData.add(e.ReadExcel(Excel.getAbsolutePath()));
 					System.out.println("Excel "+Excel.getName());
-					Vector<DataContainer> ModifiedExcel=e.CheckPDBexists(AllToolsData, e.ReadExcel(Excel.getAbsolutePath()));
+					Vector<ExcelContents> ModifiedExcel=e.CheckPDBexists(AllToolsData, e.ReadExcel(Excel.getAbsolutePath()));
 					System.out.println("ModifiedExcel "+ModifiedExcel.size());
 					new ExcelSheet().FillInExcel(ModifiedExcel, PathToWrite+"/"+Folder.getName()+"/"+Excel.getName());
 				}

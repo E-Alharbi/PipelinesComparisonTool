@@ -17,7 +17,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import Analyser.DataContainer;
+import Analyser.ExcelContents;
 import Analyser.ExcelSheet;
 import Analyser.FactorsFlags;
 import Run.RunningPram;
@@ -72,7 +72,7 @@ public class ArpResultsAnalysis2 {
 		
 		
 	//	Vector<String> ColData=  ExcelSheet.ReadExcelByColIndex("./DataRunResults.xlsx",0);
-		Vector <DataContainer> Container = new Vector <DataContainer>();
+		Vector <ExcelContents> Container = new Vector <ExcelContents>();
 		 File[] files = new File(LogsDir).listFiles();
 	//	for(int i=0 ; i < ColData.size() ; ++i){
 		 int countFiles=0;
@@ -80,7 +80,7 @@ public class ArpResultsAnalysis2 {
 				countFiles++;
 				//System.out.println(file.getName());
 				String NameOfFile=file.getName().substring(0,file.getName().indexOf(".")).trim();
-				DataContainer DC = new DataContainer();
+				ExcelContents DC = new ExcelContents();
 				DC.ExceptionNoLogFile="F";
 				String RFactor="";
 				String RFree="";

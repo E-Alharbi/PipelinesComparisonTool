@@ -10,7 +10,7 @@ import java.util.Vector;
 
 import org.apache.commons.io.FileUtils;
 
-import Analyser.DataContainer;
+import Analyser.ExcelContents;
 import Analyser.ExcelLoader;
 
 public class CopyPDB {
@@ -18,7 +18,7 @@ public class CopyPDB {
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		 ExcelLoader e = new ExcelLoader();
-		Vector<DataContainer> Container2 = e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Run5/ARPwARP.xlsx");
+		Vector<ExcelContents> Container2 = e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Run5/ARPwARP.xlsx");
 	String PDBPath="/Volumes/PhDHardDrive/simulated_jcsg/";
 	String Checked="";
 	for(int i=0 ; i < Container2.size() ; ++i ) {

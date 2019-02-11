@@ -8,7 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Vector;
 
-import Analyser.DataContainer;
+import Analyser.ExcelContents;
 import Analyser.ExcelSheet;
 import Analyser.ExcelLoader;
 import Run.RunningPram;
@@ -19,9 +19,9 @@ public class UpdateExcel {
 		// TODO Auto-generated method stub
 
 		ExcelLoader e = new ExcelLoader();
-		Vector<DataContainer> Crank = new Vector<DataContainer>();
+		Vector<ExcelContents> Crank = new Vector<ExcelContents>();
 		Crank = e.ReadExcel("/Users/emadalharbi/Desktop/PhDYork/jcsg202Results/ToolsResults12_3_2018/Crank.xlsx");
-		Vector<DataContainer> Arp = e.ReadExcel("/Users/emadalharbi/Desktop/PhDYork/jcsg202Results/ToolsResults12_3_2018/ARPwARP.xlsx");
+		Vector<ExcelContents> Arp = e.ReadExcel("/Users/emadalharbi/Desktop/PhDYork/jcsg202Results/ToolsResults12_3_2018/ARPwARP.xlsx");
 		for(int i=0; i< Crank.size();++i) {
 			
 			for(int a=0; a< Arp.size();++a) {

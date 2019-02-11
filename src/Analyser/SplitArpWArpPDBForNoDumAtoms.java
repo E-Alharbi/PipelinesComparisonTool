@@ -19,8 +19,8 @@ public class SplitArpWArpPDBForNoDumAtoms {
 
 		File [] PDBs= new File("/Volumes/PhDHardDrive/TempResults/Pipelines/ArpNoncsPDB").listFiles();
 		 ExcelLoader e = new ExcelLoader();
-		Vector<DataContainer> Container = e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Run6/noncs/ARPwARP.xlsx");
-		Vector<DataContainer> ContainerNoDummy = new Vector<DataContainer>();
+		Vector<ExcelContents> Container = e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Run6/noncs/ARPwARP.xlsx");
+		Vector<ExcelContents> ContainerNoDummy = new Vector<ExcelContents>();
 		int count=0;
 		for(File pdb : PDBs) {
 		 String Txt = new ResultsAnalyserMultiThreads().readFileAsString(pdb.getAbsolutePath());

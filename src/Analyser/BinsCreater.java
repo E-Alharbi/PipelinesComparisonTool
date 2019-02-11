@@ -37,7 +37,7 @@ public class BinsCreater {
 					System.out.println(Excel.getAbsolutePath());
 					
 					ExcelLoader e = new ExcelLoader();
-					Vector<DataContainer> Container = e.ReadExcel(Excel.getAbsolutePath());
+					Vector<ExcelContents> Container = e.ReadExcel(Excel.getAbsolutePath());
 					HashMap<Double,Double> Reso=new HashMap<Double,Double>();  
 					HashMap<Double,Integer> ResoCounting=new HashMap<Double,Integer>();  
 					for(int i=0 ; i < Container.size() ; ++i) {

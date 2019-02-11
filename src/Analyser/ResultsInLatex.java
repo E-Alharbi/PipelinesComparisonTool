@@ -30,7 +30,7 @@ public class ResultsInLatex {
 
 	// Creating many types of tables in latex format for results representation
 
-String PathToLatexFolder="./";
+String PathToLatexFolder="./Latex";
 	public static void main(String[] args) throws IOException, StatsException {
 		// TODO Auto-generated method stub
 		
@@ -50,16 +50,16 @@ String PathToLatexFolder="./";
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets17";
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/GAResults/Ex5";
 
-		String ExcelDir = "/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun3ArpNoFree";
+		String ExcelDir = "/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun3ArpNoFreeReproducibility/";
 		
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets17";
 
 		new RunComparison().CheckDirAndFile("CSV");
-		new RunComparison().CheckDirAndFile("Latex");
+		new RunComparison().CheckDirAndFile("./Latex");
 
 		// new ResultsInCSV().PDBTable(Container);
 
-		new ResultsInLatex().OverallResults(ExcelDir);
+		//new ResultsInLatex().OverallResults(ExcelDir);
 		// new ResultsInLatex().PDBList(ExcelDir);
 		// new ResultsInLatex().BestAndWorstCases(ExcelDir);
 		// new ResultsInLatex().PrepareExcelForSpss(ExcelDir);
@@ -75,13 +75,15 @@ String PathToLatexFolder="./";
 		//new ResultsInLatex().TimeTakingTable(ExcelDir);
 		
 		
-		//new ResultsInLatex().CompRTimeAvgTable(ExcelDir);
+		new ResultsInLatex().CompRTimeAvgTable(ExcelDir,"/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun3ArpNoFree/All");
 	}
-	void CompRTimeAvgTable(String ExcelDir) throws IOException {
+	void CompRTimeAvgTable(String ExcelDir, String PathForOriginalExp) throws IOException {
 		
 		for (File Folder : new File(ExcelDir).listFiles()) {
 			if(Folder.isDirectory()) {
 				String Table="\\tiny Pipeline & \\tiny Completeness &\\tiny R-work/R-free & \\tiny Time taking \\\\ \\hline \n";
+				String TableOriginal="\\tiny Pipeline & \\tiny Completeness &\\tiny R-work/R-free & \\tiny Time taking \\\\ \\hline \n";
+
 				String Comments="";
 				Comments+="% "+ new Date().toString() +" \n ";
 				Comments+="% Folder: "+ Folder.getName() +" \n ";
@@ -96,22 +98,56 @@ String PathToLatexFolder="./";
 						double Rwork=0;
 						double Rfree=0;
 						double Time=0;
+						
+						double ComOriginal=0;
+						double RworkOriginal=0;
+						double RfreeOriginal=0;
+						double TimeOriginal=0;
+						int countBuiltPDB=0;
 						ExcelLoader f = new ExcelLoader();
-						Vector<DataContainer> Container = f.ReadExcel(Excel.getAbsolutePath());
+						Vector<ExcelContents> Container = f.ReadExcel(Excel.getAbsolutePath());
 						for(int i=0; i < Container.size() ; ++i) {
+							if(Container.get(i).BuiltPDB.equals("T")) {
+								countBuiltPDB++;
 							Com+=Double.parseDouble(Container.get(i).Completeness);
 							Rwork+=Double.parseDouble(Container.get(i).R_factor0Cycle);
 							Rfree+=Double.parseDouble(Container.get(i).R_free0Cycle);
 							Time+=Double.parseDouble(Container.get(i).TimeTaking);
+							for (File FolderOriginalExp : new File(PathForOriginalExp).listFiles()) {
+								if(FolderOriginalExp.getName().equals(Folder.getName()))
+									for(File OriginalExcel : FolderOriginalExp.listFiles()) {
+										if(Excel.getName().equals(OriginalExcel.getName())) {
+											Vector<ExcelContents> OriginalContainer = f.ReadExcel(OriginalExcel.getAbsolutePath());
+											for(int o=0; o < OriginalContainer.size() ; ++o) {
+												if(Container.get(i).PDB_ID.equals(OriginalContainer.get(o).PDB_ID)) {
+													ComOriginal+=Double.parseDouble(OriginalContainer.get(o).Completeness);
+													RworkOriginal+=Double.parseDouble(OriginalContainer.get(o).R_factor0Cycle);
+													RfreeOriginal+=Double.parseDouble(OriginalContainer.get(o).R_free0Cycle);
+													TimeOriginal+=Double.parseDouble(OriginalContainer.get(o).TimeTaking);
+													break;// no need to complete the loop
+												}
+												
+											}
+										}
+									}
+							}
+						}
 						}
 						DecimalFormat df = new DecimalFormat("#.##");
 						df.setRoundingMode(RoundingMode.HALF_UP);
 						
 						
-						Table+="\\tiny "+Excel.getName()+" & \\tiny "+Math.round((Com/Container.size())) +" & \\tiny "+ df.format(BigDecimal.valueOf(Double.valueOf((Rwork/Container.size()))))+"/"+df.format(BigDecimal.valueOf(Double.valueOf((Rfree/Container.size()))))+" & \\tiny "+Math.round((Time/Container.size())) +"\\\\ \\hline \n";
+						Table+="\\tiny "+Excel.getName()+" & \\tiny "+Math.round((Com/countBuiltPDB)) +" & \\tiny "+ df.format(BigDecimal.valueOf(Double.valueOf((Rwork/countBuiltPDB))))+"/"+df.format(BigDecimal.valueOf(Double.valueOf((Rfree/countBuiltPDB))))+" & \\tiny "+Math.round((Time/countBuiltPDB)) +"\\\\ \\hline \n";
+						TableOriginal+="\\tiny "+Excel.getName()+" & \\tiny "+Math.round((ComOriginal/countBuiltPDB)) +" & \\tiny "+ df.format(BigDecimal.valueOf(Double.valueOf((RworkOriginal/countBuiltPDB))))+"/"+df.format(BigDecimal.valueOf(Double.valueOf((RfreeOriginal/countBuiltPDB))))+" & \\tiny "+Math.round((TimeOriginal/countBuiltPDB)) +"\\\\ \\hline \n";
+
+
+						
+					
+					
 					}
 				}
 				new Preparer().WriteTxtFile(PathToLatexFolder+"/ReproducibilityTable" + Folder.getName() + ".tex", FormatingPipelinesNames(Table,true) + "\n"+Comments);
+				new Preparer().WriteTxtFile(PathToLatexFolder+"/ReproducibilityTableOriginal" + Folder.getName() + ".tex", FormatingPipelinesNames(TableOriginal,true) + "\n"+Comments);
 
 			}
 		}
@@ -130,7 +166,7 @@ void TimeTakingTable(String ExcelDir) throws IOException {
 				if(Excel.isFile()) {
 					Comments+="%"+Excel.getAbsolutePath() +" \n ";
 					ExcelLoader f = new ExcelLoader();
-					Vector<DataContainer> Container = f.ReadExcel(Excel.getAbsolutePath());
+					Vector<ExcelContents> Container = f.ReadExcel(Excel.getAbsolutePath());
 					double min=Double.parseDouble(Container.get(0).TimeTaking);
 					double max=Double.parseDouble(Container.get(0).TimeTaking);
 					double total=0;
@@ -151,11 +187,11 @@ void TimeTakingTable(String ExcelDir) throws IOException {
 		}
 	}
 }
-	void PDBTable(Vector<Vector<DataContainer>> Container) throws IOException {
+	void PDBTable(Vector<Vector<ExcelContents>> Container) throws IOException {
 		// Sorting by Resolution
 		Vector<String> PDB = new Vector<String>();
 		for (int i = 0; i < Container.size(); ++i) {
-			Collections.sort(Container.get(i), DataContainer.DataContainerComparator);
+			Collections.sort(Container.get(i), ExcelContents.DataContainerComparator);
 		}
 
 		new RunComparison().CheckDirAndFile("CSV");
@@ -179,7 +215,7 @@ void TimeTakingTable(String ExcelDir) throws IOException {
 	void OverallResults(String ResultsDir) throws IOException {
 		File[] Folders = new File(ResultsDir).listFiles();
 		ExcelLoader e = new ExcelLoader();
-		Vector<Vector<DataContainer>> Container = new Vector<Vector<DataContainer>>();
+		Vector<Vector<ExcelContents>> Container = new Vector<Vector<ExcelContents>>();
 		String Comments="% "+new Date().toString() +" \n";
 		for (File Folder : Folders) {
 			if (Folder.isDirectory()) {
@@ -224,7 +260,8 @@ void TimeTakingTable(String ExcelDir) throws IOException {
 					Completed, Intermediate, Failed, IntermediateTime));
 		}
 		System.out.println(CSV);
-		new Preparer().WriteTxtFile("CSV/Overall.csv", CSV);
+		new RunComparison().CheckDirAndFile(PathToLatexFolder+"/CSV");
+		new Preparer().WriteTxtFile(PathToLatexFolder+"/CSV/Overall.csv", CSV);
 		Vector<String> CheckedFiles = new Vector<String>();
 		String Table = "\\tiny Pipeline &&\\tiny HA-NCS &&&&\\tiny MR-NCS &&&& \\tiny NO-NCS\\\\ \n" + 
 				"&&\\tiny Compelete & \\tiny Intermediate& \\tiny Falied&&\\tiny Compelete &\\tiny Intermediate& \\tiny Falied&& \\tiny Compelete & \\tiny Intermediate& \\tiny Falied\\\\ \\hline";
@@ -272,12 +309,12 @@ void TimeTakingTable(String ExcelDir) throws IOException {
 		for (int i = 0; i < Container.size(); ++i) {
 			if(e.ToolsNames.get(i).contains("hancs") && NumberofConsideredCasesHancs==0) {
 				ExcelLoader f = new ExcelLoader();
-				Vector<Vector<DataContainer>> AllToolsData = new Vector<Vector<DataContainer>>();
+				Vector<Vector<ExcelContents>> AllToolsData = new Vector<Vector<ExcelContents>>();
 				for(int m =0 ; m < Container.size() ; ++m ) {
 					if(e.ToolsNames.get(m).contains("hancs"))
 					AllToolsData.add(Container.get(m));
 				}
-				Vector <DataContainer> AfterExBuccDev= new Exculding54Dataset().Exculding(Container.get(i), true);
+				Vector <ExcelContents> AfterExBuccDev= new Exculding54Dataset().Exculding(Container.get(i), true);
 				NumberofConsideredCasesHancs=f.CheckPDBexists(AllToolsData,AfterExBuccDev).size();
 				System.out.println(e.ToolsNames.get(i) +" NumberofConsideredCases "+NumberofConsideredCasesHancs);
 				System.out.println(e.ToolsNames.get(i) +" AfterExBuccDev "+AfterExBuccDev.size());
@@ -285,24 +322,24 @@ void TimeTakingTable(String ExcelDir) throws IOException {
 			}
 if(e.ToolsNames.get(i).contains("mrncs") && NumberofConsideredCasesMrncs==0) {
 	ExcelLoader f = new ExcelLoader();
-	Vector<Vector<DataContainer>> AllToolsData = new Vector<Vector<DataContainer>>();
+	Vector<Vector<ExcelContents>> AllToolsData = new Vector<Vector<ExcelContents>>();
 	for(int m =0 ; m < Container.size() ; ++m ) {
 		if(e.ToolsNames.get(m).contains("mrncs"))
 		AllToolsData.add(Container.get(m));
 	}
-	Vector <DataContainer> AfterExBuccDev= new Exculding54Dataset().Exculding(Container.get(i), true);
+	Vector <ExcelContents> AfterExBuccDev= new Exculding54Dataset().Exculding(Container.get(i), true);
 	NumberofConsideredCasesMrncs=f.CheckPDBexists(AllToolsData,AfterExBuccDev).size();
 	System.out.println(e.ToolsNames.get(i) +" NumberofConsideredCases "+NumberofConsideredCasesMrncs);
 	System.out.println(e.ToolsNames.get(i) +" AfterExBuccDev "+AfterExBuccDev.size());
 			}
 if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 	ExcelLoader f = new ExcelLoader();
-	Vector<Vector<DataContainer>> AllToolsData = new Vector<Vector<DataContainer>>();
+	Vector<Vector<ExcelContents>> AllToolsData = new Vector<Vector<ExcelContents>>();
 	for(int m =0 ; m < Container.size() ; ++m ) {
 		if(e.ToolsNames.get(m).contains("noncs"))
 		AllToolsData.add(Container.get(m));
 	}
-	Vector <DataContainer> AfterExBuccDev= new Exculding54Dataset().Exculding(Container.get(i), true);
+	Vector <ExcelContents> AfterExBuccDev= new Exculding54Dataset().Exculding(Container.get(i), true);
 	NumberofConsideredCasesNoncs=f.CheckPDBexists(AllToolsData,AfterExBuccDev).size();
 	System.out.println(e.ToolsNames.get(i) +" NumberofConsideredCases "+NumberofConsideredCasesNoncs);
 	System.out.println(e.ToolsNames.get(i) +" AfterExBuccDev "+AfterExBuccDev.size());
@@ -319,7 +356,7 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 	void PDBList(String ResultsDir) throws IOException {
 		File[] Folders = new File(ResultsDir).listFiles();
 		ExcelLoader e = new ExcelLoader();
-		Vector<Vector<DataContainer>> Container = new Vector<Vector<DataContainer>>();
+		Vector<Vector<ExcelContents>> Container = new Vector<Vector<ExcelContents>>();
 		for (File Folder : Folders) {
 			if (Folder.isDirectory()) {
 				for (File Excel : Folder.listFiles()) {
@@ -330,7 +367,7 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 
 		}
 		Vector<String> CheckedFiles = new Vector<String>();
-		Vector<DataContainer> PDBList = new Vector<DataContainer>();
+		Vector<ExcelContents> PDBList = new Vector<ExcelContents>();
 		for (int i = 0; i < Container.size(); ++i) {
 
 			for (int y = 0; y < Container.get(i).size(); ++y) {
@@ -341,7 +378,7 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 						Found = true;
 				}
 				if (Found == false && !Container.get(i).get(y).Resolution.equals("None")) {
-					DataContainer DC = new DataContainer();
+					ExcelContents DC = new ExcelContents();
 					DC.PDBIDTXT = Container.get(i).get(y).PDB_ID.substring(0, 4);
 					DC.F_mapCorrelation = Container.get(i).get(y).F_mapCorrelation;
 					DC.E_mapCorrelation = Container.get(i).get(y).E_mapCorrelation;
@@ -360,7 +397,7 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 
 		System.out.println(PDBList.size());
 		GroupedResults(PDBList);// Print Reso Table
-		Vector<DataContainer> CheckedPDB = new Vector<DataContainer>();
+		Vector<ExcelContents> CheckedPDB = new Vector<ExcelContents>();
 
 		for (int i = 0; i < PDBList.size(); ++i) {
 
@@ -380,7 +417,7 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 			}
 			if (NotFoundAtAll == false && FoundPDB == false) {
 				// System.out.println("NotFoundAtAll");
-				DataContainer DC = new DataContainer();
+				ExcelContents DC = new ExcelContents();
 				DC.PDBIDTXT = PDBList.get(i).PDBIDTXT;
 				DC.F_mapCorrelation = PDBList.get(i).F_mapCorrelation;
 				DC.E_mapCorrelation = PDBList.get(i).E_mapCorrelation;
@@ -389,7 +426,7 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 			}
 			if (FoundPDB == true) {
 				// System.out.println("FoundPDB");
-				DataContainer DC = CheckedPDB.get(Index);
+				ExcelContents DC = CheckedPDB.get(Index);
 				DC.Resolution += " " + PDBList.get(i).Resolution;
 				DC.F_mapCorrelation += " " + PDBList.get(i).F_mapCorrelation;
 				DC.E_mapCorrelation += " " + PDBList.get(i).E_mapCorrelation;
@@ -404,14 +441,14 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 					+ "&& \\tiny " + CheckedPDB.get(i).F_mapCorrelation + "& \\tiny "
 					+ CheckedPDB.get(i).E_mapCorrelation + "\\\\" + "\n";
 		}
-		Collections.sort(CheckedPDB, DataContainer.DataContainerComparator);
+		Collections.sort(CheckedPDB, ExcelContents.DataContainerComparator);
 		System.out.println(CheckedPDB.size());
 		new Preparer().WriteTxtFile(PathToLatexFolder+"/PDBList.tex", TableContext);
 
 	}
 
-	public Vector<Integer> GroupedResults(Vector<DataContainer> PDBList) throws IOException {
-		Collections.sort(PDBList, DataContainer.DataContainerComparator);
+	public Vector<Integer> GroupedResults(Vector<ExcelContents> PDBList) throws IOException {
+		Collections.sort(PDBList, ExcelContents.DataContainerComparator);
 		// Count The cases depend on Reso
 		Vector<Integer> Reso = new Vector<Integer>();
 		Vector<Integer> NumReso = new Vector<Integer>();
@@ -493,7 +530,7 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 		File[] Folders = new File(ResultsDir).listFiles();
 
 		for (File Folder : Folders) {
-			Vector<Vector<DataContainer>> Container = new Vector<Vector<DataContainer>>();
+			Vector<Vector<ExcelContents>> Container = new Vector<Vector<ExcelContents>>();
 			if (Folder.isDirectory()) {
 				ExcelLoader e = new ExcelLoader();
 				for (File Excel : Folder.listFiles()) {
@@ -502,7 +539,7 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 				}
 
 				System.out.println(Folder.getName());
-				Vector<Vector<DataContainer>> Container2 = new Vector<Vector<DataContainer>>();
+				Vector<Vector<ExcelContents>> Container2 = new Vector<Vector<ExcelContents>>();
 				/*
 				 * for(int i=0 ; i < Container.size() ; ++i) {
 				 * 
@@ -521,8 +558,8 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 					Vector<Integer> Reso = GroupedResults(Container2.get(i));
 					for (int r = 0; r < Reso.size(); ++r) {
 
-						DataContainer BestCase = new DataContainer();
-						DataContainer WorstCase = new DataContainer();
+						ExcelContents BestCase = new ExcelContents();
+						ExcelContents WorstCase = new ExcelContents();
 						BestCase.Completeness = "0";
 						WorstCase.Completeness = "None";// Assuming is the worst
 						for (int B = 0; B < Container2.get(i).size(); ++B) {
@@ -649,7 +686,7 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 		File[] Folders = new File(ResultsDir).listFiles();
 
 		for (File Folder : Folders) {
-			Vector<Vector<DataContainer>> Container = new Vector<Vector<DataContainer>>();
+			Vector<Vector<ExcelContents>> Container = new Vector<Vector<ExcelContents>>();
 			ExcelLoader e = new ExcelLoader();
 			if (Folder.isDirectory()) {
 				for (File Excel : Folder.listFiles()) {
@@ -669,7 +706,7 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 				 * 
 				 * int OrginalContainerSize=Container.size(); Container.addAll(AllDMResults);
 				 */
-				Vector<Vector<DataContainer>> Container2 = new Vector<Vector<DataContainer>>();
+				Vector<Vector<ExcelContents>> Container2 = new Vector<Vector<ExcelContents>>();
 				for (int i = 0; i < Container.size(); ++i) {
 
 					System.out.println(" " + i + " out of " + Container.size());
@@ -690,7 +727,7 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 				Vector<Integer> Reso = GroupedResults(Container.get(0)); // because all excels have the same cases so
 																			// one is engouh
 				for (int r = 0; r < Reso.size(); ++r) {
-					Vector<DataContainer> ToBeInExcel = new Vector<DataContainer>();
+					Vector<ExcelContents> ToBeInExcel = new Vector<ExcelContents>();
 					for (int i = 0; i < Container.size(); ++i) {
 						for (int y = 0; y < Container.get(i).size(); ++y) {
 							Double Value = Double.parseDouble(Container.get(i).get(y).Resolution);
@@ -854,7 +891,7 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 	void GroupByPhases(String ResultsDir) throws IOException {
 		File[] Folders = new File(ResultsDir).listFiles();
 		ExcelLoader e = new ExcelLoader();
-		Vector<Vector<DataContainer>> Container = new Vector<Vector<DataContainer>>();
+		Vector<Vector<ExcelContents>> Container = new Vector<Vector<ExcelContents>>();
 		for (File Folder : Folders) {
 			if (Folder.isDirectory()) {
 				for (File Excel : Folder.listFiles()) {
@@ -882,8 +919,8 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 		PhasesTable(Container.get(1));
 	}
 
-	Vector<Integer> PhasesTable(Vector<DataContainer> PDBList) throws IOException {
-		Collections.sort(PDBList, DataContainer.DataContainerComparatorEmap);
+	Vector<Integer> PhasesTable(Vector<ExcelContents> PDBList) throws IOException {
+		Collections.sort(PDBList, ExcelContents.DataContainerComparatorEmap);
 		// Count The cases depend on Reso
 		Vector<Integer> Reso = new Vector<Integer>();
 		Vector<Integer> NumReso = new Vector<Integer>();
@@ -950,7 +987,7 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 		
 		for (File Folder : Folders) {
 			if (Folder.isDirectory()) {
-				Vector<Vector<DataContainer>> Container = new Vector<Vector<DataContainer>>();
+				Vector<Vector<ExcelContents>> Container = new Vector<Vector<ExcelContents>>();
 				ExcelLoader e = new ExcelLoader();
 				String Comments="";
 				Comments = "% "+new Date().toString()+" \n";
@@ -1085,6 +1122,7 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 						float EquivalentR5=0;
 						float EquivalentRFree5=0;
 						
+						boolean IsRFreeFlagUsed=true;// because ARP/wARP usually not used it. if RFREE is zero from the log file that mean not used. 
 						for (int model = 0; model < Container.get(i).size(); ++model) {
 							for (int modeComTo = 0; modeComTo < Container.get(m).size(); ++modeComTo) {
 								
@@ -1094,6 +1132,9 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 									if (Container.get(i).get(model).BuiltPDB.equals("T")
 											&& Container.get(m).get(modeComTo).BuiltPDB.equals("T")) {
 										CountModel++;
+										if(Container.get(i).get(model).R_free.equals("0")) {
+											IsRFreeFlagUsed=false;
+										}
 										
 										if (  new BigDecimal(Container.get(i).get(model).Completeness).setScale(0, RoundingMode.HALF_UP).subtract( 
 												new BigDecimal(Container.get(m).get(modeComTo).Completeness).setScale(0, RoundingMode.HALF_UP)).compareTo(new BigDecimal("1")) >=0)  {
@@ -1324,23 +1365,32 @@ if(new BigDecimal(Container.get(i).get(model).R_free0Cycle).compareTo(new BigDec
 
 							 
 							  
-							//  if(((CountRFree0 * 100) / CountModel) >= 30)
-						// RowRFree0 += "& \\cellcolor{gray!35} \\tiny " + decim.format(((CountRFree0 * 100) / CountModel)) + "\\% " ;
-							//	if(((CountRFree0 * 100) / CountModel) < 30)
-						RowRFree0 += " &  " + decim.format(((CountRFree0 * 100) / CountModel))  ;
+						if(IsRFreeFlagUsed==true) {	
+					RowRFree0 += " &  " + decim.format(((CountRFree0 * 100) / CountModel))  ;
 								
-								// if(((CountRFree5 * 100) / CountModel) >= 30)
-								//	 RowRFree5 += "& \\cellcolor{gray!35} \\tiny " + decim.format(((CountRFree5 * 100) / CountModel)) + "\\% " ;
-								//if(((CountRFree5 * 100) / CountModel) < 30)
-								RowRFree5 += " &  " + decim.format(((CountRFree5 * 100) / CountModel))  ;	
+								
+					RowRFree5 += " &  " + decim.format(((CountRFree5 * 100) / CountModel))  ;	
 							  
 					RowRFree0Equivalent+=	" & " + decim.format(((EquivalentRFree * 100) / CountModel));		
 					
-					 RowR5Equivalent += " & " + decim.format(((EquivalentR5 * 100) / CountModel)) ;
 					
 					 RowRFree5Equivalent+=	" &  " + decim.format(((EquivalentRFree5 * 100) / CountModel)) ;
-					
-					 
+						}
+						if(IsRFreeFlagUsed==false) {	
+							RowRFree0 += " & - " ;
+							
+							
+							RowRFree5 += " & - " ;	
+									  
+							RowRFree0Equivalent+=	" & -" ;		
+							
+							 
+							
+							 RowRFree5Equivalent+=	" & - "  ;
+								
+						}
+					 RowR5Equivalent += " & " + decim.format(((EquivalentR5 * 100) / CountModel)) ;
+
 					 LogOfCom0+="\n Number of models: "+CountModelCom0+" \n";
 					 
 					 LogOfCom0Equivalent+="\n Number of models: "+EquivalentFor0+" \n";
@@ -1493,7 +1543,11 @@ LogOfR0Equivalent+="\n Number of models: "+EquivalentR+" \n";
 					 NumberOfPipelien++;
 				 }
 			 }
+			 if(sumofTheLine!=0)
 			 LinesAvg.add(String.valueOf(Math.round((sumofTheLine/NumberOfPipelien))));
+			 if(sumofTheLine==0)
+			 LinesAvg.add("-");
+
 			 }
 			 ++i;
 		 }
@@ -1637,7 +1691,7 @@ return FormattedTable;
 		
 		DecimalFormat decim = new DecimalFormat("#.##");
 		
-		Vector<Vector<Vector<DataContainer>>> AllDatasetContainer = new Vector<Vector<Vector<DataContainer>>>();
+		Vector<Vector<Vector<ExcelContents>>> AllDatasetContainer = new Vector<Vector<Vector<ExcelContents>>>();
 		Vector<String> DatasetNames = new Vector<String>();
 		Vector<ExcelLoader> ExcelNames = new Vector<ExcelLoader>();
 		Vector<String> ExcelNamesAsInTableHeader = new Vector<String>();
@@ -1650,7 +1704,7 @@ return FormattedTable;
 
 				ExcelLoader e = new ExcelLoader();
 
-				Vector<Vector<DataContainer>> CurrentReading = new Vector<Vector<DataContainer>>();
+				Vector<Vector<ExcelContents>> CurrentReading = new Vector<Vector<ExcelContents>>();
 				for (File Excel : Folder.listFiles()) {
 					System.out.println(Excel.getName());
 					CurrentReading.add(e.ReadExcel(Excel.getAbsolutePath()));

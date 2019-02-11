@@ -20,7 +20,6 @@ import ToolsExecation.SingleThread.Crank;
 import ToolsExecation.SingleThread.MolProbity;
 import ToolsExecation.SingleThread.Arp;
 import ToolsExecation.SingleThread.RunCBuccaneer;
-import ToolsExecation.SingleThread.RunCBuccaneerGA;
 import ToolsExecation.SingleThread.RunnerManager;
 import ToolsExecation.SingleThread.cfakeAnom;
 import ToolsExecation.SingleThread.chltofom;
@@ -469,31 +468,7 @@ public class RunComparison {
 					// new RunCBuccaneer().RunBuccaneerTool();
 					 new Buccaneeri1().RunBuccaneerTool();
 			 }
-			 else if(args[0].equals("RunCBuccaneerGA")){
-					
-				 
-					
-				 Parm.addAll(Arrays.asList(args));
-			
-				if(checkArg(Parm,"data")==null){
-					System.out.println("One or more of the required parameters is missing! ");
-					System.out.println("The required parameters are : ");
-					System.out.println("data= the path for data folder");
-					System.out.println("BuccaneerGA= the path for data folder");
-					System.exit(-1);
-				}
-					 if(checkArg(Parm,"data")!=null){
-						 RunningPram.DataPath=checkArg(Parm,"data");
-						
-					 }
-					 if(checkArg(Parm,"BuccaneerGA")!=null){
-						 RunningPram.BuccaneerPipeLine=checkArg(Parm,"BuccaneerGA");
-						
-					 }
-					//new RunCBuccaneer().RunBuccaneerTool(	new RunCBuccaneer().PickACase());
-					// new ThreadsRunner().Threads(new RunCBuccaneer());
-					 new RunCBuccaneerGA().RunBuccaneerTool();
-			 } 
+			 
 			 else if(args[0].equals("RunCBuccaneerTestingProupse")){
 					
 				 
@@ -955,21 +930,74 @@ public class RunComparison {
 		 
 		 System.out.println("6- RunwArpAnalyser to run Arp/wArp results analyser");
 
+		 System.out.println("The required parameters are : ");
+		 System.out.println("\t data= the path for data folder");
+		 System.out.println("\t castat2Path= the path for castat2");
+		 System.out.println("\t LogsDir= the path for Arp/wArp logs ");
+		 System.out.println("\t PDBsDir= the path for Arp/wArp PDBs");
+				
+				System.out.println("7- RunPhenixAnalyser to run Phenix results analyser");
 				System.out.println("The required parameters are : ");
 				System.out.println("\t data= the path for data folder");
 				System.out.println("\t castat2Path= the path for castat2");
-				System.out.println("\t LogsDir= the path for Arp/wArp logs ");
-				System.out.println("\t PDBsDir= the path for Arp/wArp PDBs");
+				System.out.println("\t LogsDir= the path for Phenix logs ");
+				System.out.println("\t PDBsDir= the path for Phenix PDBs");
+						
+				System.out.println("8- chltofom to convert to/from Hendrickson-Lattman coefficients for ARP/wARP. The mtz should have phases from parrot");
+				System.out.println("\t data= the path for data folder");
 				
-				System.out.println("7- RunPhenixAnalyser to run Phenix results analyser");
+				System.out.println("9- CAD to add fakewave in mtz");
+				System.out.println("\t data= the path for data folder");
+				
+				System.out.println("10- CfakeAnom ");
+				System.out.println("\t data= the path for data folder");
+				System.out.println("\t Cfake= path to c++ code");
+				
+				
+				System.out.println("11- ReRun to re-run the pipeliens. Only intermediate and failed cases will re-run  ");
+				System.out.println("Path= the path for the folder that contains pipelines");
+				
+				System.out.println("12- RunBuccaneeri2 to run Run Buccaneeri2  ");
+				System.out.println("Path= the path for the folder that contains pipelines");
+				System.out.println("data= the path for data folder");
+				System.out.println("Buccaneeri2= the path for data folder");
+	
+				
+				System.out.println("13- Preparer command is very useful to preparer all the necessary scripts. Should be used before the first run.");
+				System.out.println("Pipelines= the pipelines that you want to run separated by a comma (Ex Pipelines=Phenix,ArpWArp,Buccaneeri1,Buccaneeri2,Buccaneeri2W,Crank,ArpWArpAfterBuccaneeri1)");
+				System.out.println("FOMDataPath= the data folder after converting to figure-of-merit");
+				System.out.println("DataPath= the data folder with parrot phases ");
+				System.out.println("ccp4i2Core= path for ccp4i2 core folder   ");
+				System.out.println("DatafakeAnomalous= path Data fake Anomalous");
+				System.out.println("cstat2= path for cstat2 core folder");
+				System.out.println("UsingMolProbity= T or F");
+				System.out.println("PhasesUsedCPhasesMatch= Default is (parrot.ABCD.A,parrot.ABCD.B,parrot.ABCD.C,parrot.ABCD.D)");
+				System.out.println("UsingRfree= T or F");
 
-						
-						System.out.println("The required parameters are : ");
-						System.out.println("\t data= the path for data folder");
-						System.out.println("\t castat2Path= the path for castat2");
-						System.out.println("\t LogsDir= the path for Phenix logs ");
-						System.out.println("\t PDBsDir= the path for Phenix PDBs");
-						
+				
+				System.out.println("14- JobsCreater command  creates single job for each case. ");
+				System.out.println("ToolName= the path for tool script");
+				System.out.println("PDBDir= the path for tool PDBs. If not provided, will create job scripts for the all files");
+	
+				System.out.println("15- Cleaner command to clean intermediate and unnecessary scripts. Recommended before a re-run.");
+				System.out.println("LogsDir= the path for the log files");
+				System.out.println("PDBDir= the path for the PDB files");
+				System.out.println("LogsDirInter= the path for the log files");
+				System.out.println("PDBDirInter= the path for the PDB files");
+	
+				System.out.println("16- MolProbity command.");
+				System.out.println("The required parameters are : ");
+				System.out.println("data= the path for data folder");
+				System.out.println("Excel= the path for Excell");
+				System.out.println("MolProbity= the path for  MolProbity ");
+				System.out.println("PDBs= the path for  PDBs folder ");
+				System.out.println("Threads= Number of threads");
+				System.out.println("ToolName= Buccaneer,  ARP/wARP or Phenix ... etc");
+	
+				System.out.println("Some useful keywords: ");
+				System.out.println("Threads= number of threads to use in the analyser ");
+				System.out.println("Iterations= number of iterations  for  Buccaneer");
+				System.out.println("UsingRFree= T or F. Default is T");
 	}
 	static public boolean CheckDirAndFile(String Path){
 		

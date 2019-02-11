@@ -11,21 +11,21 @@ public class ReproducibilityChecker {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		File [] ReproducibilityFolders = new File("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Reproducibility/").listFiles();
-		File [] DatasetFolders = new File("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Run6/All").listFiles();
+		File [] ReproducibilityFolders = new File("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun3ArpNoFreeReproducibility/").listFiles();
+		File [] DatasetFolders = new File("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun3ArpNoFree/All").listFiles();
 		
 		
 		for(File Folder : ReproducibilityFolders) {
 			for(File dataset : DatasetFolders) {
 				if(Folder.getName().equals(dataset.getName())){
-					
+					System.out.println(Folder.getPath());
 					for(File Excel : Folder.listFiles()) {
 						for(File ExcelFromDataset : dataset.listFiles()) {
 							if(Excel.getName().equals(ExcelFromDataset.getName())){
 								 ExcelLoader e = new ExcelLoader();
 								
-							Vector<DataContainer> ReproducibilityContainer = e.ReadExcel(Excel.getAbsolutePath());
-							Vector<DataContainer> DatasetContainer = e.ReadExcel(ExcelFromDataset.getAbsolutePath());
+							Vector<ExcelContents> ReproducibilityContainer = e.ReadExcel(Excel.getAbsolutePath());
+							Vector<ExcelContents> DatasetContainer = e.ReadExcel(ExcelFromDataset.getAbsolutePath());
 							
 							for(int i=0 ; i < ReproducibilityContainer.size() ; ++i) {
 								for(int d=0 ; d < DatasetContainer.size() ; ++d) {

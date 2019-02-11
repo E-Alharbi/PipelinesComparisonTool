@@ -13,7 +13,7 @@ import java.util.Vector;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
-import Analyser.DataContainer;
+import Analyser.ExcelContents;
 import Analyser.ExcelLoader;
 
 public class Parrot {
@@ -21,7 +21,7 @@ public class Parrot {
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		ExcelLoader e = new ExcelLoader();
-		Vector<Vector<DataContainer>> Container =  new Vector<Vector<DataContainer>>();
+		Vector<Vector<ExcelContents>> Container =  new Vector<Vector<ExcelContents>>();
 		
 		Container.add(e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets2/hancs/Buccaneer.xlsx"));
 		Container.add(e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets2/mrncs/Buccaneer.xlsx"));

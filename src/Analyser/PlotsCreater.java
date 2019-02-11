@@ -37,7 +37,7 @@ public class PlotsCreater {
 		
 	
 
-		Vector<Vector<DataContainer>> Container = new Vector<Vector<DataContainer>>();
+		Vector<Vector<ExcelContents>> Container = new Vector<Vector<ExcelContents>>();
 	
 
 		P.PlotsPath = "Plots";
@@ -65,7 +65,7 @@ public class PlotsCreater {
 		new RunComparison().CheckDirAndFile("Plots");
 		
 		for(int i=0 ; i < Container.size() ; ++i) {
-		Collections.sort(Container.get(i),DataContainer.DataContainerComparator);
+		Collections.sort(Container.get(i),ExcelContents.DataContainerComparator);
 		
 		}
 		
@@ -103,14 +103,14 @@ public class PlotsCreater {
 	
 	
 
-	void PrintPDBID(Vector<Vector<DataContainer>> Container) {
+	void PrintPDBID(Vector<Vector<ExcelContents>> Container) {
 		for(int i=0 ; i < Container.get(0).size() ; ++i) {
 			System.out.println(Container.get(0).get(i).PDB_ID);
 			System.out.print("  " +Container.get(0).get(i).Resolution);
 			System.out.println();
 		}
 	}
-	void HowManyModelsAreBuilt(Vector<Vector<DataContainer>> Container) throws IOException {
+	void HowManyModelsAreBuilt(Vector<Vector<ExcelContents>> Container) throws IOException {
 		Plot P = new Plot();
 		Vector<Double> X = new Vector<Double>();
 		Vector<Double> Y = new Vector<Double>();
@@ -150,7 +150,7 @@ public class PlotsCreater {
 
 	}
 
-	void HowManyModelsAreBuiltByReso(Vector<Vector<DataContainer>> Container) throws FileNotFoundException {
+	void HowManyModelsAreBuiltByReso(Vector<Vector<ExcelContents>> Container) throws FileNotFoundException {
 
 		ArrayList<String> Headers = new ArrayList<String>();
 		ArrayList<ArrayList<String>> ListOfList = new ArrayList<ArrayList<String>>();
@@ -210,7 +210,7 @@ public class PlotsCreater {
 		}
 	}
 
-	void BoxPlotsNumberofAtoms(Vector<Vector<DataContainer>> Container) throws IOException {
+	void BoxPlotsNumberofAtoms(Vector<Vector<ExcelContents>> Container) throws IOException {
 
 		// int Series=Container.size();
 		DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
@@ -258,7 +258,7 @@ public class PlotsCreater {
 				"Number of Atoms in Second PDB ", dataset);
 	}
 
-	void BoxPlotsNumberofAtomsInWellKnownSameSeq(Vector<Vector<DataContainer>> Container) throws IOException {
+	void BoxPlotsNumberofAtomsInWellKnownSameSeq(Vector<Vector<ExcelContents>> Container) throws IOException {
 
 		// int Series=Container.size();
 		DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
@@ -310,7 +310,7 @@ public class PlotsCreater {
 				"Number of Atoms in Second PDB and in well known model (Same Sequence) ", dataset);
 	}
 
-	void BoxPlotsNumberofAtomsInWellKnown(Vector<Vector<DataContainer>> Container) throws IOException {
+	void BoxPlotsNumberofAtomsInWellKnown(Vector<Vector<ExcelContents>> Container) throws IOException {
 
 		// int Series=Container.size();
 		DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
@@ -360,7 +360,7 @@ public class PlotsCreater {
 	}
 
 	
-	void BoxPlotsMolProbity(Vector<Vector<DataContainer>> Container) throws IOException {
+	void BoxPlotsMolProbity(Vector<Vector<ExcelContents>> Container) throws IOException {
 
 		// int Series=Container.size();
 		DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
@@ -411,7 +411,7 @@ public class PlotsCreater {
 	
 	
 	
-	void BoxPlotsMolProbityClashScore(Vector<Vector<DataContainer>> Container) throws IOException {
+	void BoxPlotsMolProbityClashScore(Vector<Vector<ExcelContents>> Container) throws IOException {
 
 		// int Series=Container.size();
 		DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
@@ -461,7 +461,7 @@ public class PlotsCreater {
 	}
 	
 	
-	void BoxPlotsRfactor(Vector<Vector<DataContainer>> Container) throws IOException {
+	void BoxPlotsRfactor(Vector<Vector<ExcelContents>> Container) throws IOException {
 
 		// int Series=Container.size();
 		DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
@@ -508,7 +508,7 @@ public class PlotsCreater {
 		P.CreateBoxPlot(PlotsPath + "/BoxPlotR_factor0Cycle", " Resolution ", "R-Factor ", dataset);
 	}
 
-	void VisualTheDataSet(Vector<Vector<DataContainer>> Container) throws IOException {
+	void VisualTheDataSet(Vector<Vector<ExcelContents>> Container) throws IOException {
 		Plot P = new Plot();
 		Vector<Double> X = new Vector<Double>();
 		Vector<Double> Y = new Vector<Double>();
@@ -524,7 +524,7 @@ public class PlotsCreater {
 
 	}
 
-	void ResolutionVsRFactor(Vector<Vector<DataContainer>> Container) throws IOException {
+	void ResolutionVsRFactor(Vector<Vector<ExcelContents>> Container) throws IOException {
 		Plot P = new Plot();
 		Vector<Double> X = new Vector<Double>();
 		Vector<Double> Y = new Vector<Double>();
@@ -544,7 +544,7 @@ public class PlotsCreater {
 
 	}
 
-	void PhasesVsRFactor(Vector<Vector<DataContainer>> Container) throws IOException {
+	void PhasesVsRFactor(Vector<Vector<ExcelContents>> Container) throws IOException {
 		Plot P = new Plot();
 		Vector<Double> X = new Vector<Double>();
 		Vector<Double> Y = new Vector<Double>();
@@ -561,7 +561,7 @@ public class PlotsCreater {
 		P.CreateScatterPlot(PlotsPath + "/F_mapCorrelation vs R-Factor", "F_mapCorrelation", "R-Factor");
 
 	}
-	void PhasesVsNumberofAtomsInSeq(Vector<Vector<DataContainer>> Container) throws IOException {
+	void PhasesVsNumberofAtomsInSeq(Vector<Vector<ExcelContents>> Container) throws IOException {
 		Plot P = new Plot();
 		Vector<Double> X = new Vector<Double>();
 		Vector<Double> Y = new Vector<Double>();
@@ -578,7 +578,7 @@ public class PlotsCreater {
 		P.CreateScatterPlot(PlotsPath + "/F_mapCorrelation vs Number of Atoms in Seq", "F_mapCorrelation", "Number of Atoms in Seq");
 
 	}
-	void RFactorComparsion(Vector<Vector<DataContainer>> Container) throws IOException {
+	void RFactorComparsion(Vector<Vector<ExcelContents>> Container) throws IOException {
 		Plot P = new Plot();
 		Vector<Double> X = new Vector<Double>();
 		Vector<Double> Y = new Vector<Double>();
@@ -596,7 +596,7 @@ public class PlotsCreater {
 
 	}
 
-	void RFactorVsOpmtimalRComparsion(Vector<Vector<DataContainer>> Container) throws IOException {
+	void RFactorVsOpmtimalRComparsion(Vector<Vector<ExcelContents>> Container) throws IOException {
 		Plot P = new Plot();
 		Vector<Double> X = new Vector<Double>();
 		Vector<Double> Y = new Vector<Double>();
@@ -623,7 +623,7 @@ public class PlotsCreater {
 
 	}
 
-	void PhasesVsTimeTaking(Vector<Vector<DataContainer>> Container) throws IOException {
+	void PhasesVsTimeTaking(Vector<Vector<ExcelContents>> Container) throws IOException {
 		Plot P = new Plot();
 		Vector<Double> X = new Vector<Double>();
 		Vector<Double> Y = new Vector<Double>();
@@ -641,7 +641,7 @@ public class PlotsCreater {
 
 	}
 
-	void TimeTakingComaprsion(Vector<Vector<DataContainer>> Container) throws IOException {
+	void TimeTakingComaprsion(Vector<Vector<ExcelContents>> Container) throws IOException {
 		Plot P = new Plot();
 		Vector<Double> X = new Vector<Double>();
 		Vector<Double> Y = new Vector<Double>();
@@ -659,7 +659,7 @@ public class PlotsCreater {
 
 	}
 
-	void RfacorsFori1(Vector<Vector<DataContainer>> Container) throws IOException {
+	void RfacorsFori1(Vector<Vector<ExcelContents>> Container) throws IOException {
 		Plot P = new Plot();
 		Vector<Double> X = new Vector<Double>();
 		Vector<Double> Y = new Vector<Double>();
@@ -677,7 +677,7 @@ public class PlotsCreater {
 
 	}
 
-	void NumberofAtomsVsTimeTaking(Vector<Vector<DataContainer>> Container) throws IOException {
+	void NumberofAtomsVsTimeTaking(Vector<Vector<ExcelContents>> Container) throws IOException {
 		Plot P = new Plot();
 		Vector<Double> X = new Vector<Double>();
 		Vector<Double> Y = new Vector<Double>();
@@ -699,7 +699,7 @@ public class PlotsCreater {
 
 	}
 
-	void NumberofAtomsPDB1VsNumberofAtomsPDB2(Vector<Vector<DataContainer>> Container) throws IOException {
+	void NumberofAtomsPDB1VsNumberofAtomsPDB2(Vector<Vector<ExcelContents>> Container) throws IOException {
 		Vector<Integer> Reso = ResoRange(Container);
 		for (int r = 0; r < Reso.size(); ++r) {
 			Plot P = new Plot();
@@ -722,7 +722,7 @@ public class PlotsCreater {
 
 	}
 
-	void NumberofAtomsPDB1AndInNumberofAtomsPDB2(Vector<Vector<DataContainer>> Container) throws IOException {
+	void NumberofAtomsPDB1AndInNumberofAtomsPDB2(Vector<Vector<ExcelContents>> Container) throws IOException {
 
 		Vector<Integer> Reso = ResoRange(Container);
 		for (int r = 0; r < Reso.size(); ++r) {
@@ -751,7 +751,7 @@ public class PlotsCreater {
 
 	}
 
-	void NumberofAtomsPDB1AndInNumberofAtomsPDB2InsameSequnce(Vector<Vector<DataContainer>> Container)
+	void NumberofAtomsPDB1AndInNumberofAtomsPDB2InsameSequnce(Vector<Vector<ExcelContents>> Container)
 			throws IOException {
 
 		Vector<Integer> Reso = ResoRange(Container);
@@ -782,7 +782,7 @@ System.out.println(" n2m1 "+Container.get(i).get(m).n2m1);
 		}
 	}
 
-	void ResoVsNumberofAtomsPDB2(Vector<Vector<DataContainer>> Container) throws IOException {
+	void ResoVsNumberofAtomsPDB2(Vector<Vector<ExcelContents>> Container) throws IOException {
 		Plot P = new Plot();
 		Vector<Double> X = new Vector<Double>();
 		Vector<Double> Y = new Vector<Double>();
@@ -803,7 +803,7 @@ System.out.println(" n2m1 "+Container.get(i).get(m).n2m1);
 
 	}
 
-	void LineChartForToolsPerformance(Vector<Vector<DataContainer>> Container) throws IOException {
+	void LineChartForToolsPerformance(Vector<Vector<ExcelContents>> Container) throws IOException {
 		
 		Plot P = new Plot();
 	
@@ -812,10 +812,10 @@ System.out.println(" n2m1 "+Container.get(i).get(m).n2m1);
 
 		 for (int i = 0; i < Container.size(); ++i) {
 			 String series1 = ToolsNames.get(i);
-			 Vector<DataContainer> BestModelInEachReso= new Vector<DataContainer>();
+			 Vector<ExcelContents> BestModelInEachReso= new Vector<ExcelContents>();
 			 for (int m = 0; m < Container.get(i).size(); ++m) {
 				 if(Container.get(i).get(m).PDB_ID.contains("2a3n")) {
-				DataContainer.AddElemnet(BestModelInEachReso, Container.get(i).get(m));
+				ExcelContents.AddElemnet(BestModelInEachReso, Container.get(i).get(m));
 				 }
 			 }
 			 for (int m = 0; m < BestModelInEachReso.size(); ++m) {
@@ -885,7 +885,7 @@ System.out.println(" n2m1 "+Container.get(i).get(m).n2m1);
 	
 	
 	
-void LineChartMolScore(Vector<Vector<DataContainer>> Container) throws IOException {
+void LineChartMolScore(Vector<Vector<ExcelContents>> Container) throws IOException {
 		
 		Plot P = new Plot();
 	
@@ -922,7 +922,7 @@ void LineChartMolScore(Vector<Vector<DataContainer>> Container) throws IOExcepti
 
 	
 	
-	String MaxValue(Vector<Vector<DataContainer>> Container, String PDBID, boolean Seq) {
+	String MaxValue(Vector<Vector<ExcelContents>> Container, String PDBID, boolean Seq) {
 		int Max = 0;
 		String PDBid = "";
 		for (int i = 0; i < Container.size(); ++i) {
@@ -948,7 +948,7 @@ void LineChartMolScore(Vector<Vector<DataContainer>> Container) throws IOExcepti
 
 	}
 
-	String MinValue(Vector<Vector<DataContainer>> Container, String PDBID, boolean Time) {
+	String MinValue(Vector<Vector<ExcelContents>> Container, String PDBID, boolean Time) {
 		Double Min = 1.0;
 		Double MinTime = 1000000.0;
 		for (int i = 0; i < Container.size(); ++i) {
@@ -978,7 +978,7 @@ void LineChartMolScore(Vector<Vector<DataContainer>> Container) throws IOExcepti
 
 	}
 
-	String AvgValue(Vector<Vector<DataContainer>> Container, String PDBID) {
+	String AvgValue(Vector<Vector<ExcelContents>> Container, String PDBID) {
 		Double Avg = 0.0;
 		int count = 0;
 		for (int i = 0; i < Container.size(); ++i) {
@@ -1014,7 +1014,7 @@ void LineChartMolScore(Vector<Vector<DataContainer>> Container) throws IOExcepti
 		return Container;
 	}*/
 	
-	Vector<Integer> ResoRange(Vector<Vector<DataContainer>> Containers) {
+	Vector<Integer> ResoRange(Vector<Vector<ExcelContents>> Containers) {
 
 		Vector<Integer> Reso = new Vector<Integer>();
 		for (int i = 0; i < Containers.size(); ++i) {
@@ -1029,7 +1029,7 @@ void LineChartMolScore(Vector<Vector<DataContainer>> Container) throws IOExcepti
 		return Reso;
 	}
 
-	void WorstestCasesInSeq(Vector<Vector<DataContainer>> Containers) {
+	void WorstestCasesInSeq(Vector<Vector<ExcelContents>> Containers) {
 		for (int i = 0; i < Containers.size(); ++i) {
 			for (int m = 0; m < Containers.get(i).size(); ++m) {
 				for (int n = 0; n < Containers.size(); ++n) {

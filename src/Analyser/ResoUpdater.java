@@ -30,7 +30,7 @@ public class ResoUpdater {
 				for(File Excel:Folder.listFiles()) {
 					System.out.println(Excel.getAbsolutePath());
 					ExcelLoader e = new ExcelLoader();
-					Vector<DataContainer> Container = e.ReadExcel(Excel.getAbsolutePath());
+					Vector<ExcelContents> Container = e.ReadExcel(Excel.getAbsolutePath());
 					for(int i=0 ; i < Container.size() ; ++i) {
 						System.out.println(Container.get(i).PDB_ID.substring(5, 8));
 						Container.get(i).Resolution=Container.get(i).PDB_ID.substring(5, 8);

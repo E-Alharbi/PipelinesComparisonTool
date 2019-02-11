@@ -17,7 +17,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import Analyser.DataContainer;
+import Analyser.ExcelContents;
 import Analyser.ExcelSheet;
 import Analyser.FactorsFlags;
 import Run.RunningPram;
@@ -74,7 +74,7 @@ public class BuccaneerResultsAnalysis extends Thread {
 		
 		// Vector<String> ColData=  ExcelSheet.ReadExcelByColIndex("./DataRunResults.xlsx",0);
 		
-		Vector <DataContainer> Container = new Vector <DataContainer>();
+		Vector <ExcelContents> Container = new Vector <ExcelContents>();
 		 File[] files = new File(LogsDir).listFiles();
 		//for(int i=0 ; i < ColData.size() ; ++i){
 		 int countFiles=0;
@@ -84,7 +84,7 @@ public class BuccaneerResultsAnalysis extends Thread {
 				String NameOfFile=file.getName().substring(0,file.getName().indexOf(".")).trim();
 				System.out.println(NameOfFile);
 				String LogTxt=new BuccaneerResultsAnalysis().readFileAsString(LogsDir+"/"+NameOfFile+".txt");
-				DataContainer DC = new DataContainer();
+				ExcelContents DC = new ExcelContents();
 				//String Reso=LogTxt.substring(LogTxt.indexOf("Resolution range:"));
 				//Reso=Reso.substring(Reso.indexOf("Resolution range:"),Reso.indexOf("\n")).split(" ")[Reso.substring(Reso.indexOf("Resolution range:"),Reso.indexOf("\n")).split(" ").length-1];
 				String Reso="";

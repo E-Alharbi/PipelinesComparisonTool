@@ -9,7 +9,7 @@ import java.util.Vector;
 
 import ToolsExecation.SingleThread.MolProbityData;
 
-public class DataContainer implements Comparable<DataContainer> {
+public class ExcelContents implements Comparable<ExcelContents> {
 
 	// This class to read the excel file into vector of type DataContainer
 
@@ -53,7 +53,7 @@ public class DataContainer implements Comparable<DataContainer> {
 	public MolProbityData molProbityData = new MolProbityData();
 	public String PDBIDTXT;
 
-	static boolean CheckIfResoIsInContainer(String Reso, Vector<DataContainer> Container) {
+	static boolean CheckIfResoIsInContainer(String Reso, Vector<ExcelContents> Container) {
 		for (int i = 0; i < Container.size(); ++i) {
 
 			if (round(Double.parseDouble(Container.get(i).Resolution), 2) == round(Double.parseDouble(Reso), 2))
@@ -62,7 +62,7 @@ public class DataContainer implements Comparable<DataContainer> {
 		return false;
 	}
 
-	static DataContainer ReturnByReo(String Reso, Vector<DataContainer> Container) {
+	static ExcelContents ReturnByReo(String Reso, Vector<ExcelContents> Container) {
 		for (int i = 0; i < Container.size(); ++i) {
 			if (round(Double.parseDouble(Container.get(i).Resolution), 2) == round(Double.parseDouble(Reso), 2))
 				return Container.get(i);
@@ -71,7 +71,7 @@ public class DataContainer implements Comparable<DataContainer> {
 		return null;
 	}
 
-	static Vector<DataContainer> AddElemnet(Vector<DataContainer> Container, DataContainer NewEle) {
+	static Vector<ExcelContents> AddElemnet(Vector<ExcelContents> Container, ExcelContents NewEle) {
 
 		if (Container.size() == 0) {
 			Container.insertElementAt(NewEle, 0);
@@ -120,10 +120,14 @@ public class DataContainer implements Comparable<DataContainer> {
 	String NumOfCa() {
 		return NumberofAtomsinFirstPDB;
 	}
+	
+	String TimeTaking() {
+		return TimeTaking;
+	}
 
-	public static Comparator<DataContainer> DataContainerComparator = new Comparator<DataContainer>() {
+	public static Comparator<ExcelContents> DataContainerComparator = new Comparator<ExcelContents>() {
 
-		public int compare(DataContainer Ele1, DataContainer Ele2) {
+		public int compare(ExcelContents Ele1, ExcelContents Ele2) {
 
 			String Ele11 = Ele1.GetReso().toUpperCase();
 			String Ele22 = Ele2.GetReso().toUpperCase();
@@ -137,9 +141,9 @@ public class DataContainer implements Comparable<DataContainer> {
 
 	};
 
-	public static Comparator<DataContainer> DataContainerComparatorByNumOfSeqRes = new Comparator<DataContainer>() {
+	public static Comparator<ExcelContents> DataContainerComparatorByNumOfSeqRes = new Comparator<ExcelContents>() {
 
-		public int compare(DataContainer Ele1, DataContainer Ele2) {
+		public int compare(ExcelContents Ele1, ExcelContents Ele2) {
 
 			String Ele11 = Ele1.GetSeqRes().toUpperCase();
 			String Ele22 = Ele2.GetSeqRes().toUpperCase();
@@ -156,9 +160,9 @@ public class DataContainer implements Comparable<DataContainer> {
 
 	};
 
-	public static Comparator<DataContainer> DataContainerComparatorEmap = new Comparator<DataContainer>() {
+	public static Comparator<ExcelContents> DataContainerComparatorEmap = new Comparator<ExcelContents>() {
 
-		public int compare(DataContainer Ele1, DataContainer Ele2) {
+		public int compare(ExcelContents Ele1, ExcelContents Ele2) {
 
 			String Ele11 = Ele1.GetEmap().toUpperCase();
 			String Ele22 = Ele2.GetEmap().toUpperCase();
@@ -174,9 +178,38 @@ public class DataContainer implements Comparable<DataContainer> {
 		}
 
 	};
-	public static Comparator<DataContainer> DataContainerComparatorByNumOfCa = new Comparator<DataContainer>() {
+	
+	
+	public static Comparator<ExcelContents> DataContainerComparatorTimeTaking = new Comparator<ExcelContents>() {
 
-		public int compare(DataContainer Ele1, DataContainer Ele2) {
+		public int compare(ExcelContents Ele1, ExcelContents Ele2) {
+
+			double Ele11 = Double.parseDouble(Ele1.TimeTaking());
+			double Ele22 = Double.parseDouble(Ele2.TimeTaking());
+			//if (Ele11.equals("-1"))
+			//	Ele11 = "0";
+			//if (Ele22.equals("-1"))
+			//	Ele22 = "0";
+			// ascending order
+			
+			
+			
+			if(Ele11<Ele22)
+				return -1;
+			if(Ele11>Ele22)
+				return 1;
+			return 0;
+					//	return Ele22;
+			//return Ele22.compareTo(Ele11);
+
+			// descending order
+			// return fruitName2.compareTo(fruitName1);
+		}
+
+	};
+	public static Comparator<ExcelContents> DataContainerComparatorByNumOfCa = new Comparator<ExcelContents>() {
+
+		public int compare(ExcelContents Ele1, ExcelContents Ele2) {
 
 			Double Ele11 = Double.parseDouble(Ele1.NumOfCa());
 			Double Ele22 = Double.parseDouble(Ele2.NumOfCa());
@@ -191,7 +224,7 @@ public class DataContainer implements Comparable<DataContainer> {
 	};
 
 	@Override
-	public int compareTo(DataContainer o) {
+	public int compareTo(ExcelContents o) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

@@ -12,7 +12,7 @@ import java.io.InputStreamReader;
 import java.util.Stack;
 import java.util.Vector;
 
-import Analyser.DataContainer;
+import Analyser.ExcelContents;
 import Analyser.ExcelSheet;
 import Analyser.ExcelLoader;
 import Analyser.ResultsAnalyserMultiThreads;
@@ -20,12 +20,12 @@ import Run.RunningPram;
 import Utilities.DataSetChecking;
 
 public class MolProbity implements Runnable {
-	static Stack<DataContainer> OldContainer =  new Stack<>();;
-	static Vector<DataContainer> NewContainer = new Vector<DataContainer>();
-	public synchronized void AddRowToContainer(DataContainer C ) {
+	static Stack<ExcelContents> OldContainer =  new Stack<>();;
+	static Vector<ExcelContents> NewContainer = new Vector<ExcelContents>();
+	public synchronized void AddRowToContainer(ExcelContents C ) {
 		NewContainer.addElement(C);
 	}
-	public synchronized DataContainer GetFile() {
+	public synchronized ExcelContents GetFile() {
 		
 		System.out.println(" #### Unanalysed files:  "+ OldContainer.size());
 		return OldContainer.pop();
@@ -62,7 +62,7 @@ public class MolProbity implements Runnable {
 	public static void RunMol() throws FileNotFoundException, IOException {
 		
 	  	int NumberpfThreads= Integer.valueOf(RunningPram.NumberofThreads);
-			Vector <DataContainer> temp = new ExcelLoader().ReadExcel(RunningPram.ExcellPath);
+			Vector <ExcelContents> temp = new ExcelLoader().ReadExcel(RunningPram.ExcellPath);
 			for(int i=0 ; i < temp.size() ; ++i) {
 				OldContainer.push(temp.get(i));
 			}

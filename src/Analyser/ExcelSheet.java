@@ -58,7 +58,7 @@ public class ExcelSheet {
 	            workbook.write(outputStream);
 	        }
 	}
-	public void FillInExcel(Vector <DataContainer> DataContainer, String ToolName) throws FileNotFoundException, IOException{
+	public void FillInExcel(Vector <ExcelContents> DataContainer, String ToolName) throws FileNotFoundException, IOException{
 		ExcelSheet e = new ExcelSheet ();
 		 XSSFWorkbook w= e.CreateWorkBook();
 		 

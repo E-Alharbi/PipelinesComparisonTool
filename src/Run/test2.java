@@ -6,7 +6,7 @@ package Run;
 */
 import java.util.Vector;
 
-import Analyser.DataContainer;
+import Analyser.ExcelContents;
 import Analyser.ExcelLoader;
 
 public class test2 {
@@ -15,9 +15,10 @@ public class test2 {
 		// TODO Auto-generated method stub
 		ExcelLoader e = new ExcelLoader();
 		
-		Vector<DataContainer> ArpWithRFree = e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun1/noncs/PhenixHAL.xlsx");
+		// To compare ArpWithRFree with ArpWithNoRFree
+		Vector<ExcelContents> ArpWithRFree = e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun3/noncs/Buccaneeri2I5.xlsx");
 		
-		Vector<DataContainer> ArpWithNoRFree = e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun2/noncs/Phenix.xlsx");
+		Vector<ExcelContents> ArpWithNoRFree = e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun3NoRFree/noncs/Buccaneeri2I5.xlsx");
 		
 		int better=0;
 		int better10=0;
@@ -46,9 +47,9 @@ public class test2 {
 		int Rfree=0;
 		
 		
-		for (DataContainer d : ArpWithRFree) {
+		for (ExcelContents d : ArpWithRFree) {
 			
-			for (DataContainer dd : ArpWithNoRFree) {
+			for (ExcelContents dd : ArpWithNoRFree) {
 				if(d.PDB_ID.equals(dd.PDB_ID) && !d.Completeness.equals("None")&& !dd.Completeness.equals("None") && dd.Intermediate.equals("F") && dd.BuiltPDB.equals("T")) {
 					 WithRFree+=Math.round(Double.valueOf(d.Completeness));
 					 WithNoRFree+=Math.round(Double.valueOf(dd.Completeness));

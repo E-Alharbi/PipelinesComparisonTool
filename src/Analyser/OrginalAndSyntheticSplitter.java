@@ -38,12 +38,12 @@ public class OrginalAndSyntheticSplitter {
 					if(Excel.isFile()) {
 					 ExcelLoader e = new ExcelLoader();
 					 System.out.println(Excel.getAbsolutePath());
-					Vector<DataContainer> Container = e.ReadExcel(Excel.getAbsolutePath());
-					Vector<DataContainer> OrginalContainer = new Vector<DataContainer>();
-					Vector<DataContainer> SyntheticContainer = new Vector<DataContainer>();
+					Vector<ExcelContents> Container = e.ReadExcel(Excel.getAbsolutePath());
+					Vector<ExcelContents> OrginalContainer = new Vector<ExcelContents>();
+					Vector<ExcelContents> SyntheticContainer = new Vector<ExcelContents>();
 					Vector <String> CheckedCases= new Vector <String>();
 					for(int i=0 ; i < Container.size() ; ++i ) {
-						Vector<DataContainer> AllCaseReso= new Vector<DataContainer> ();
+						Vector<ExcelContents> AllCaseReso= new Vector<ExcelContents> ();
 						if(!CheckedCases.contains(Container.get(i).PDBIDTXT)) {
 						for(int o=0 ; o < Container.size() ; ++o ) { // loop to find the orginal case by comparing the reso
 							if(Container.get(i).PDBIDTXT.equals(Container.get(o).PDBIDTXT)) {
@@ -51,7 +51,7 @@ public class OrginalAndSyntheticSplitter {
 							}
 						}
 						CheckedCases.add(Container.get(i).PDBIDTXT);
-						Collections.sort(AllCaseReso, DataContainer.DataContainerComparator);// Sorting based on Reso
+						Collections.sort(AllCaseReso, ExcelContents.DataContainerComparator);// Sorting based on Reso
 						
 						OrginalContainer.addElement(AllCaseReso.get(0));
 						AllCaseReso.remove(0); // Removing first record which is the Orginal case 
@@ -77,7 +77,7 @@ public class OrginalAndSyntheticSplitter {
 				new RunComparison().CheckDirAndFile(OrginalPathBuccEx54+"/"+Folder.getName());
 				for(File BExcel : BuccExcel) {
 						ExcelLoader e = new ExcelLoader();
-						Vector<DataContainer> BuccContainer = new Exculding54Dataset().Exculding(e.ReadExcel(BExcel.getAbsolutePath()),true);
+						Vector<ExcelContents> BuccContainer = new Exculding54Dataset().Exculding(e.ReadExcel(BExcel.getAbsolutePath()),true);
 						new ExcelSheet().FillInExcel(BuccContainer, OrginalPathBuccEx54+"/"+Folder.getName()+"/"+BExcel.getName());
 	
 				}
@@ -90,7 +90,7 @@ public class OrginalAndSyntheticSplitter {
 					
 					
 						ExcelLoader e = new ExcelLoader();
-						Vector<DataContainer> BuccContainer = new Exculding54Dataset().Exculding(e.ReadExcel(BExcel.getAbsolutePath()),false);
+						Vector<ExcelContents> BuccContainer = new Exculding54Dataset().Exculding(e.ReadExcel(BExcel.getAbsolutePath()),false);
 						new ExcelSheet().FillInExcel(BuccContainer, OrginalPathBuccInc54+"/"+Folder.getName()+"/"+BExcel.getName());
 
 					
@@ -105,7 +105,7 @@ public class OrginalAndSyntheticSplitter {
 				new RunComparison().CheckDirAndFile(SyntheticPathBuccEx54+"/"+Folder.getName());
 				for(File BExcel : SyntheticPathExcel) {
 						ExcelLoader e = new ExcelLoader();
-						Vector<DataContainer> BuccContainer = new Exculding54Dataset().Exculding(e.ReadExcel(BExcel.getAbsolutePath()),true);
+						Vector<ExcelContents> BuccContainer = new Exculding54Dataset().Exculding(e.ReadExcel(BExcel.getAbsolutePath()),true);
 						new ExcelSheet().FillInExcel(BuccContainer, SyntheticPathBuccEx54+"/"+Folder.getName()+"/"+BExcel.getName());
 	
 				}
@@ -118,7 +118,7 @@ public class OrginalAndSyntheticSplitter {
 					
 					
 						ExcelLoader e = new ExcelLoader();
-						Vector<DataContainer> BuccContainer = new Exculding54Dataset().Exculding(e.ReadExcel(BExcel.getAbsolutePath()),false);
+						Vector<ExcelContents> BuccContainer = new Exculding54Dataset().Exculding(e.ReadExcel(BExcel.getAbsolutePath()),false);
 						new ExcelSheet().FillInExcel(BuccContainer, SyntheticPathBuccInc54+"/"+Folder.getName()+"/"+BExcel.getName());
 
 					

@@ -13,7 +13,7 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import Analyser.DataContainer;
+import Analyser.ExcelContents;
 import Analyser.ExcelLoader;
 import Analyser.ResultsAnalyserMultiThreads;
 
@@ -23,7 +23,7 @@ public class Tester {
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		
-		  File[] Dataset = new File("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun3ArpNoFree").listFiles();
+		  File[] Dataset = new File("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun3NoRFree").listFiles();
 		
 		 // File[] Dataset2 = new File("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Run8/All").listFiles();
 		 /*
@@ -100,11 +100,11 @@ public class Tester {
 	}
 
 	
-	boolean RFactorAnd0CycleRFactor(Vector<DataContainer> Pipeline) {
+	boolean RFactorAnd0CycleRFactor(Vector<ExcelContents> Pipeline) {
 		boolean Matched=true;
 		int NotMatched=0;
 		int NumberOfModelsCount=0;
-		for(DataContainer DC : Pipeline) {
+		for(ExcelContents DC : Pipeline) {
 			if(!DC.R_factor0Cycle.equals("None") && !DC.R_factor.equals("None")) {
 				NumberOfModelsCount++;
 			if( new BigDecimal(DC.R_factor).subtract(new BigDecimal(DC.R_factor0Cycle) ).compareTo(new BigDecimal("0.02")) > 0 ||  new BigDecimal(DC.R_free).subtract(new BigDecimal(DC.R_free0Cycle) ).compareTo(new BigDecimal("0.02")) > 0 ) {
@@ -144,30 +144,30 @@ public class Tester {
 		
 	}
 	
-	boolean CheckingRNoneCol(Vector<DataContainer> Pipeline) {
+	boolean CheckingRNoneCol(Vector<ExcelContents> Pipeline) {
 		boolean NoNone=true;
 		
-		for(DataContainer DC : Pipeline) {
+		for(ExcelContents DC : Pipeline) {
 			if(DC.BuiltPDB.equals("T")&&DC.R_factor0Cycle.equals("None"))
 				NoNone=false;
 		}
 		return NoNone;
 	}
-	boolean CheckingSeqNoneCol(Vector<DataContainer> Pipeline) {
+	boolean CheckingSeqNoneCol(Vector<ExcelContents> Pipeline) {
 		boolean NoNone=true;
 		
-		for(DataContainer DC : Pipeline) {
+		for(ExcelContents DC : Pipeline) {
 			if(DC.BuiltPDB.equals("T")&& DC.n1m2.equals("None"))
 				NoNone=false;
 		}
 		return NoNone;
 	}
-	boolean DuplicateRecord(Vector<DataContainer> Pipeline) {
+	boolean DuplicateRecord(Vector<ExcelContents> Pipeline) {
 		boolean NoDuplicated=true;
 		
-		for(DataContainer DC : Pipeline) {
+		for(ExcelContents DC : Pipeline) {
 			int Record=0;
-			for(DataContainer DC2 : Pipeline) {
+			for(ExcelContents DC2 : Pipeline) {
 			if(DC.PDB_ID.equals(DC2.PDB_ID))
 				Record++;
 				
@@ -177,14 +177,14 @@ public class Tester {
 		}
 		return NoDuplicated;
 	}
-	void NumberOfRecords(Vector<DataContainer> Pipeline) {
+	void NumberOfRecords(Vector<ExcelContents> Pipeline) {
 		System.out.println(Pipeline.size());
 	}
 	
- boolean SeqInDepoistedModelNotLessThanSeqInBuiltModel(Vector<DataContainer> Pipeline) {
+ boolean SeqInDepoistedModelNotLessThanSeqInBuiltModel(Vector<ExcelContents> Pipeline) {
 		boolean NoNone=true;
 		int count=0;
-		for(DataContainer DC : Pipeline) {
+		for(ExcelContents DC : Pipeline) {
 			if(DC.BuiltPDB.equals("T")&& Integer.parseInt(DC.n1m2) != Integer.parseInt(DC.n2m1)) {
 				NoNone=false;
 			count++;}
@@ -193,11 +193,11 @@ public class Tester {
 		return NoNone;
 	}
  
- boolean ComparingTwoPipeline(Vector<DataContainer> Pipeline1,Vector<DataContainer> Pipeline2) {
+ boolean ComparingTwoPipeline(Vector<ExcelContents> Pipeline1,Vector<ExcelContents> Pipeline2) {
 		boolean Matched=true;
 		int CountMismatchedRecords=0;
-		for(DataContainer DC : Pipeline1) {
-			for(DataContainer DC2 : Pipeline2) {
+		for(ExcelContents DC : Pipeline1) {
+			for(ExcelContents DC2 : Pipeline2) {
 				if(DC.PDB_ID.equals(DC2.PDB_ID)) {
 					if(!DC.Completeness.equals(DC2.Completeness) || !DC.R_factor0Cycle.equals(DC2.R_factor0Cycle)) {
 						Matched=false;

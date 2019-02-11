@@ -9,7 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Vector;
 
-import Analyser.DataContainer;
+import Analyser.ExcelContents;
 import Analyser.ExcelSheet;
 import Analyser.ExcelLoader;
 
@@ -25,8 +25,8 @@ public class LargeCasesRemover {
 				new RunComparison().CheckDirAndFile(Dataset+"NoLargeStr");
 				for(File Excel : Dataset.listFiles()) {
 					 ExcelLoader e = new ExcelLoader();
-						Vector<DataContainer> Container = e.ReadExcel(Excel.getAbsolutePath());
-						Vector<DataContainer> ContainerWithNoLargeStr =new Vector<DataContainer>();
+						Vector<ExcelContents> Container = e.ReadExcel(Excel.getAbsolutePath());
+						Vector<ExcelContents> ContainerWithNoLargeStr =new Vector<ExcelContents>();
 				for(int i=0 ; i < Container.size() ; ++i) {
 					if(!Container.get(i).PDBIDTXT.contains("2pnk")) {
 						ContainerWithNoLargeStr.add(Container.get(i));

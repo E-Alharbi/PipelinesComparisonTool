@@ -48,10 +48,10 @@ public class ResultsAnalyserMultiThreads implements Runnable {
 	
 	
 	
-	static Vector <DataContainer> Container = new Vector <DataContainer>();
+	static Vector <ExcelContents> Container = new Vector <ExcelContents>();
 	
 	 static Stack<File> Files = new Stack<>();
-	public synchronized void AddRowToContainer(DataContainer C ) {
+	public synchronized void AddRowToContainer(ExcelContents C ) {
 		Container.addElement(C);
 	}
 	public synchronized File GetFile() {
@@ -105,8 +105,8 @@ public class ResultsAnalyserMultiThreads implements Runnable {
 			 System.out.println("Found an excel file ");
 			 System.out.println("Excluding the proccseed files based on the excel");
 			 ExcelLoader e = new ExcelLoader();
-			 Vector<DataContainer> ProccseedFilesContainer = e.ReadExcel(RunningPram.ToolName+".xlsx");
-			 Vector<DataContainer> FilesNotNeedToAnalysedContainer=new Vector<DataContainer>();
+			 Vector<ExcelContents> ProccseedFilesContainer = e.ReadExcel(RunningPram.ToolName+".xlsx");
+			 Vector<ExcelContents> FilesNotNeedToAnalysedContainer=new Vector<ExcelContents>();
 			for(int i=0 ;i < ProccseedFilesContainer.size() ; ++i) {
 				if(ProccseedFilesContainer.get(i).Intermediate.equals("F") && ProccseedFilesContainer.get(i).BuiltPDB.equals("T")) {
 				for(int f=0 ; f <  Analyser.Files.size() ; ++f) {
@@ -193,7 +193,7 @@ public class ResultsAnalyserMultiThreads implements Runnable {
 		
 		String NameOfFile=file.getName().replaceAll("."+FilenameUtils.getExtension(file.getName()),"");
 		
-				DataContainer DC = new DataContainer();
+				ExcelContents DC = new ExcelContents();
 				DC.PDB_ID=NameOfFile;
 				DC.PDBIDTXT=NameOfFile.substring(0, 4);
 				File PDB=null  ;
@@ -231,7 +231,7 @@ DC.E_mapCorrelation=FandE[1];
 	Container.add(DC);
 	CreateExcel();
 	}
- public void Parse (DataContainer DC, File Log , File PDB) throws IOException {
+ public void Parse (ExcelContents DC, File Log , File PDB) throws IOException {
 	
 	 List<String> headersList = Arrays.asList("Tool Name", "File Name", "File Num", "Current Step", "Current Step Output");
 	
@@ -509,7 +509,7 @@ DC.WarringLogFile="F";
         return fileData.toString();
     }
 	
-	void ParsingRFromDepoistedPDB(File pdb , DataContainer dc) throws IOException {
+	void ParsingRFromDepoistedPDB(File pdb , ExcelContents dc) throws IOException {
 		System.out.println(pdb.getAbsolutePath());
 		String PDB=new ResultsAnalyserMultiThreads().readFileAsString(pdb.getAbsolutePath());
 		

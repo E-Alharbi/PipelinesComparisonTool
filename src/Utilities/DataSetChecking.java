@@ -10,7 +10,7 @@ import java.util.Vector;
 
 import org.apache.commons.io.FilenameUtils;
 
-import Analyser.DataContainer;
+import Analyser.ExcelContents;
 import Analyser.ExcelSheet;
 import Analyser.FactorsFlags;
 import Analyser.ResultsAnalyserMultiThreads;
@@ -20,7 +20,7 @@ import ToolsExecation.SingleThread.Refmac;
 
 public class DataSetChecking {
 
-	public Vector<DataContainer> CheckIfAllDataSetHasProcessed (Vector <DataContainer> Container, String LogsDir , String DataSetPath) throws IOException {
+	public Vector<ExcelContents> CheckIfAllDataSetHasProcessed (Vector <ExcelContents> Container, String LogsDir , String DataSetPath) throws IOException {
 		 File[] files = new File(LogsDir).listFiles();
 		File [] DataSet = new File(DataSetPath).listFiles();
 		Vector <String> NamesChecked= new Vector <String>();
@@ -40,7 +40,7 @@ public class DataSetChecking {
 				}
 		if(Found==false) {
 			File PDB=null;
-			DataContainer DC = new DataContainer();
+			ExcelContents DC = new ExcelContents();
 			DC.PDB_ID=ExFileName;
 			DC.PDBIDTXT=ExFileName.substring(0,4);
 			FactorsFlags F = new Refmac().RunRefmac(DataSetPath+"/"+ExFileName+".mtz", DataSetPath+"/"+ExFileName+".pdb", RunningPram.RefmacPath, RunningPram.ToolName, ExFileName,"");

@@ -11,7 +11,7 @@ import java.util.Vector;
 
 import org.apache.commons.io.FilenameUtils;
 
-import Analyser.DataContainer;
+import Analyser.ExcelContents;
 import Analyser.ExcelLoader;
 
 public class Cleaner {
@@ -219,7 +219,7 @@ public class Cleaner {
 			 if(folder.isDirectory()) {
 				 for (File Excel : folder.listFiles()) {
 					 String ExcelName= Excel.getName().replaceAll("."+FilenameUtils.getExtension(Excel.getName()),"");
-					 Vector<DataContainer> Container = e.ReadExcel(Excel.getAbsolutePath());
+					 Vector<ExcelContents> Container = e.ReadExcel(Excel.getAbsolutePath());
 					 new Cleaner().WrtieTheCleanerScript(Container, folder.getName()+ExcelName);
 				 }
 			 }
@@ -227,7 +227,7 @@ public class Cleaner {
 		 }
 	}
 	
-	void WrtieTheCleanerScript(Vector<DataContainer> Container, String ExcelName) throws IOException {
+	void WrtieTheCleanerScript(Vector<ExcelContents> Container, String ExcelName) throws IOException {
 		String Script="";
 		String PDB="";
 		String TxtFileName="";

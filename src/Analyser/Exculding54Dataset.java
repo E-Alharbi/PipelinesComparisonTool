@@ -30,7 +30,7 @@ public class Exculding54Dataset {
 					if(Excel.isFile()) {
 					System.out.println(Excel.getAbsolutePath());
 					ExcelLoader e = new ExcelLoader();
-					Vector<DataContainer> BuccContainer = e.ReadExcel(Excel.getAbsolutePath());
+					Vector<ExcelContents> BuccContainer = e.ReadExcel(Excel.getAbsolutePath());
 					BuccContainer=new Exculding54Dataset().Exculding(BuccContainer,Exculded);
 					new ExcelSheet().FillInExcel(BuccContainer, PathToWrite+"/"+Folder.getName()+"/"+Excel.getName());}
 				}
@@ -42,11 +42,11 @@ public class Exculding54Dataset {
 		
 	}
 	
-	public Vector<DataContainer> Exculding(Vector<DataContainer> Container , boolean ExculdingTheCases) throws IOException {
+	public Vector<ExcelContents> Exculding(Vector<ExcelContents> Container , boolean ExculdingTheCases) throws IOException {
 		// TODO Auto-generated method stub
 
 		String  Dataset54=new ResultsAnalyserMultiThreads().readFileAsString("datasets.54");
-		Vector<DataContainer> BuccExThe54Dataset= new Vector<DataContainer>();
+		Vector<ExcelContents> BuccExThe54Dataset= new Vector<ExcelContents>();
 			for(int o=0 ; o < Container.size() ; ++o ) {
 				if(!Dataset54.contains(Container.get(o).PDBIDTXT) && ExculdingTheCases==true) {
 					BuccExThe54Dataset.add(Container.get(o));
