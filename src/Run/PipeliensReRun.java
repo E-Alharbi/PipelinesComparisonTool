@@ -38,11 +38,11 @@ public class PipeliensReRun {
 				RunningPram.IntermediatePDBs=Results.getAbsolutePath()+"/IntermediatePDBs";
 				Script+="cd "+p.getAbsolutePath()+"\n";
 				new CleanerForRunner().Clean();
-				Script+="sh Cleaner.sh ";
+				Script+="sh Cleaner.sh "+"\n";
 				RunningPram.PDBsDir=Results.getAbsolutePath()+"PDBs";
 				//new JobCreater().CreateJobs(ToolScript.getName());
 				//Script+="sh Qsub.sh";
-				Script+="cd "+Path;
+				Script+="cd "+Path+"\n";
 			}
 			else {
 				
@@ -50,7 +50,7 @@ public class PipeliensReRun {
 				RunningPram.PDBsDir=null;
 				//new JobCreater().CreateJobs(ToolScript.getName());
 				//Script+="sh Qsub.sh";
-				Script+="cd "+Path;
+				Script+="cd "+Path+"\n";
 			}
 			
 			}
