@@ -50,7 +50,7 @@ String PathToLatexFolder="./Latex";
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets17";
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/GAResults/Ex5";
 
-		String ExcelDir = "/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun3ArpNoFreeReproducibility/";
+		String ExcelDir = "/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun3ArpNoFreeNoCrank/OrginalBuccEx54ExFaliedCases";
 		
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets17";
 
@@ -66,7 +66,7 @@ String PathToLatexFolder="./Latex";
 		// new ResultsInLatex().SpssBootstraping("SpssExcel");
 		// new ResultsInLatex().ReadingSpssBootstraping("SpssExcelResults");
 		
-		//new ResultsInLatex().MatrixOfResults(ExcelDir);
+		new ResultsInLatex().MatrixOfResults(ExcelDir);
 		
 		//new ResultsInLatex().LongMatrixOfResults(ExcelDir);
 
@@ -75,7 +75,7 @@ String PathToLatexFolder="./Latex";
 		//new ResultsInLatex().TimeTakingTable(ExcelDir);
 		
 		
-		new ResultsInLatex().CompRTimeAvgTable(ExcelDir,"/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun3ArpNoFree/All");
+		//new ResultsInLatex().CompRTimeAvgTable(ExcelDir,"/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun3ArpNoFreeNoCrank/All");
 	}
 	void CompRTimeAvgTable(String ExcelDir, String PathForOriginalExp) throws IOException {
 		
@@ -1544,7 +1544,7 @@ LogOfR0Equivalent+="\n Number of models: "+EquivalentR+" \n";
 				 }
 			 }
 			 if(sumofTheLine!=0)
-			 LinesAvg.add(String.valueOf(Math.round((sumofTheLine/NumberOfPipelien))));
+			 LinesAvg.add(String.valueOf(Math.round((sumofTheLine/(NumberOfPipelien-1))))); // -1 to exclude the compared pipeline 
 			 if(sumofTheLine==0)
 			 LinesAvg.add("-");
 
