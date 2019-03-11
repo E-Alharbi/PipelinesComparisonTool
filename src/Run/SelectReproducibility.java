@@ -16,7 +16,7 @@ public class SelectReproducibility {
 		ExcelLoader e = new ExcelLoader();
 	
 Vector<ExcelContents> Con= 			e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun3ArpNoFree/All/noncs/PhenixHAL.xlsx.xlsx");
-Collections.sort(Con, ExcelContents.DataContainerComparatorTimeTaking);// Sorting based on Reso
+Collections.sort(Con, ExcelContents.DataContainerComparatorTimeTaking);// Sorting based on Time Taking
 List<ExcelContents> c=Con.subList(3, 33);
 int cout =0 ;
 for(ExcelContents EC : c) {
