@@ -31,6 +31,7 @@ public class ResultsInLatex {
 	// Creating many types of tables in latex format for results representation
 
 String PathToLatexFolder="./Latex";
+boolean AvgInMatrices=false;
 	public static void main(String[] args) throws IOException, StatsException {
 		// TODO Auto-generated method stub
 		
@@ -50,7 +51,7 @@ String PathToLatexFolder="./Latex";
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets17";
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/GAResults/Ex5";
 
-		String ExcelDir = "/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun3ArpNoFreeNoCrank/OrginalBuccEx54ExFaliedCases";
+		String ExcelDir = "/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun3ArpNoFreeNoCrankRemovedAvgTestFixedLatexBugs/OrginalBuccInc54";
 		
 		// String ExcelDir="/Volumes/PhDHardDrive/jcsg1200Results/ExcelSheets17";
 
@@ -59,7 +60,7 @@ String PathToLatexFolder="./Latex";
 
 		// new ResultsInCSV().PDBTable(Container);
 
-		//new ResultsInLatex().OverallResults(ExcelDir);
+		new ResultsInLatex().OverallResults(ExcelDir);
 		// new ResultsInLatex().PDBList(ExcelDir);
 		// new ResultsInLatex().BestAndWorstCases(ExcelDir);
 		// new ResultsInLatex().PrepareExcelForSpss(ExcelDir);
@@ -75,7 +76,7 @@ String PathToLatexFolder="./Latex";
 		//new ResultsInLatex().TimeTakingTable(ExcelDir);
 		
 		
-		//new ResultsInLatex().CompRTimeAvgTable(ExcelDir,"/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun3ArpNoFreeNoCrank/All");
+		//new ResultsInLatex().CompRTimeAvgTable(ExcelDir,"/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun3ArpNoFreeNoCrankRemovedAvg/All");
 	}
 	void CompRTimeAvgTable(String ExcelDir, String PathForOriginalExp) throws IOException {
 		
@@ -1079,20 +1080,20 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 					 RowCom5Models+= "\\tiny " + e.ToolsNames.get(i);
 					 
 					 
-					 RowR0 += "\\tiny " + e.ToolsNames.get(i)+" _{R-work}";
-					 RowR0Equivalent+= "\\tiny " + e.ToolsNames.get(i)+" _{R-work}";
+					 RowR0 += "\\tiny " + e.ToolsNames.get(i)+" $_{R-work}$";
+					 RowR0Equivalent+= "\\tiny " + e.ToolsNames.get(i)+" $_{R-work}$";
 					 RowROverfitting="\\tiny Overfitting" ;
-					 RowR5 += "\\tiny " + e.ToolsNames.get(i)+" _{R-work}";
+					 RowR5 += "\\tiny " + e.ToolsNames.get(i)+" $_{R-work}$";
 					 RowR5Overfitting="\\tiny Overfitting" ;
 					 
-					  RowRFree0 ="\\tiny " + e.ToolsNames.get(i)+" _R_{-free}";
+					  RowRFree0 ="\\tiny " + e.ToolsNames.get(i)+" $_R{_{-free}}$";
 					  
-					  RowRFree5 = "\\tiny " + e.ToolsNames.get(i)+" _R_{-free}";
+					  RowRFree5 = "\\tiny " + e.ToolsNames.get(i)+" $_R{_{-free}}$";
 					  
-					  RowRFree0Equivalent="\\tiny " + e.ToolsNames.get(i)+" _R_{-free}";
+					  RowRFree0Equivalent="\\tiny " + e.ToolsNames.get(i)+" $_R{_{-free}}$";
 				
-					   RowRFree5Equivalent = "\\tiny " + e.ToolsNames.get(i)+" _R_{-free}";
-					   RowR5Equivalent += "\\tiny " + e.ToolsNames.get(i)+" _{R-work}";
+					   RowRFree5Equivalent = "\\tiny " + e.ToolsNames.get(i)+" $_R{_{-free}}$";
+					   RowR5Equivalent += "\\tiny " + e.ToolsNames.get(i)+" $_{R-work}$";
 					for (int m = 0; m < Container.size(); ++m) {
 
 						if (Col.length() == 0) {
@@ -1132,12 +1133,12 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 									if (Container.get(i).get(model).BuiltPDB.equals("T")
 											&& Container.get(m).get(modeComTo).BuiltPDB.equals("T")) {
 										CountModel++;
-										if(Container.get(i).get(model).R_free.equals("0")) {
+										if(Container.get(i).get(model).R_free.equals("0") || Container.get(m).get(modeComTo).R_free.equals("0") ) {
 											IsRFreeFlagUsed=false;
 										}
 										
 										if (  new BigDecimal(Container.get(i).get(model).Completeness).setScale(0, RoundingMode.HALF_UP).subtract( 
-												new BigDecimal(Container.get(m).get(modeComTo).Completeness).setScale(0, RoundingMode.HALF_UP)).compareTo(new BigDecimal("1")) >=0)  {
+												new BigDecimal(Container.get(m).get(modeComTo).Completeness).setScale(0, RoundingMode.HALF_UP)).compareTo(new BigDecimal("1")) >=0)  { 
 										
 
 												CountModelCom0++;
@@ -1179,7 +1180,7 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 						//	System.out.println(Container.get(m).get(modeComTo).PDB_ID);	
 							//	System.out.println(Container.get(m).get(modeComTo).R_free0Cycle);	
 						//	if( new BigDecimal(Container.get(i).get(model).R_free0Cycle).subtract(new BigDecimal(Container.get(i).get(model).R_factor0Cycle) ).compareTo(new BigDecimal("0.05")) <= 0 &&  new BigDecimal(Container.get(m).get(modeComTo).R_free0Cycle).subtract(new BigDecimal(Container.get(m).get(modeComTo).R_factor0Cycle) ).compareTo(new BigDecimal("0.05")) > 0 ) {
-								if( new BigDecimal(Container.get(i).get(model).R_factor0Cycle).compareTo(new BigDecimal(Container.get(m).get(modeComTo).R_factor0Cycle)) < 0  ) {
+								if( new BigDecimal(Container.get(i).get(model).R_factor0Cycle).compareTo(new BigDecimal(Container.get(m).get(modeComTo).R_factor0Cycle)) < 0  ) { 
 
 									
 								CountModelR ++;
@@ -1526,7 +1527,14 @@ LogOfR0Equivalent+="\n Number of models: "+EquivalentR+" \n";
 		}
 
 	}
+	
+	
+	
+	
 	String AddingAvgToTheTable(String Table) {
+		if(AvgInMatrices==false)
+			return Table;
+		
 		 String a = Table;
 		 String [] Lines= a.split("\n");
 		 Vector<String> LinesAvg = new Vector<String>(); 
