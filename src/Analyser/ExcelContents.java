@@ -229,6 +229,31 @@ public class ExcelContents implements Comparable<ExcelContents> {
 		return 0;
 	}
 	
+	public double TotalOfCompleteness(Vector<ExcelContents> Container){
+		double Total=0;
+		for(int i=0 ; i < Container.size() ; ++i) {
+			Total+=Double.parseDouble(Container.get(i).Completeness);
+		}
+		return Total;
+		
+	}
+	public double TotalOfRwork(Vector<ExcelContents> Container){
+		double Total=0;
+		for(int i=0 ; i < Container.size() ; ++i) {
+			Total+=Double.parseDouble(Container.get(i).R_factor0Cycle);
+		}
+		return Total;
+		
+	}
+	
+	public double TotalOfRfree(Vector<ExcelContents> Container){
+		double Total=0;
+		for(int i=0 ; i < Container.size() ; ++i) {
+			Total+=Double.parseDouble(Container.get(i).R_free0Cycle);
+		}
+		return Total;
+		
+	}
 	public String toString() { 
 	   return this.PDB_ID +","+ 
 				this.Resolution +","+ 
