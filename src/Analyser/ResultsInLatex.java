@@ -82,8 +82,8 @@ boolean AvgInMatrices=false;
 		
 		for (File Folder : new File(ExcelDir).listFiles()) {
 			if(Folder.isDirectory()) {
-				String Table="\\tiny Pipeline & \\tiny Completeness &\\tiny R-work/R-free & \\tiny Time taking \\\\ \\hline \n";
-				String TableOriginal="\\tiny Pipeline & \\tiny Completeness &\\tiny R-work/R-free & \\tiny Time taking \\\\ \\hline \n";
+				String Table="\\tiny Pipeline Variants& \\tiny Completeness &\\tiny R-work/R-free & \\tiny Time taking \\\\ \\hline \n";
+				String TableOriginal="\\tiny Pipeline Variants & \\tiny Completeness &\\tiny R-work/R-free & \\tiny Time taking \\\\ \\hline \n";
 
 				String Comments="";
 				Comments+="% "+ new Date().toString() +" \n ";
@@ -157,7 +157,7 @@ void TimeTakingTable(String ExcelDir) throws IOException {
 	
 	for (File Folder : new File(ExcelDir).listFiles()) {
 		if(Folder.isDirectory()) {
-			String Table="\\tiny Pipeline & \\tiny Min &\\tiny Max & \\tiny Avg. \\\\ \\hline \n";
+			String Table="\\tiny Pipeline Variants & \\tiny Min &\\tiny Max & \\tiny Avg. \\\\ \\hline \n";
 			String Comments="";
 			Comments+="% "+ new Date().toString() +" \n ";
 			Comments+="% Folder: "+ Folder.getName() +" \n ";
@@ -264,8 +264,8 @@ void TimeTakingTable(String ExcelDir) throws IOException {
 		new RunComparison().CheckDirAndFile(PathToLatexFolder+"/CSV");
 		new Preparer().WriteTxtFile(PathToLatexFolder+"/CSV/Overall.csv", CSV);
 		Vector<String> CheckedFiles = new Vector<String>();
-		String Table = "\\tiny Pipeline &&\\tiny HA-NCS &&&&\\tiny MR-NCS &&&& \\tiny NO-NCS\\\\ \n" + 
-				"&&\\tiny Compelete & \\tiny Intermediate& \\tiny Falied&&\\tiny Compelete &\\tiny Intermediate& \\tiny Falied&& \\tiny Compelete & \\tiny Intermediate& \\tiny Falied\\\\ \\hline";
+		String Table = "\\tiny Pipeline Variants Variants &&\\tiny HA-NCS &&&&\\tiny MR-NCS &&&& \\tiny NO-NCS\\\\ \n" + 
+				"&&\\tiny Complete & \\tiny Intermediate& \\tiny Failed&&\\tiny Complete &\\tiny Intermediate& \\tiny Failed&& \\tiny Complete & \\tiny Intermediate& \\tiny Failed\\\\ \\hline";
 		for (int i = 0; i < Results.size(); ++i) {
 			// System.out.println(Results.get(i).DM);
 			String hancs = "-&-&-";
@@ -1069,7 +1069,7 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 				Container.addAll(Container2); // only the cases that built by all tools
 				*/
 				for (int i = 0; i < Container.size(); ++i) {
-					Col = "\\tiny Pipeline ";// avoiding repetition
+					Col = "\\tiny Pipeline Variants ";// avoiding repetition
 					
 					RowCom0 += "\\tiny " + e.ToolsNames.get(i);
 					RowCom5 += "\\tiny " + e.ToolsNames.get(i);
