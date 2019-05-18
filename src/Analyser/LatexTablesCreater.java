@@ -16,7 +16,7 @@ public class LatexTablesCreater {
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		// TODO Auto-generated method stub
 
-    String ExcelPath="/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun3NoRFree"; 
+    String ExcelPath=args[0]; 
 	
     Vector<File> DM= new Vector<File>();
     for(File F : new File(ExcelPath).listFiles())
