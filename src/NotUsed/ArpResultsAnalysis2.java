@@ -17,16 +17,16 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import Analyser.ExcelContents;
-import Analyser.ExcelSheet;
-import Analyser.FactorsFlags;
-import Run.RunningPram;
-import ToolsExecation.SingleThread.Castat2Data;
-import ToolsExecation.SingleThread.CphasesMatch;
-import ToolsExecation.SingleThread.Refmac;
-import ToolsExecation.SingleThread.castat2;
-import Utilities.DataSetChecking;
-import Utilities.FilesManagements;
+import Comparison.Analyser.ExcelContents;
+import Comparison.Analyser.ExcelSheet;
+import Comparison.Analyser.REFMACFactors;
+import Comparison.Runner.RunningPram;
+import Comparison.ToolsExecation.SingleThread.Castat2Data;
+import Comparison.ToolsExecation.SingleThread.CphasesMatch;
+import Comparison.ToolsExecation.SingleThread.Refmac;
+import Comparison.ToolsExecation.SingleThread.castat2;
+import Comparison.Utilities.DataSetChecking;
+import Comparison.Utilities.FilesManagements;
 import table.draw.LogFile;
 
 
@@ -93,7 +93,7 @@ public class ArpResultsAnalysis2 {
 				//System.out.println(Reso);
 				//new LogFile().Log("wArp/Arp", file.getName(), countFiles+" out of "+files.length, " Parsing Resolution", Reso);
 				String TimeTakig="-1";
-				FactorsFlags F=null;
+				REFMACFactors F=null;
 				
 				if(LogTxt.contains("TimeTaking")){
 					

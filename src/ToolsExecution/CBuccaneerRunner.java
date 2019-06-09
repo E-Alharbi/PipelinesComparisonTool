@@ -27,12 +27,12 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import Analyser.FactorsFlags;
-import Analyser.PipelineLog;
+import Comparison.Analyser.PipelineLog;
+import Comparison.Analyser.REFMACFactors;
+import Comparison.Runner.RunComparison;
+import Comparison.Runner.RunningPram;
+import Comparison.ToolsExecation.SingleThread.Refmac;
 import NotUsed.ARPResultsAnalysis;
-import Run.RunComparison;
-import Run.RunningPram;
-import ToolsExecation.SingleThread.Refmac;
 
 public class CBuccaneerRunner  extends Tool{
 /*
@@ -234,7 +234,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 		             }
 
 		              RunningPram.RefmacPath=System.getenv("CCP4")+"/bin/refmac5";
-			        FactorsFlags F=  new Refmac().RunRefmac(FilePathAndName+".mtz", WorkingDir+"/build.pdb",  RunningPram.RefmacPath, "CBuccaneer", WorkingDir+"/"+FileName,LIBINRefMac);
+			        REFMACFactors F=  new Refmac().RunRefmac(FilePathAndName+".mtz", WorkingDir+"/build.pdb",  RunningPram.RefmacPath, "CBuccaneer", WorkingDir+"/"+FileName,LIBINRefMac);
 			        res.LogFile+=F.Log;
 			            for (int i =1 ; i< 25 ; ++i ) {
 			            	System.out.println("########## Cycle "+i+" ##########");

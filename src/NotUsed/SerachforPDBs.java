@@ -15,7 +15,7 @@ import java.util.Vector;
 
 import org.apache.commons.io.FileUtils;
 
-import Analyser.ExcelSheet;
+import Comparison.Analyser.ExcelSheet;
 
 public class SerachforPDBs {
 

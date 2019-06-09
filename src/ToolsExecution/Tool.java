@@ -13,8 +13,8 @@ import java.util.Vector;
 
 import org.apache.commons.io.FilenameUtils;
 
+import Comparison.Runner.RunningPram;
 import NotUsed.ARPResultsAnalysis;
-import Run.RunningPram;
 
 public  class Tool {
 	

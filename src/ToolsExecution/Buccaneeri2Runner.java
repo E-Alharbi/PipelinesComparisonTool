@@ -30,10 +30,10 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import Analyser.PipelineLog;
+import Comparison.Analyser.PipelineLog;
+import Comparison.Runner.RunComparison;
+import Comparison.Runner.RunningPram;
 import NotUsed.ARPResultsAnalysis;
-import Run.RunComparison;
-import Run.RunningPram;
 
 public class Buccaneeri2Runner  extends Tool{
 /*

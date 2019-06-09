@@ -17,16 +17,16 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import Analyser.ExcelContents;
-import Analyser.ExcelSheet;
-import Analyser.FactorsFlags;
-import Run.RunningPram;
-import ToolsExecation.SingleThread.Castat2Data;
-import ToolsExecation.SingleThread.CphasesMatch;
-import ToolsExecation.SingleThread.Refmac;
-import ToolsExecation.SingleThread.castat2;
-import Utilities.DataSetChecking;
-import Utilities.FilesManagements;
+import Comparison.Analyser.ExcelContents;
+import Comparison.Analyser.ExcelSheet;
+import Comparison.Analyser.REFMACFactors;
+import Comparison.Runner.RunningPram;
+import Comparison.ToolsExecation.SingleThread.Castat2Data;
+import Comparison.ToolsExecation.SingleThread.CphasesMatch;
+import Comparison.ToolsExecation.SingleThread.Refmac;
+import Comparison.ToolsExecation.SingleThread.castat2;
+import Comparison.Utilities.DataSetChecking;
+import Comparison.Utilities.FilesManagements;
 import table.draw.LogFile;
 
 
@@ -162,7 +162,7 @@ public class PhenixResultsAnalysis2 {
 	DC.Overfitting=String.valueOf((OverfiitingPercentage>0.05)?"T":"F");
 	///new LogFile().Log("Phenix AutoBuild", file.getName(), countFiles+" out of "+files.length, "Run Refmac 0 cycle ", "Running ...");
 
-	FactorsFlags F = new Refmac().RunRefmac(DataPath+"/"+NameOfFile+".mtz", PDBsDir+"/"+NameOfFile+".pdb", RefmacPath, "Phenix", NameOfFile,LIBIN);
+	REFMACFactors F = new Refmac().RunRefmac(DataPath+"/"+NameOfFile+".mtz", PDBsDir+"/"+NameOfFile+".pdb", RefmacPath, "Phenix", NameOfFile,LIBIN);
 	//new LogFile().Log("Phenix AutoBuild", file.getName(), countFiles+" out of "+files.length, "Run Refmac 0 cycle ", "Running ...");
 
 	DC.R_factor0Cycle=F.RFactor;
