@@ -14,7 +14,7 @@ import Comparison.Analyser.ExcelContents;
 import Comparison.Analyser.ExcelSheet;
 import Comparison.Analyser.REFMACFactors;
 import Comparison.Analyser.MultiThreadedAnalyser;
-import Comparison.Runner.RunningPram;
+import Comparison.Runner.RunningParameter;
 import Comparison.ToolsExecation.SingleThread.CphasesMatch;
 import Comparison.ToolsExecation.SingleThread.Refmac;
 
@@ -43,19 +43,19 @@ public class DataSetChecking {
 			ExcelContents DC = new ExcelContents();
 			DC.PDB_ID=ExFileName;
 			DC.PDBIDTXT=ExFileName.substring(0,4);
-			REFMACFactors F = new Refmac().RunRefmac(DataSetPath+"/"+ExFileName+".mtz", DataSetPath+"/"+ExFileName+".pdb", RunningPram.RefmacPath, RunningPram.ToolName, ExFileName,"");
+			REFMACFactors F = new Refmac().RunRefmac(DataSetPath+"/"+ExFileName+".mtz", DataSetPath+"/"+ExFileName+".pdb", RunningParameter.RefmacPath, RunningParameter.ToolName, ExFileName,"");
             DC.Resolution=F.Reso;
-			if(new File(RunningPram.IntermediatePDBs+"/"+ExFileName+".pdb").exists()) {
-				PDB=new File(RunningPram.IntermediatePDBs+"/"+ExFileName+".pdb");
+			if(new File(RunningParameter.IntermediatePDBs+"/"+ExFileName+".pdb").exists()) {
+				PDB=new File(RunningParameter.IntermediatePDBs+"/"+ExFileName+".pdb");
 				DC.Intermediate="T";
 			}
-			if(!new File(RunningPram.IntermediateLogs+"/"+ExFileName+".txt").exists()) {
+			if(!new File(RunningParameter.IntermediateLogs+"/"+ExFileName+".txt").exists()) {
 				
 	            DC.BuiltPDB="F";
 			}
 			else {
 	
-		new MultiThreadedAnalyser().Parse(DC,new File(RunningPram.IntermediateLogs+"/"+ExFileName+".txt"),PDB);
+		new MultiThreadedAnalyser().Parse(DC,new File(RunningParameter.IntermediateLogs+"/"+ExFileName+".txt"),PDB);
 		
 			}
 			
