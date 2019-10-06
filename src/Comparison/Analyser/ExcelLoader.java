@@ -53,11 +53,13 @@ public class ExcelLoader {
 				Sheet datatypeSheet = workbook.getSheetAt(0);
 				Iterator<Row> iterator = datatypeSheet.iterator();
 				boolean isheader = true;
+				
 				while (iterator.hasNext()) {
 
 					if (isheader == true) {// ignore the header
 						isheader = false;
 						iterator.next();
+						if(iterator.hasNext()==false) return Container;
 					}
 					Row currentRow = iterator.next();
 
@@ -148,6 +150,7 @@ public class ExcelLoader {
 				AllToolsDataPDB=AllToolsDataPDB.replace("-parrot-hancs", "");
 				AllToolsDataPDB=AllToolsDataPDB.replace("-parrot-mrncs", "");
 				AllToolsDataPDB=AllToolsDataPDB.replace("-parrot-noncs", "");
+				
 				
 				
 				if (ThisToolDataPDB.equals(AllToolsDataPDB) &&AllToolsData.get(i).get(m).BuiltPDB.equals("T")) {
