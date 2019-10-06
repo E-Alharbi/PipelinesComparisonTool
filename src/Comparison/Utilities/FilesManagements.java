@@ -10,6 +10,7 @@ import java.util.Vector;
 
 import org.apache.commons.io.FileUtils;
 
+import Comparison.Runner.RunningParameter;
 import ToolsExecution.RunCBuccaneerTestingProupse;
 
 public class FilesManagements {
@@ -40,5 +41,21 @@ public class FilesManagements {
 		return true;
 		else
 		return false;
+}
+	public String GetModelPath(String PDBId){
+		
+		 File[] initialmodels = new File(RunningParameter.InitialModels).listFiles();
+		 for (File PDB : initialmodels) {
+			 if(PDBId.trim().equals(PDB.getName())) {
+				 return PDB.getAbsolutePath();
+			 }
+		 }
+		 initialmodels = new File(RunningParameter.InitialModels.replaceAll("PDBs", "IntermediatePDBs")).listFiles(); 
+    for (File PDB : initialmodels) {
+		 if(PDBId.trim().equals(PDB.getName())) {
+			 return PDB.getAbsolutePath();
+		 }
+	 } 
+		 return "";// Not Found
 }
 }
