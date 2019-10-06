@@ -25,7 +25,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import Comparison.Runner.RunComparison;
-import Comparison.Runner.RunningPram;
+import Comparison.Runner.RunningParameter;
 import Comparison.ToolsExecation.SingleThread.Castat2Data;
 import Comparison.ToolsExecation.SingleThread.CphasesMatch;
 import Comparison.ToolsExecation.SingleThread.MolProbity;
@@ -79,33 +79,33 @@ public class MultiThreadedAnalyser implements Runnable {
 			System.out.println("The tool name");
 			System.exit(-1);
 		}
-		RunningPram.DataPath=args[0];//Data folder path 
-		RunningPram.LogsDir=args[1];// logs files for Buccaneer
-		RunningPram.PDBsDir=args[2];// PDBS files that built by Buccaneer
-		RunningPram.castat2Path=args[3];// castat2 path
-		RunningPram.CphasesMatchScriptPath=args[4];//CphasesMatch Script Path in CCP4 folder
-		RunningPram.RefmacPath=args[5];	
+		RunningParameter.DataPath=args[0];//Data folder path 
+		RunningParameter.LogsDir=args[1];// logs files for Buccaneer
+		RunningParameter.PDBsDir=args[2];// PDBS files that built by Buccaneer
+		RunningParameter.castat2Path=args[3];// castat2 path
+		RunningParameter.CphasesMatchScriptPath=args[4];//CphasesMatch Script Path in CCP4 folder
+		RunningParameter.RefmacPath=args[5];	
    	int NumberpfThreads=Integer.valueOf(args[6]);
-   	RunningPram.ToolName=args[7];	
+   	RunningParameter.ToolName=args[7];	
 	  
    	Analyses();
 	}
 	public static void Analyses() throws FileNotFoundException, IOException {
 		
     MultiThreadedAnalyser Analyser = new MultiThreadedAnalyser();
-  	int NumberpfThreads= Integer.valueOf(RunningPram.NumberofThreads);
+  	int NumberpfThreads= Integer.valueOf(RunningParameter.NumberofThreads);
 		
-		String LogsDir=RunningPram.LogsDir;// logs files 
+		String LogsDir=RunningParameter.LogsDir;// logs files 
 		 File[] files = new File(LogsDir).listFiles();
 		 for (File file : files) {
 			 Analyser.Files.push(file); 
 		 }
 		 	
-		 if(new File(RunningPram.ToolName+".xlsx").exists()) {
+		 if(new File(RunningParameter.ToolName+".xlsx").exists()) {
 			 System.out.println("Found an excel file ");
 			 System.out.println("Excluding the proccseed files based on the excel");
 			 ExcelLoader e = new ExcelLoader();
-			 Vector<ExcelContents> ProccseedFilesContainer = e.ReadExcel(RunningPram.ToolName+".xlsx");
+			 Vector<ExcelContents> ProccseedFilesContainer = e.ReadExcel(RunningParameter.ToolName+".xlsx");
 			 Vector<ExcelContents> FilesNotNeedToAnalysedContainer=new Vector<ExcelContents>();
 			for(int i=0 ;i < ProccseedFilesContainer.size() ; ++i) {
 				if(ProccseedFilesContainer.get(i).Intermediate.equals("F") && ProccseedFilesContainer.get(i).BuiltPDB.equals("T")) {
@@ -128,16 +128,16 @@ public class MultiThreadedAnalyser implements Runnable {
 		 
 		 
 		 System.out.println("The paramters will be used by the Analyser: ");
-		 System.out.println("Pipeline= "+ RunningPram.ToolName);
-		 System.out.println("Data Path= "+RunningPram.DataPath);
-		 System.out.println("Logs Folder Path= "+RunningPram.LogsDir);
-		 System.out.println("PDB Folder Path= "+RunningPram.PDBsDir);
-		 System.out.println("Refmac= "+RunningPram.RefmacPath);
-		 System.out.println("Cphases Match Path= "+ RunningPram.CphasesMatchScriptPath);
-		 System.out.println("Phases used in CPhasesMatch= "+  RunningPram.PhasesUsedCPhasesMatch);
-		 System.out.println("Using MolProbity?= "+  RunningPram.UsingMolProbity);
-		 if(RunningPram.UsingMolProbity.equals("T"))
-		 System.out.println("MolProbity Path= "+  RunningPram.PhenixMolProbity);
+		 System.out.println("Pipeline= "+ RunningParameter.ToolName);
+		 System.out.println("Data Path= "+RunningParameter.DataPath);
+		 System.out.println("Logs Folder Path= "+RunningParameter.LogsDir);
+		 System.out.println("PDB Folder Path= "+RunningParameter.PDBsDir);
+		 System.out.println("Refmac= "+RunningParameter.RefmacPath);
+		 System.out.println("Cphases Match Path= "+ RunningParameter.CphasesMatchScriptPath);
+		 System.out.println("Phases used in CPhasesMatch= "+  RunningParameter.PhasesUsedCPhasesMatch);
+		 System.out.println("Using MolProbity?= "+  RunningParameter.UsingMolProbity);
+		 if(RunningParameter.UsingMolProbity.equals("T"))
+		 System.out.println("MolProbity Path= "+  RunningParameter.PhenixMolProbity);
 		 
 	     //System.out.println(Thread.activeCount()); 
 	     int ThreadNumber=0;
@@ -153,7 +153,7 @@ public class MultiThreadedAnalyser implements Runnable {
 	     while (Files.size()==0) {
 	     	 if(Thread.activeCount() == 1 ) {
 	     		 System.out.println("Creating The excel file");
-	     		Container=new DataSetChecking().CheckIfAllDataSetHasProcessed(Container , RunningPram.LogsDir,RunningPram.DataPath);
+	     		Container=new DataSetChecking().CheckIfAllDataSetHasProcessed(Container , RunningParameter.LogsDir,RunningParameter.DataPath);
 	     		CreateExcel();
 	     		break;
 	     	 }
@@ -161,7 +161,7 @@ public class MultiThreadedAnalyser implements Runnable {
 	}
 	static public synchronized void  CreateExcel() throws FileNotFoundException, IOException {
 		
-		new ExcelSheet().FillInExcel(Container, RunningPram.ToolName);
+		new ExcelSheet().FillInExcel(Container, RunningParameter.ToolName);
 	}
 	@Override
 	public void run() {
@@ -186,8 +186,8 @@ public class MultiThreadedAnalyser implements Runnable {
 			
 		
 	
-		String LogsDir=RunningPram.LogsDir;// 
-		String PDBsDir=RunningPram.PDBsDir;//
+		String LogsDir=RunningParameter.LogsDir;// 
+		String PDBsDir=RunningParameter.PDBsDir;//
 
 		
 		
@@ -203,14 +203,14 @@ public class MultiThreadedAnalyser implements Runnable {
 					PDB=new File(PDBsDir+"/"+NameOfFile+".pdb");
 				}
 				else {
-					if(new File(RunningPram.IntermediatePDBs+"/"+NameOfFile+".pdb").exists()) {
-						PDB=new File(RunningPram.IntermediatePDBs+"/"+NameOfFile+".pdb");
+					if(new File(RunningParameter.IntermediatePDBs+"/"+NameOfFile+".pdb").exists()) {
+						PDB=new File(RunningParameter.IntermediatePDBs+"/"+NameOfFile+".pdb");
 						DC.Intermediate="T";
 					}
 				}
 				if(PDB==null) {// In case no pdb is built and we need the reso in the excel
 		
-String [] FandE=new CphasesMatch().cphasesmatch(RunningPram.DataPath+"/"+DC.PDB_ID,RunningPram.CphasesMatchScriptPath);
+String [] FandE=new CphasesMatch().cphasesmatch(RunningParameter.DataPath+"/"+DC.PDB_ID,RunningParameter.CphasesMatchScriptPath);
 DC.F_mapCorrelation=FandE[0];
 DC.E_mapCorrelation=FandE[1];
 }
@@ -266,9 +266,9 @@ DC.WarringLogFile="F";
 
 		if(PDB!=null){
 			String Line="";
-			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "Parsing both R and Rfree from log file ", "Running ...",headersList);
+			new LogFile().Log(RunningParameter.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "Parsing both R and Rfree from log file ", "Running ...",headersList);
 
-			if(RunningPram.ToolName.equals("Buccaneeri1") || RunningPram.ToolName.equals("Buccaneeri2") || RunningPram.ToolName.equals("Buccaneeri2W") || RunningPram.ToolName.equals("Buccaneeri1I5") ||  RunningPram.ToolName.equals("Buccaneeri2I5") || RunningPram.ToolName.equals("Buccaneeri2WI5")) {
+			if(RunningParameter.ToolName.equals("Buccaneeri1") || RunningParameter.ToolName.equals("Buccaneeri2") || RunningParameter.ToolName.equals("Buccaneeri2W") || RunningParameter.ToolName.equals("Buccaneeri1I5") ||  RunningParameter.ToolName.equals("Buccaneeri2I5") || RunningParameter.ToolName.equals("Buccaneeri2WI5")) {
 			
 				for(int s=0 ; s<LogTxt.length();++s){
 				Line+=LogTxt.charAt(s);
@@ -288,7 +288,7 @@ DC.WarringLogFile="F";
 				}
 			}
 			} 
-			if(RunningPram.ToolName.equals("ARPwARP") || RunningPram.ToolName.equals("ArpWArpAfterBuccaneeri1") || RunningPram.ToolName.equals("ArpWArpAfterBuccaneeri1I5")) {
+			if(RunningParameter.ToolName.equals("ARPwARP") || RunningParameter.ToolName.equals("ArpWArpAfterBuccaneeri1") || RunningParameter.ToolName.equals("ArpWArpAfterBuccaneeri1I5")) {
 				
 				for(int s=0 ; s<LogTxt.length();++s){
 					Line+=LogTxt.charAt(s);
@@ -325,7 +325,7 @@ DC.WarringLogFile="F";
 				//RFree=RFree.substring(7,RFree.indexOf(")")).trim();
 				}
 			}
-			if(RunningPram.ToolName.equals("Phenix")) {
+			if(RunningParameter.ToolName.equals("Phenix")) {
 				for(int s=0 ; s<LogTxt.length();++s){
 					Line+=LogTxt.charAt(s);
 					if(LogTxt.charAt(s)=='\n'){
@@ -340,7 +340,7 @@ DC.WarringLogFile="F";
 					}
 				}
 			}
-			if(RunningPram.ToolName.equals("Crank")) {
+			if(RunningParameter.ToolName.equals("Crank")) {
 				for(int s=0 ; s<LogTxt.length();++s){
 					Line+=LogTxt.charAt(s);
 					if(LogTxt.charAt(s)=='\n'){
@@ -360,7 +360,7 @@ DC.WarringLogFile="F";
 			DecimalFormat df = new DecimalFormat("#.##");
 			if(!RFactor.equals("Not Found") && !RFree.equals("Not Found")){
 				
-			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "Parsing both R and Rfree from log file ", "RFactor "+RFactor + " RFree "+RFree,headersList);
+			new LogFile().Log(RunningParameter.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "Parsing both R and Rfree from log file ", "RFactor "+RFactor + " RFree "+RFree,headersList);
 
 				
 			
@@ -396,11 +396,11 @@ DC.WarringLogFile="F";
 			
 			DC.Overfitting=String.valueOf((OverfiitingPercentage>0.05)?"T":"F");
 			}
-			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "Run Refmac 0 cycle ", "Running ...",headersList);
+			new LogFile().Log(RunningParameter.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "Refmac 0 cycle ", "Running ...",headersList);
 
 			
 			
-			REFMACFactors F = new Refmac().RunRefmac(RunningPram.DataPath+"/"+DC.PDB_ID+".mtz", PDB.getAbsolutePath(), RunningPram.RefmacPath, RunningPram.ToolName, DC.PDB_ID,"");
+			REFMACFactors F = new Refmac().RunRefmac(RunningParameter.DataPath+"/"+DC.PDB_ID+".mtz", PDB.getAbsolutePath(), RunningParameter.RefmacPath, RunningParameter.ToolName, DC.PDB_ID,"");
 			
 			if(!F.RFactor.equals("None")) {
 			DC.R_factor0Cycle=df.format(BigDecimal.valueOf(Double.valueOf(F.RFactor)));
@@ -416,28 +416,28 @@ DC.WarringLogFile="F";
 			
 			
 			
-			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "Run Refmac 0 cycle ", F.RFactor +" "+F.FreeFactor,headersList);
+			new LogFile().Log(RunningParameter.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "Refmac 0 cycle ", F.RFactor +" "+F.FreeFactor,headersList);
 
-			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "Run Refmac (well known) ", "Running ...",headersList);
+			new LogFile().Log(RunningParameter.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "Refmac (deposited) ", "Running ...",headersList);
 
 			//F = new Refmac().RunRefmac(RunningPram.DataPath+"/"+DC.PDB_ID+".mtz",RunningPram.DataPath+"/"+DC.PDB_ID+".pdb", RunningPram.RefmacPath, RunningPram.ToolName, DC.PDB_ID,"");
-			ParsingRFromDepoistedPDB(new File(RunningPram.DataPath+"/"+DC.PDB_ID+".pdb"),DC);
+			ParsingRFromDepoistedPDB(new File(RunningParameter.DataPath+"/"+DC.PDB_ID+".pdb"),DC);
 			DC.OptimalR_factor=df.format(BigDecimal.valueOf(Double.valueOf(DC.OptimalR_factor)));
 			
-			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "Run Refmac (well know) ", F.RFactor +" "+F.FreeFactor,headersList);
+			new LogFile().Log(RunningParameter.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "Refmac (deposited) ", DC.OptimalR_factor,headersList);
 			//DC.OptimalR_factor="0";
-			Castat2Data Cas =  new castat2().Runcastat2(RunningPram.DataPath+"/"+DC.PDB_ID+".pdb", PDB.getAbsolutePath(), RunningPram.castat2Path);
-			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "castat2 ", "Running ...",headersList);
-			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "castat2 ", "Done" ,headersList);
+			Castat2Data Cas =  new castat2().Runcastat2(RunningParameter.DataPath+"/"+DC.PDB_ID+".pdb", PDB.getAbsolutePath(), RunningParameter.castat2Path);
+			new LogFile().Log(RunningParameter.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "castat2 ", "Running ...",headersList);
+			new LogFile().Log(RunningParameter.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "castat2 ", "Done" ,headersList);
 
 			
-			if((RunningPram.ToolName.equals("Buccaneeri2W") || RunningPram.ToolName.equals("Buccaneeri2WI5"))  && Cas.n1m2.equals("None")) { // this occurs in very few cases when the water chain ID is Z and the PDB has many chains 
+			if((RunningParameter.ToolName.equals("Buccaneeri2W") || RunningParameter.ToolName.equals("Buccaneeri2WI5"))  && Cas.n1m2.equals("None")) { // this occurs in very few cases when the water chain ID is Z and the PDB has many chains 
 				new RunComparison().CheckDirAndFile("PDBsWithEmptyWaterChainID");
 				FileUtils.copyToDirectory(PDB, new File("PDBsWithEmptyWaterChainID"));
 				new RemovingWaterChainID().RemoveWaterChainID("PDBsWithEmptyWaterChainID"+"/"+PDB.getName());
-				Cas =  new castat2().Runcastat2(RunningPram.DataPath+"/"+DC.PDB_ID+".pdb", "PDBsWithEmptyWaterChainID"+"/"+PDB.getName(), RunningPram.castat2Path);
-				new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "castat2 Buccaneeri2W", "Running ...",headersList);
-				new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "castat2 Buccaneeri2W", "Done" ,headersList);
+				Cas =  new castat2().Runcastat2(RunningParameter.DataPath+"/"+DC.PDB_ID+".pdb", "PDBsWithEmptyWaterChainID"+"/"+PDB.getName(), RunningParameter.castat2Path);
+				new LogFile().Log(RunningParameter.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "castat2 Buccaneeri2W", "Running ...",headersList);
+				new LogFile().Log(RunningParameter.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "castat2 Buccaneeri2W", "Done" ,headersList);
 
 			}
 			
@@ -459,21 +459,21 @@ DC.WarringLogFile="F";
 			DC.Completeness= df.format((BigDecimal.valueOf((Double.parseDouble(Cas.n1m2) * 100.00)/Double.parseDouble(Cas.NumberOfAtomsInFirstPDB)) ));
 			else
 		    DC.Completeness=	"None";
-			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "cphasesmatch  ", "Running... ",headersList);
+			new LogFile().Log(RunningParameter.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "cphasesmatch  ", "Running... ",headersList);
 
-			 String [] FandE=new CphasesMatch().cphasesmatch(RunningPram.DataPath+"/"+DC.PDB_ID,RunningPram.CphasesMatchScriptPath);
+			 String [] FandE=new CphasesMatch().cphasesmatch(RunningParameter.DataPath+"/"+DC.PDB_ID,RunningParameter.CphasesMatchScriptPath);
 			 DC.F_mapCorrelation=FandE[0];
 			 DC.E_mapCorrelation=FandE[1];
 			 
 			 DC.BuiltPDB="T";
 			
-			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "cphasesmatch F and E map  ", FandE[0] +" "+ FandE[1],headersList);
-			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "Phases Used in CPhasesMatch  ", RunningPram.PhasesUsedCPhasesMatch,headersList );
+			new LogFile().Log(RunningParameter.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "cphasesmatch F and E map  ", FandE[0] +" "+ FandE[1],headersList);
+			new LogFile().Log(RunningParameter.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "Phases Used in CPhasesMatch  ", RunningParameter.PhasesUsedCPhasesMatch,headersList );
 
-			if(RunningPram.UsingMolProbity.equals("T")) {
-			DC.molProbityData=new MolProbity().molProbity(PDB,new File(RunningPram.DataPath+"/"+DC.PDB_ID+".mtz"));
-			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "MolProbity  ", "Running... ",headersList);
-			new LogFile().Log(RunningPram.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "MolProbity ", "Done ",headersList );
+			if(RunningParameter.UsingMolProbity.equals("T")) {
+			DC.molProbityData=new MolProbity().molProbity(PDB,new File(RunningParameter.DataPath+"/"+DC.PDB_ID+".mtz"));
+			new LogFile().Log(RunningParameter.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "MolProbity  ", "Running... ",headersList);
+			new LogFile().Log(RunningParameter.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "MolProbity ", "Done ",headersList );
 
 			}
 		//else {
@@ -490,7 +490,7 @@ DC.WarringLogFile="F";
 		}
 		
 		if(DC.Resolution.equals("None")) { // it is rare to happen, but if might occurred when there is built PDB and refmac throw and error 
-		REFMACFactors F = new Refmac().RunRefmac(RunningPram.DataPath+"/"+DC.PDB_ID+".mtz", RunningPram.DataPath+"/"+DC.PDB_ID+".pdb", RunningPram.RefmacPath, RunningPram.ToolName, DC.PDB_ID,"");
+		REFMACFactors F = new Refmac().RunRefmac(RunningParameter.DataPath+"/"+DC.PDB_ID+".mtz", RunningParameter.DataPath+"/"+DC.PDB_ID+".pdb", RunningParameter.RefmacPath, RunningParameter.ToolName, DC.PDB_ID,"");
 		DC.Resolution=F.Reso;	
 		}
 		
