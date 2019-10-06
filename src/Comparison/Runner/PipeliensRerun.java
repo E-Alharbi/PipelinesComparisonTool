@@ -27,26 +27,26 @@ public class PipeliensRerun {
 				
 			if(Results.exists() ) {
 				
-				RunningPram.PDBsDir=Results.getAbsolutePath()+"/PDBs";
+				RunningParameter.PDBsDir=Results.getAbsolutePath()+"/PDBs";
 				for(File log : Results.listFiles())
 				{
 					if(log.getName().contains("Logs") && !log.getName().contains("IntermediateLogs"))
-						RunningPram.LogsDir=log.getAbsolutePath();
+						RunningParameter.LogsDir=log.getAbsolutePath();
 				}
 				
-				RunningPram.IntermediateLogs=Results.getAbsolutePath()+"/IntermediateLogs";
-				RunningPram.IntermediatePDBs=Results.getAbsolutePath()+"/IntermediatePDBs";
+				RunningParameter.IntermediateLogs=Results.getAbsolutePath()+"/IntermediateLogs";
+				RunningParameter.IntermediatePDBs=Results.getAbsolutePath()+"/IntermediatePDBs";
 				Script+="cd "+p.getAbsolutePath()+"\n";
 				new CleanerForRunner().Clean();
 				Script+="sh Cleaner.sh "+"\n";
-				RunningPram.PDBsDir=Results.getAbsolutePath()+"PDBs";
+				RunningParameter.PDBsDir=Results.getAbsolutePath()+"PDBs";
 				
 				Script+="cd "+Path+"\n";
 			}
 			else {
 				
 				Script+="cd "+p.getAbsolutePath()+"\n";
-				RunningPram.PDBsDir=null;
+				RunningParameter.PDBsDir=null;
 				
 				Script+="cd "+Path+"\n";
 			}
