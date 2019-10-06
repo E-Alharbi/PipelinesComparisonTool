@@ -23,23 +23,7 @@ import Comparison.ToolsExecation.SingleThread.cfakeAnom;
 import Comparison.ToolsExecation.SingleThread.chltofom;
 import Comparison.ToolsExecation.SingleThread.shelxe;
 import Comparison.Utilities.PhenixTempCleaner;
-import NotToSync.Buccaneeri1Testing;
-import NotUsed.ArpResultsAnalysis2;
-import NotUsed.BuccaneerResultsAnalysis;
-import NotUsed.PhenixResultsAnalysis2;
-import NotUsed.RunCBuccaneer;
-import ToolsExecution.Buccaneeri2Runner;
-import ToolsExecution.CrankRunner;
-import ToolsExecution.ArpRunner;
-import ToolsExecution.RunArpTesting;
-import ToolsExecution.RunBuccaneerMulti;
-import ToolsExecution.CBuccaneerRunner;
-import ToolsExecution.RunCBuccaneerTestingProupse;
-import ToolsExecution.RunPhenix2;
-import ToolsExecution.RunPhenixHLA;
-import ToolsExecution.RunPhenixMultiThreads;
-import ToolsExecution.PhenixRunner;
-import ToolsExecution.ThreadsRunner;
+
 
 public class RunComparison {
 
@@ -209,6 +193,7 @@ public class RunComparison {
 					 }
 					new PhenixTempCleaner().CleanTemp(RunningParameter.LogsDirPhenix,RunningParameter.PhenixWorkingDirList);	
 			 }
+			  /*
 			 else if(args[0].equals("RunBuccaneer")){
 				
 				 
@@ -227,6 +212,7 @@ public class RunComparison {
 					 }
 					new RunBuccaneerMulti().RunBuccaneerTool();	
 			 }
+			  */
 			 else if(args[0].equals("RunCrank")){
 					
 				 
@@ -608,6 +594,7 @@ public class RunComparison {
 					 new Buccaneeri1Testing().RunBuccaneerTool();
 			 }
 			  */
+			  /*
 			 else if(args[0].equals("RunCBuccaneerTestingProupse")){
 					
 				 
@@ -626,6 +613,7 @@ public class RunComparison {
 					 }
 					new RunCBuccaneerTestingProupse().RunBuccaneerTool();
 			 }
+			  */
 			 else if(args[0].equals("RunwArp")){
 				
 				
@@ -673,6 +661,7 @@ public class RunComparison {
 					
 					 new Arp().RunwArpTool();
 			 }
+			  /*
 			 else if(args[0].equals("RunwArpTesting")){
 					
 					
@@ -717,6 +706,7 @@ public class RunComparison {
 					 new RunArpTesting().RunwArpTool();
  
 			 }
+			  */
 			 else if (args[0].equals("RunPhenix") ){
 				
 				
@@ -776,7 +766,7 @@ public class RunComparison {
 					
 					new Phenix().RunPhenixTool();
 			 }
-			 
+			/* 
  else if (args[0].equals("RunPhenixMultiThreads") ){
 				
 				
@@ -810,9 +800,9 @@ public class RunComparison {
 					 new RunPhenixMultiThreads().RunPhenixTool(); 
 			 }
 			 
- 
+ */
 			 
-			 
+			 /*
 			 else if(args[0].equals("RunBuccaneerAnalyser")){
 				
 				 
@@ -850,7 +840,7 @@ public class RunComparison {
 						new BuccaneerResultsAnalysis().AnalysingBuccaneerResults();
 
 			 }
-			 
+			 */
  else if(args[0].equals("RunAnalyser")){
 				
 				 
@@ -972,6 +962,7 @@ public class RunComparison {
 			new MolProbity().RunMol();
 
  }
+			  /*
 			 else if(args[0].equals("RunwArpAnalyser")){
 				 
 				 
@@ -1009,7 +1000,8 @@ public class RunComparison {
 					 new ArpResultsAnalysis2().AnalysingwArpResults();
 
 			 }
-			 
+			 */
+			  /*
 			 else if(args[0].equals("RunPhenixAnalyser")){
 				
 				 
@@ -1047,6 +1039,7 @@ public class RunComparison {
 					 new PhenixResultsAnalysis2().AnalysingPhenixResults();
 
 			 }
+			  */
 			 else{
 				 System.out.println("Unknown keyword");
 				 PrintInstructions();			

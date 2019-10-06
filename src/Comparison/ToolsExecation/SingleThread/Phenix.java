@@ -40,7 +40,7 @@ import Comparison.Runner.Preparer;
 import Comparison.Runner.RunComparison;
 import Comparison.Runner.RunningParameter;
 import Comparison.Utilities.FilesManagements;
-import NotUsed.ARPResultsAnalysis;
+
 
 public class Phenix {
 	
@@ -76,7 +76,7 @@ public class Phenix {
     		 LogsFiles.addAll(Logs);
     		 String LogTxt="";
     		 for(int i=0 ; i < LogsFiles.size() ;++i) {
-    			 LogTxt+= new ARPResultsAnalysis().readFileAsString(LogsFiles.get(i).getAbsolutePath())+"\n";  
+    			 LogTxt+= new FilesManagements().readFileAsString(LogsFiles.get(i).getAbsolutePath())+"\n";  
     		 }
     		 double difference = new java.util.Date().getTime() - StartTime.getTime(); 
              DecimalFormat df = new DecimalFormat("#.##");
@@ -405,7 +405,7 @@ seqin=FilePathAndName+".seq";
 	static Vector<String> AddFileNameToList( Vector<String> FilesNames) throws IOException{
 		File yourFile = new File("./ProcessedFilesNamesPhenix.txt");
 		yourFile.createNewFile();
-		 String FileNamesTxt=new ARPResultsAnalysis().readFileAsString("./ProcessedFilesNamesPhenix.txt");
+		 String FileNamesTxt=new FilesManagements().readFileAsString("./ProcessedFilesNamesPhenix.txt");
 		 FilesNames.addAll(Arrays.asList(FileNamesTxt.split("\n")));
 		 return FilesNames;
 		

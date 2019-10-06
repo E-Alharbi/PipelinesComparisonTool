@@ -12,7 +12,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import Comparison.Runner.RunningParameter;
-import NotUsed.ARPResultsAnalysis;
+
 
 public class PhenixTempCleaner {
 
@@ -41,7 +41,7 @@ public class PhenixTempCleaner {
 String WorkingDirPath(String CaseName, String WorkingDirList) throws IOException {
 	File yourFile = new File(WorkingDirList);
 	yourFile.createNewFile();
-	 String FileNamesTxt=new ARPResultsAnalysis().readFileAsString(WorkingDirList);
+	 String FileNamesTxt=new FilesManagements().readFileAsString(WorkingDirList);
 	  String [] CasesAndPaths= FileNamesTxt.split("\n");
 	  for(int i=0 ; i <CasesAndPaths.length ; ++i )
 		  if(CasesAndPaths[i].equals(CaseName))

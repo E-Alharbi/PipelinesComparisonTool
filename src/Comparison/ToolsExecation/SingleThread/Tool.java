@@ -9,7 +9,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
 
-import NotUsed.ARPResultsAnalysis;
+import Comparison.Utilities.FilesManagements;
+
 
 public class Tool {
 
@@ -41,7 +42,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 	Vector<String> AddFileNameToList( Vector<String> FilesNames,  String Filename) throws IOException{
 		File yourFile = new File(Filename);
 		yourFile.createNewFile();
-		 String FileNamesTxt=new ARPResultsAnalysis().readFileAsString(Filename);
+		 String FileNamesTxt=new FilesManagements().readFileAsString(Filename);
 		 FilesNames.addAll(Arrays.asList(FileNamesTxt.split("\n")));
 		 return FilesNames;
 		

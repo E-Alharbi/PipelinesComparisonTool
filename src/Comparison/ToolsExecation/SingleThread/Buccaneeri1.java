@@ -36,7 +36,7 @@ import Comparison.Runner.Preparer;
 import Comparison.Runner.RunComparison;
 import Comparison.Runner.RunningParameter;
 import Comparison.Utilities.FilesManagements;
-import NotUsed.ARPResultsAnalysis;
+
 
 public class Buccaneeri1 {
 
@@ -302,7 +302,7 @@ public class Buccaneeri1 {
 	 Vector<String> AddFileNameToList( Vector<String> FilesNames) throws IOException{
 		File yourFile = new File("./ProcessedFilesNamesBuccaneer.txt");
 		yourFile.createNewFile();
-		 String FileNamesTxt=new ARPResultsAnalysis().readFileAsString("./ProcessedFilesNamesBuccaneer.txt");
+		 String FileNamesTxt=new FilesManagements().readFileAsString("./ProcessedFilesNamesBuccaneer.txt");
 		 FilesNames.addAll(Arrays.asList(FileNamesTxt.split("\n")));
 		 return FilesNames;
 		

@@ -39,7 +39,8 @@ import Comparison.Analyser.PipelineLog;
 import Comparison.Runner.Preparer;
 import Comparison.Runner.RunComparison;
 import Comparison.Runner.RunningParameter;
-import NotUsed.ARPResultsAnalysis;
+import Comparison.Utilities.FilesManagements;
+
 
 public class Buccaneeri2 {
 
@@ -76,7 +77,7 @@ public class Buccaneeri2 {
 		 String LogTxt="";
 		 for(int i=0; i<LogsFiles.size();++i ) {
 			 
-			 LogTxt+=new ARPResultsAnalysis().readFileAsString(LogsFiles.get(i).getAbsolutePath())+"\n"; 
+			 LogTxt+=new FilesManagements().readFileAsString(LogsFiles.get(i).getAbsolutePath())+"\n"; 
 			
 		 }
 		 
@@ -325,7 +326,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 	synchronized Vector<String> AddFileNameToList( Vector<String> FilesNames) throws IOException{
 		File yourFile = new File("./ProcessedFilesNamesBuccaneer.txt");
 		yourFile.createNewFile();
-		 String FileNamesTxt=new ARPResultsAnalysis().readFileAsString("./ProcessedFilesNamesBuccaneer.txt");
+		 String FileNamesTxt=new FilesManagements().readFileAsString("./ProcessedFilesNamesBuccaneer.txt");
 		 FilesNames.addAll(Arrays.asList(FileNamesTxt.split("\n")));
 		 return FilesNames;
 		

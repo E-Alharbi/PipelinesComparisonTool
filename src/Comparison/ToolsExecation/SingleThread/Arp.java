@@ -38,7 +38,8 @@ import Comparison.Analyser.PipelineLog;
 import Comparison.Runner.Preparer;
 import Comparison.Runner.RunComparison;
 import Comparison.Runner.RunningParameter;
-import NotUsed.ARPResultsAnalysis;
+import Comparison.Utilities.FilesManagements;
+
 
 public class Arp {
 	
@@ -410,7 +411,7 @@ new Preparer().WriteTxtFile("ParametersUsed/"+FileName+".txt", new Date().toStri
 	 Vector<String> AddFileNameToList( Vector<String> FilesNames) throws IOException{
 			File yourFile = new File("./ProcessedFilesNamesArp.txt");
 			yourFile.createNewFile();
-			 String FileNamesTxt=new ARPResultsAnalysis().readFileAsString("./ProcessedFilesNamesArp.txt");
+			 String FileNamesTxt=new FilesManagements().readFileAsString("./ProcessedFilesNamesArp.txt");
 			 FilesNames.addAll(Arrays.asList(FileNamesTxt.split("\n")));
 			 return FilesNames;
 			
