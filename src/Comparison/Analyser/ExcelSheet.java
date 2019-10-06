@@ -54,9 +54,18 @@ public class ExcelSheet {
 		
 	}
 	public void WriteExcel(XSSFWorkbook workbook, String FileName) throws FileNotFoundException, IOException{
-		 try (FileOutputStream outputStream = new FileOutputStream(FileName+".xlsx")) {
+		
+		if(FileName.contains(".xlsx")) {
+			try (FileOutputStream outputStream = new FileOutputStream(FileName)) {
 	            workbook.write(outputStream);
 	        }
+		}
+		else {
+			try (FileOutputStream outputStream = new FileOutputStream(FileName+".xlsx")) {
+	            workbook.write(outputStream);
+	        }
+		}
+		
 	}
 	public void FillInExcel(Vector <ExcelContents> DataContainer, String ToolName) throws FileNotFoundException, IOException{
 		ExcelSheet e = new ExcelSheet ();
@@ -71,21 +80,21 @@ public class ExcelSheet {
 		c = e.CreateCell(r, 2);
 		e.SetCellValue(c, "TimeTaking");
 		c = e.CreateCell(r, 3);
-		e.SetCellValue(c, "R-factor");
+		e.SetCellValue(c, "R-work");
 		c = e.CreateCell(r, 4);
 		e.SetCellValue(c, "R-free");
 		c = e.CreateCell(r, 5);
-		e.SetCellValue(c, " R-factor Δ R-free");
+		e.SetCellValue(c, " Diff R-work and R-free");
 		c = e.CreateCell(r, 6);
 		e.SetCellValue(c, "Overfitting?");
       
        
 		c = e.CreateCell(r, 7);
-       e.SetCellValue(c, "R-factor (0 Cycle)");
+       e.SetCellValue(c, "R-work (0 Cycle)");
 		c = e.CreateCell(r, 8);
 		e.SetCellValue(c, "R-free (0 Cycle)");
 		c = e.CreateCell(r, 9);
-		e.SetCellValue(c, "Optimal R-factor");
+		e.SetCellValue(c, "Deposited R-work");
 		c = e.CreateCell(r, 10);
 		e.SetCellValue(c, "Number of Atoms in First PDB");
 		
@@ -116,40 +125,40 @@ public class ExcelSheet {
 		e.SetCellValue(c, "BuiltPDB");
 		
 		c = e.CreateCell(r, 20);
-		e.SetCellValue(c, "Warring Time Taking");
+		e.SetCellValue(c, "Warring execution time");
 		
 		c = e.CreateCell(r, 21);
-		e.SetCellValue(c, "Warring Log Size");
+		e.SetCellValue(c, "Warring log Size");
 		c = e.CreateCell(r, 22);
-		e.SetCellValue(c, "Exception (No Log File)");
+		e.SetCellValue(c, "Exception (no log file)");
 		
 		c = e.CreateCell(r, 23);	
-		e.SetCellValue(c, "Ramachandran Outliers"); 
+		e.SetCellValue(c, "Ramachandran outliers"); 
 	 c = e.CreateCell(r, 24);
-	 e.SetCellValue(c, "Ramachandran Favored");; 
+	 e.SetCellValue(c, "Ramachandran favored");; 
 		 c = e.CreateCell(r, 25);
-		 e.SetCellValue(c,"Rotamer Outliers");
+		 e.SetCellValue(c,"Rotamer outliers");
 		 c = e.CreateCell(r, 26);
 		
-		 e.SetCellValue(c,"Clash Score");
+		 e.SetCellValue(c,"Clash score");
 		 c = e.CreateCell(r, 27);
 		 ; 
-		 e.SetCellValue(c,"RMS Bonds");
+		 e.SetCellValue(c,"RMS bonds");
 		 c = e.CreateCell(r, 28);
 		  ; 
-		 e.SetCellValue(c,"RMS Angles");
+		 e.SetCellValue(c,"RMS angles");
 		 c = e.CreateCell(r, 29);
 		  ;
-		 e.SetCellValue(c,"MolProbity Score");
+		 e.SetCellValue(c,"MolProbity score");
 		 c = e.CreateCell(r, 30);
 		  ;
-		 e.SetCellValue(c,"RWork");
+		 e.SetCellValue(c,"Rwork");
 		 c = e.CreateCell(r, 31);
 		  ;
-		 e.SetCellValue(c,"RFree");
+		 e.SetCellValue(c,"Rfree");
 		 c = e.CreateCell(r, 32);
 		  ;
-		 e.SetCellValue(c,"Refinement Program");
+		 e.SetCellValue(c,"Refinement program");
 		 
 		 c = e.CreateCell(r, 33);
 		  ;
