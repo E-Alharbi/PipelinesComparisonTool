@@ -36,7 +36,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import Comparison.Analyser.ExcelSheet;
 import Comparison.Analyser.PipelineLog;
 import Comparison.Runner.RunComparison;
-import Comparison.Runner.RunningPram;
+import Comparison.Runner.RunningParameter;
 import NotUsed.ARPResultsAnalysis;
 import table.draw.LogFile;
 
@@ -54,8 +54,8 @@ public class ArpRunner  extends Tool{
 			System.exit(-1);
 		}
 		
-		RunningPram.DataPath=args[0];
-		RunningPram.wArpAutotracing=args[1];
+		RunningParameter.DataPath=args[0];
+		RunningParameter.wArpAutotracing=args[1];
 		//new RunArp().RunwArpTool();
 	}
 	boolean SaveIntermediateResults(String JobDirectory ,  String PDBID) throws InterruptedException, IOException {
@@ -221,10 +221,10 @@ String mtzin=FilePathAndName+".mtz";
 String seqin=FilePathAndName+".seq";
 
 String[]ArpParm;
-if(RunningPram.UseBuccModels.trim().equals("T")) {
+if(RunningParameter.UseInitialModels.trim().equals("T")) {
 	String[]callAndArgs= {
 			// /Applications/arp_warp_7.6/share/auto_tracing.sh 
-		RunningPram.wArpAutotracing,
+		RunningParameter.wArpAutotracing,
 		"datafile",mtzin,
 		"workdir",System.getProperty("user.dir")+"/wArpResults/WorkingDir",
 		//"phibest","parrot.F_phi.phi",
@@ -249,7 +249,7 @@ if(RunningPram.UseBuccModels.trim().equals("T")) {
 else {
 	 String[]callAndArgs= {
 		// /Applications/arp_warp_7.6/share/auto_tracing.sh 
-	RunningPram.wArpAutotracing,
+	RunningParameter.wArpAutotracing,
 	"datafile",mtzin,
 	"workdir",System.getProperty("user.dir")+"/wArpResults/WorkingDir",
 	//"phibest","parrot.F_phi.phi",
@@ -374,7 +374,7 @@ else {
 		*/
 		String GetModelPath(String PDBId){
 			
-				 File[] BuccModels = new File(RunningPram.BuccModels).listFiles();
+				 File[] BuccModels = new File(RunningParameter.InitialModels).listFiles();
 				 for (File PDB : BuccModels) {
 					 if(PDBId.trim().equals(PDB.getName())) {
 						 return PDB.getAbsolutePath();
