@@ -5,6 +5,7 @@ package Comparison.Analyser;
 * University of York
 */
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -14,7 +15,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.Vector;
+import java.util.Map.Entry;
 
 import org.apache.commons.io.FileUtils;
 //import  org.apache.commons.lang3.StringUtils;
@@ -25,7 +29,7 @@ import com.ibm.statistics.plugin.*;
 
 import Comparison.Runner.Preparer;
 import Comparison.Runner.RunComparison;
-import Comparison.Runner.RunningPram;
+import Comparison.Runner.RunningParameter;
 import NotToSync.SPSS;
 import NotToSync.SPSSDescriptivesTable;
 
@@ -36,12 +40,19 @@ public class ComparisonMeasures {
 String PathToLatexFolder="./Latex";
 boolean AvgInMatrices=false;
 
-	void CompRTimeAvgTable(String ExcelDir, String PathForOriginalExp) throws IOException {
+public static void main(String[] args) throws FileNotFoundException, IOException {
+
+	//Reproducibility
+	//ComparisonMeasures cm = new ComparisonMeasures();
+	//cm.PathToLatexFolder="";
+	//cm.CompRTimeAvgTable("","");
+}
+	void CompRTimeAvgTable(String ExcelDir, String PathForOriginalExp) throws IOException {//Reproducibility tables. Run this method twice for original and synthetic   
 		
 		for (File Folder : new File(ExcelDir).listFiles()) {
 			if(Folder.isDirectory()) {
-				String Table="\\tiny Pipeline variant & \\tiny Completeness &\\tiny R-work/R-free & \\tiny Time taking \\\\ \\hline \n";
-				String TableOriginal="\\tiny Pipeline variant & \\tiny Completeness &\\tiny R-work/R-free & \\tiny Time taking \\\\ \\hline \n";
+				String Table="\\tiny Pipeline variant & \\tiny Completeness &\\tiny R-work/R-free & \\tiny Execution time \\\\ \\hline \n";
+				String TableOriginal="\\tiny Pipeline variant & \\tiny Completeness &\\tiny R-work/R-free & \\tiny Execution time \\\\ \\hline \n";
 
 				String Comments="";
 				Comments+="% "+ new Date().toString() +" \n ";
@@ -115,7 +126,7 @@ void TimeTakingTable(String ExcelDir) throws IOException {
 	
 	for (File Folder : new File(ExcelDir).listFiles()) {
 		if(Folder.isDirectory()) {
-			String Table="\\tiny Pipeline variant & \\tiny Min &\\tiny Max & \\tiny Avg. \\\\ \\hline \n";
+			String Table="\\tiny Pipeline variant & \\tiny Min &\\tiny Max & \\tiny Mean \\\\ \\hline \n";
 			String Comments="";
 			Comments+="% "+ new Date().toString() +" \n ";
 			Comments+="% Folder: "+ Folder.getName() +" \n ";
@@ -1466,15 +1477,17 @@ return FormattedTable;
 		Table=Table.replaceAll("\\bBuccaneeri2W\\b", "i2W(25I)");
 		
 		Table=Table.replaceAll("\\bBuccaneeri2WI5\\b", "i2W(5I)");
-		Table=Table.replaceAll("\\bPhenix\\b", "Phenix/Parrot");
+		Table=Table.replaceAll("\\bPhenix\\b", "PHENIX/Parrot");
 		
-		Table=Table.replaceAll("\\bPhenixHAL\\b", "Phenix");
+		Table=Table.replaceAll("\\bPhenixHAL\\b", "PHENIX");
 		
 		Table=Table.replaceAll("\\bBuccaneeri1I1GA\\b", "i1(I1GA)");
 		Table=Table.replaceAll("\\bBuccaneeri1I2GA\\b", "i1(I2GA)");
 		Table=Table.replaceAll("\\bBuccaneeri1I3GA\\b", "i1(I3GA)");
 		Table=Table.replaceAll("\\bBuccaneeri1I4GA\\b", "i1(I4GA)");
 		Table=Table.replaceAll("\\bBuccaneeri1I5GA\\b", "i1(I5GA)");
+		Table=Table.replaceAll("\\ShelxeWithTFlagChFomPhi\\b", "SHELXE/Parrot");
+		Table=Table.replaceAll("\\ShelxeWithTFlag\\b", "SHELXE");
 		
 		
 		return Table;
@@ -1872,6 +1885,174 @@ for(int i=0; i < CurrentReading.size() ; ++i) {
 		new Preparer().WriteTxtFile(PathToLatexFolder+"/LongMatrixCompleteness" + ".tex", Rows);
 		new Preparer().WriteTxtFile(PathToLatexFolder+"/LongMatrixRfactor" + ".tex", RowsRFactor);
 	}
+	
+	public  void ImprovementsLevel(String DMDir) throws IOException {
+		// TODO Auto-generated method stub
+
+		File []  DMPath=new File(DMDir).listFiles();
+		for(File DM : DMPath) {
+			
+		
+		HashMap<Integer,Integer> Completenessimprovementslevels=new HashMap<Integer,Integer>(); 
+		HashMap<Integer,Integer> Rworkimprovementslevels=new HashMap<Integer,Integer>();
+		HashMap<Integer,Integer> Rfreeimprovementslevels=new HashMap<Integer,Integer>();
+		Completenessimprovementslevels.put(1, 0);
+		Completenessimprovementslevels.put(5, 0);
+		
+		Rworkimprovementslevels.put(1, 0);
+		Rworkimprovementslevels.put(5, 0);
+		
+		Rfreeimprovementslevels.put(1, 0);
+		Rfreeimprovementslevels.put(5, 0);
+		for (int i =10 ; i < 60 ; i =i+10 ) {
+			//System.out.println(i);
+			//improvementslevels.add(i);
+			Completenessimprovementslevels.put(i, 0);
+			Rworkimprovementslevels.put(i, 0);
+			Rfreeimprovementslevels.put(i, 0);
+		}
+		SortedSet<Integer> keys = new TreeSet<>(Completenessimprovementslevels.keySet());
+		//File []  ExcelDir= new File("/Users/emadalharbi/Desktop/PhDYork/SecondYearReportV1/Excel/Metaoptimization/All/SyntheticBuccEx54ExFaliedCases/noncs").listFiles(); 
+		File []  ExcelDir= new File(DM.getAbsolutePath()).listFiles(); 
+
+		Vector<String> PipelinesNames = new Vector<String>(); 
+		String CompletenessTable=" \\tiny "+"Improvement level &";
+		String RTable=" \\tiny "+"Improvement level &";
+		String Logs="";
+		//Read pipelines names
+		//System.out.println(DM.getAbsolutePath());
+		for(int i=0 ; i <ExcelDir.length ; ++i) {
+			PipelinesNames.add(ExcelDir[i].getName());
+			
+		}
+		// sort them and write to the table 
+		Collections.sort(PipelinesNames);
+		for (Integer key : keys) { 
+			CompletenessTable+=" \\tiny "+key+"&";
+		}
+		CompletenessTable=CompletenessTable.substring(0, CompletenessTable.lastIndexOf("&"));
+		CompletenessTable+=" \\\\ \\hline";
+		CompletenessTable+="\n";
+		RTable=CompletenessTable;
+		for(int i=0 ; i <PipelinesNames.size() ; ++i) {
+			File Pipeline1=null;
+			for(File e :ExcelDir ) {
+				if(PipelinesNames.get(i).equals(e.getName())) {
+					Pipeline1=e;
+					break;
+				}
+			}
+			for(int p=0 ; p <PipelinesNames.size() ; ++p) {
+				if(i!=p){
+				File Pipeline2=null;
+				for(File e :ExcelDir ) {
+					if(PipelinesNames.get(p).equals(e.getName())) {
+						Pipeline2=e;
+						break;
+					}
+				}
+				//Read the two excels 
+				ExcelLoader f = new ExcelLoader();
+				Vector<ExcelContents> Pipeline1Excel = f.ReadExcel(Pipeline1.getAbsolutePath());
+				Vector<ExcelContents> Pipeline2Excel = f.ReadExcel(Pipeline2.getAbsolutePath());
+				float CountModels=0;
+				for(int m=0; m <Pipeline1Excel.size();++m ) {
+					for(int n=0; n <Pipeline2Excel.size();++n) {
+						if(Pipeline1Excel.get(m).PDB_ID.equals(Pipeline2Excel.get(n).PDB_ID)) {
+							CountModels++;
+							for(Entry<Integer, Integer> tempmap:Completenessimprovementslevels.entrySet()) {
+								if (  new BigDecimal(Pipeline1Excel.get(m).Completeness).setScale(0, RoundingMode.HALF_UP).subtract( 
+										new BigDecimal(Pipeline2Excel.get(n).Completeness).setScale(0, RoundingMode.HALF_UP)).compareTo(new BigDecimal(tempmap.getKey())) >=0)  {
+								
+							
+									Completenessimprovementslevels.put(tempmap.getKey(), Completenessimprovementslevels.get(tempmap.getKey())+1);
+									
+												
+
+									
+						}
+								
+								if( new BigDecimal(Pipeline1Excel.get(m).R_free0Cycle).add(new BigDecimal( Double.toString(tempmap.getKey()/100.0))).compareTo(new BigDecimal(Pipeline2Excel.get(n).R_free0Cycle)) <= 0  ) {
+									Logs+=PipelinesNames.get(i).substring(0,PipelinesNames.get(i).indexOf('.')) +" VS "+"  "+PipelinesNames.get(p).substring(0,PipelinesNames.get(p).indexOf('.')) +",";
+									Logs+=Pipeline1Excel.get(m).PDB_ID+" "+" , "+tempmap.getKey()/100.0+", "+Pipeline1Excel.get(m).R_free0Cycle+", "+Pipeline2Excel.get(n).R_free0Cycle+"\n";
+									//System.out.println("Level :"+tempmap.getKey()/100.0);
+									//System.out.println("P1 :"+Pipeline1Excel.get(m).R_free0Cycle);
+									//System.out.println("P2 :"+Pipeline2Excel.get(n).R_free0Cycle);
+									Rfreeimprovementslevels.put(tempmap.getKey(), Rfreeimprovementslevels.get(tempmap.getKey())+1);
+									
+																	
+								}
+								if( new BigDecimal(Pipeline1Excel.get(m).R_factor0Cycle).add(new BigDecimal(Double.toString(tempmap.getKey()/100.0))).compareTo(new BigDecimal(Pipeline2Excel.get(n).R_factor0Cycle)) <= 0  ) {
+
+									Rworkimprovementslevels.put(tempmap.getKey(), Rworkimprovementslevels.get(tempmap.getKey())+1);
+									
+																	
+								}
+							}
+						}
+					}
+				}
+				//System.out.println(PipelinesNames.get(i));
+				//System.out.println(PipelinesNames.get(p));
+				
+				CompletenessTable+=" \\tiny "+PipelinesNames.get(i).substring(0,PipelinesNames.get(i).indexOf('.')) +" VS "+" \\tiny "+PipelinesNames.get(p).substring(0,PipelinesNames.get(p).indexOf('.'))+" ";
+				CompletenessTable+="&";
+				
+				RTable+=" \\tiny "+PipelinesNames.get(i).substring(0,PipelinesNames.get(i).indexOf('.')) +" VS "+" \\tiny "+PipelinesNames.get(p).substring(0,PipelinesNames.get(p).indexOf('.'))+" $_{R-work}$";
+				RTable+="&";
+				
+				
+				for (Integer key : keys) { 
+					DecimalFormat decim = new DecimalFormat("#");
+					   //Table+=improvementslevels.get(key)+"&";
+					CompletenessTable+=" \\tiny "+decim.format(((Completenessimprovementslevels.get(key) * 100) / CountModels)) +"&";
+					RTable+=" \\tiny "+decim.format(((Rworkimprovementslevels.get(key) * 100) / CountModels)) +"&";
+					//RTable+=" \\tiny "+Rworkimprovementslevels.get(key) +"&";
+
+				}
+				CompletenessTable=CompletenessTable.substring(0, CompletenessTable.lastIndexOf("&"));
+				CompletenessTable+=" \\\\ \\hline";
+				CompletenessTable+="\n";
+				
+				RTable=RTable.substring(0, RTable.lastIndexOf("&"));
+				RTable+=" \\\\ ";
+				RTable+="\n";
+				RTable+=" \\tiny "+PipelinesNames.get(i).substring(0,PipelinesNames.get(i).indexOf('.')) +" VS "+" \\tiny "+PipelinesNames.get(p).substring(0,PipelinesNames.get(p).indexOf('.'))+" $_{R-free}$";
+				RTable+="&";
+				for (Integer key : keys) { 
+					DecimalFormat decim = new DecimalFormat("#");
+					  
+					RTable+=" \\tiny "+decim.format(((Rfreeimprovementslevels.get(key) * 100) / CountModels)) +"&";
+					//RTable+=" \\tiny "+Rfreeimprovementslevels.get(key)  +"&";
+					Logs+= (Rfreeimprovementslevels.get(key) * 100) / CountModels+" \n ";
+					Logs+= decim.format(((Rfreeimprovementslevels.get(key) * 100) / CountModels))+" \n ";
+				}
+				RTable=RTable.substring(0, RTable.lastIndexOf("&"));
+				RTable+=" \\\\ \\hline";
+				RTable+="\n";
+				Logs+="models "+CountModels+" \n ";
+				//System.out.println();
+				for(Entry<Integer, Integer> tempmap:Completenessimprovementslevels.entrySet()) {
+					Completenessimprovementslevels.put(tempmap.getKey(), 0);
+					Rworkimprovementslevels.put(tempmap.getKey(), 0);
+					Rfreeimprovementslevels.put(tempmap.getKey(), 0);
+				}
+			}
+			}
+		}
+		CompletenessTable = new ComparisonMeasures().FormatingPipelinesNames(CompletenessTable, false);
+		RTable = new ComparisonMeasures().FormatingPipelinesNames(RTable, false);
+
+		//System.out.println(CompletenessTable);
+		//System.out.println(RTable);
+		Logs = new ComparisonMeasures().FormatingPipelinesNames(Logs, false);
+		new Preparer().WriteTxtFile(DM.getName()+"Logs.txt",Logs);
+		//new Preparer().WriteTxtFile(PathToLatexFolder+"/MatrixOfResults" + Folder.getName() + "Com0Equivalent.tex", TableCom0Equivalent);
+		new Preparer().WriteTxtFile(PathToLatexFolder+"/"+DM.getName() + "CompletenessByImprovementsLevel.tex", CompletenessTable);
+		new Preparer().WriteTxtFile(PathToLatexFolder+"/"+DM.getName() + "RTableByImprovementsLevel.tex", RTable);
+
+	}
+}
 }
 
 class OverallResult {
