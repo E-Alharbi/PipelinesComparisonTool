@@ -13,7 +13,7 @@ import java.util.Vector;
 import org.apache.commons.io.FileUtils;
 
 import Comparison.Runner.RunComparison;
-import Comparison.Runner.RunningPram;
+import Comparison.Runner.RunningParameter;
 
 public class OrginalAndSyntheticSplitter {
 
