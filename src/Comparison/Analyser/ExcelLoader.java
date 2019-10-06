@@ -133,7 +133,7 @@ public class ExcelLoader {
 			return Container;
 		}
 	
-	Vector<ExcelContents> CheckPDBexists(Vector<Vector<ExcelContents>> AllToolsData, Vector<ExcelContents> ThisToolData) {
+	public Vector<ExcelContents> CheckPDBexists(Vector<Vector<ExcelContents>> AllToolsData, Vector<ExcelContents> ThisToolData) {
 		
 		Vector<ExcelContents> Container = new Vector<ExcelContents>();
 		for (int t = 0; t < ThisToolData.size(); ++t) {
