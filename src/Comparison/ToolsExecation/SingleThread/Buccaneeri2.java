@@ -38,7 +38,7 @@ import Comparison.Analyser.Bucaneeri2LogGenerator;
 import Comparison.Analyser.PipelineLog;
 import Comparison.Runner.Preparer;
 import Comparison.Runner.RunComparison;
-import Comparison.Runner.RunningPram;
+import Comparison.Runner.RunningParameter;
 import NotUsed.ARPResultsAnalysis;
 
 public class Buccaneeri2 {
@@ -57,7 +57,7 @@ public class Buccaneeri2 {
 			System.exit(-1);
 		}
 		
-		RunningPram.DataPath=args[0];
+		RunningParameter.DataPath=args[0];
 		new Buccaneeri2().RunBuccaneerTool();
 	}
 	String Log(String JobDirectory) throws IOException {
@@ -170,16 +170,16 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 		 
 		 
 		 File[] files=null ;
-	     if(new File(RunningPram.DataPath).isDirectory()) {
-	    	 files = new File(RunningPram.DataPath).listFiles();
+	     if(new File(RunningParameter.DataPath).isDirectory()) {
+	    	 files = new File(RunningParameter.DataPath).listFiles();
 	     }
-		if(new File(RunningPram.DataPath).isFile()) {
+		if(new File(RunningParameter.DataPath).isFile()) {
 			
-			files = ArrayUtils.add(files, new File(RunningPram.DataPath));
+			files = ArrayUtils.add(files, new File(RunningParameter.DataPath));
 		}
 		
      FilesNames=RBM.AddFileNameToList(FilesNames);
-     System.out.println("Data Path "+ RunningPram.DataPath);
+     System.out.println("Data Path "+ RunningParameter.DataPath);
 		 for (File file : files) {
 	String CaseName=file.getName().replaceAll("."+FilenameUtils.getExtension(file.getName()),"");
 	if(!FilesNames.contains(CaseName)){
@@ -227,24 +227,24 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 	String mtzin=FilePathAndName+".mtz";
 	// adding water option is set in bucrefi2.py not here!!!
 	 String[]callAndArgs= {
-			 "ccp4-python",RunningPram.Buccaneeri2PipeLine,
+			 "ccp4-python",RunningParameter.Buccaneeri2PipeLine,
 			 "--mtzin",mtzin,
 			 "--seqin",seqin,
 			 "--colinfo","FP,SIGFP",
 			 "--colinhl","parrot.ABCD.A,parrot.ABCD.B,parrot.ABCD.C,parrot.ABCD.D",
-			 "--iterations",RunningPram.BuccaneerIterations,
+			 "--iterations",RunningParameter.BuccaneerIterations,
 			 "--mtz-name",FileName,
 			 
 	};
-	 if(RunningPram.UsingRFree.equals("T")) {
+	 if(RunningParameter.UsingRFree.equals("T")) {
 		 String[]callAndArgsWithRfree= {
-				 "ccp4-python",RunningPram.Buccaneeri2PipeLine,
+				 "ccp4-python",RunningParameter.Buccaneeri2PipeLine,
 				 "--mtzin",mtzin,
 				 "--seqin",seqin,
 				 "--colinfo","FP,SIGFP",
 				 "--colinhl","parrot.ABCD.A,parrot.ABCD.B,parrot.ABCD.C,parrot.ABCD.D",
 				 "--colinfree","FreeR_flag",
-				 "--iterations",RunningPram.BuccaneerIterations,
+				 "--iterations",RunningParameter.BuccaneerIterations,
 				 "--mtz-name",FileName,
 				 
 		};
