@@ -17,7 +17,7 @@ package Comparison.ToolsExecation.SingleThread;
 import org.apache.commons.io.FilenameUtils;
 
 import Comparison.Runner.RunComparison;
-import Comparison.Runner.RunningPram;
+import Comparison.Runner.RunningParameter;
 
 			public class cfakeAnom {
 
@@ -44,7 +44,7 @@ import Comparison.Runner.RunningPram;
 				void Ffake( String PDBid, String DataPath, String OutputPath) throws IOException {
 					
 					 String[]callAndArgs= {
-							 RunningPram.CfakeAnom,
+							 RunningParameter.CfakeAnom,
 							
 							"-mtzin" ,DataPath+"/"+PDBid+".mtz",
 							"-colin-fo","FP,SIGFP",

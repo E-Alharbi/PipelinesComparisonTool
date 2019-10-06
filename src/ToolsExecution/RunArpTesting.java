@@ -29,7 +29,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import Comparison.Analyser.ExcelSheet;
 import Comparison.Analyser.PipelineLog;
 import Comparison.Runner.RunComparison;
-import Comparison.Runner.RunningPram;
+import Comparison.Runner.RunningParameter;
 import NotUsed.ARPResultsAnalysis;
 
 public class RunArpTesting {
@@ -43,8 +43,8 @@ public class RunArpTesting {
 			System.exit(-1);
 		}
 		
-		RunningPram.DataPath=args[0];
-		RunningPram.wArpAutotracing=args[1];
+		RunningParameter.DataPath=args[0];
+		RunningParameter.wArpAutotracing=args[1];
 		new RunArpTesting().RunwArpTool();
 	}
 	public void RunwArpTool() throws IOException
@@ -57,7 +57,7 @@ public class RunArpTesting {
 		new RunComparison().CheckDirAndFile("./wArpResults/WorkingDir");
 		
      Vector<String> FilesNames= new Vector <String>();
-     File[] files = new File(RunningPram.DataPath).listFiles();
+     File[] files = new File(RunningParameter.DataPath).listFiles();
 	
 	
 	
@@ -106,10 +106,10 @@ String mtzin=FilePathAndName+".mtz";
 String seqin=FilePathAndName+".seq";
 
 String[]ArpParm;
-if(RunningPram.UseBuccModels.trim().equals("T")) {
+if(RunningParameter.UseInitialModels.trim().equals("T")) {
 	String[]callAndArgs= {
 			// /Applications/arp_warp_7.6/share/auto_tracing.sh 
-		RunningPram.wArpAutotracing,
+		RunningParameter.wArpAutotracing,
 		"datafile",mtzin,
 		"workdir",System.getProperty("user.dir")+"/wArpResults/WorkingDir",
 		//"phibest","parrot.F_phi.phi",
@@ -134,7 +134,7 @@ if(RunningPram.UseBuccModels.trim().equals("T")) {
 else {
 	 String[]callAndArgs= {
 		// /Applications/arp_warp_7.6/share/auto_tracing.sh 
-	RunningPram.wArpAutotracing,
+	RunningParameter.wArpAutotracing,
 	"datafile",mtzin,
 	"workdir",System.getProperty("user.dir")+"/wArpResults/WorkingDir",
 	//"phibest","parrot.F_phi.phi",
@@ -254,7 +254,7 @@ else {
 		}
 		String GetModelPath(String PDBId){
 			
-				 File[] BuccModels = new File(RunningPram.BuccModels).listFiles();
+				 File[] BuccModels = new File(RunningParameter.InitialModels).listFiles();
 				 for (File PDB : BuccModels) {
 					 if(PDBId.trim().equals(PDB.getName())) {
 						 return PDB.getAbsolutePath();

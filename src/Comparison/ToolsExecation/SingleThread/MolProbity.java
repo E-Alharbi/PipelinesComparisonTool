@@ -16,7 +16,7 @@ import Comparison.Analyser.ExcelContents;
 import Comparison.Analyser.ExcelLoader;
 import Comparison.Analyser.ExcelSheet;
 import Comparison.Analyser.MultiThreadedAnalyser;
-import Comparison.Runner.RunningPram;
+import Comparison.Runner.RunningParameter;
 import Comparison.Utilities.DataSetChecking;
 
 public class MolProbity implements Runnable {
@@ -33,8 +33,8 @@ public class MolProbity implements Runnable {
 	
 	public static void RunMol() throws FileNotFoundException, IOException {
 		
-	  	int NumberpfThreads= Integer.valueOf(RunningPram.NumberofThreads);
-			Vector <ExcelContents> temp = new ExcelLoader().ReadExcel(RunningPram.ExcellPath);
+	  	int NumberpfThreads= Integer.valueOf(RunningParameter.NumberofThreads);
+			Vector <ExcelContents> temp = new ExcelLoader().ReadExcel(RunningParameter.ExcellPath);
 			for(int i=0 ; i < temp.size() ; ++i) {
 				OldContainer.push(temp.get(i));
 			}
@@ -62,7 +62,7 @@ public class MolProbity implements Runnable {
 		}
 		static public synchronized void  CreateExcel() throws FileNotFoundException, IOException {
 			
-			new ExcelSheet().FillInExcel(NewContainer, RunningPram.ToolName);
+			new ExcelSheet().FillInExcel(NewContainer, RunningParameter.ToolName);
 			
 		}
 		
@@ -71,7 +71,7 @@ public class MolProbity implements Runnable {
 		MolProbityData  Results= new MolProbityData();
 		 String st = null;
 		String[]callAndArgs= {
-				 RunningPram.PhenixMolProbity,
+				 RunningParameter.PhenixMolProbity,
 				 PDB.getAbsolutePath(),mtz.getAbsolutePath()+":FP,SIGFP", 
 				 
 		 };

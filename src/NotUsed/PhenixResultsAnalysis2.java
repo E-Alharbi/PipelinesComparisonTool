@@ -20,7 +20,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import Comparison.Analyser.ExcelContents;
 import Comparison.Analyser.ExcelSheet;
 import Comparison.Analyser.REFMACFactors;
-import Comparison.Runner.RunningPram;
+import Comparison.Runner.RunningParameter;
 import Comparison.ToolsExecation.SingleThread.Castat2Data;
 import Comparison.ToolsExecation.SingleThread.CphasesMatch;
 import Comparison.ToolsExecation.SingleThread.Refmac;
@@ -48,24 +48,24 @@ public class PhenixResultsAnalysis2 {
 			System.out.println("CphasesMatch Script Path in CCP4 folder");
 			System.exit(-1);
 		}
-		RunningPram.DataPath=args[0];//Data folder path 
-		RunningPram.LogsDirPhenix=args[1];// logs files for wArp
-		RunningPram.PDBsDirPhenix=args[2];// PDBS files that built by wArp
-		RunningPram.castat2Path=args[3];// castat2 path
-		RunningPram.CphasesMatchScriptPath=args[4];//CphasesMatch Script Path in CCP4 folder
-		RunningPram.RefmacPath=args[5];	
+		RunningParameter.DataPath=args[0];//Data folder path 
+		RunningParameter.LogsDirPhenix=args[1];// logs files for wArp
+		RunningParameter.PDBsDirPhenix=args[2];// PDBS files that built by wArp
+		RunningParameter.castat2Path=args[3];// castat2 path
+		RunningParameter.CphasesMatchScriptPath=args[4];//CphasesMatch Script Path in CCP4 folder
+		RunningParameter.RefmacPath=args[5];	
 		new PhenixResultsAnalysis2().AnalysingPhenixResults();
 		
 	}
 	public void AnalysingPhenixResults () throws IOException
 	{
 		
-		String DataPath=RunningPram.DataPath;//Data folder path 
-		String LogsDir=RunningPram.LogsDirPhenix;// logs files for Phenix
-		String PDBsDir=RunningPram.PDBsDirPhenix;// PDBS files that built by Phenix
-		String castat2Path=RunningPram.castat2Path;// castat2 path
-		String CphasesMatchScriptPath=RunningPram.CphasesMatchScriptPath;//CphasesMatch Script Path in CCP4 folder
-		String RefmacPath=RunningPram.RefmacPath;
+		String DataPath=RunningParameter.DataPath;//Data folder path 
+		String LogsDir=RunningParameter.LogsDirPhenix;// logs files for Phenix
+		String PDBsDir=RunningParameter.PDBsDirPhenix;// PDBS files that built by Phenix
+		String castat2Path=RunningParameter.castat2Path;// castat2 path
+		String CphasesMatchScriptPath=RunningParameter.CphasesMatchScriptPath;//CphasesMatch Script Path in CCP4 folder
+		String RefmacPath=RunningParameter.RefmacPath;
 		String LIBIN="FP=FP SIGFP=SIGFP FREE=FreeR_flag HLA=parrot.ABCD.A HLB=parrot.ABCD.B HLC=parrot.ABCD.C HLD=parrot.ABCD.D";
 		
 		
@@ -213,7 +213,7 @@ Container.add(DC);
 	
 			
 			
-Container=new DataSetChecking().CheckIfAllDataSetHasProcessed(Container , RunningPram.LogsDirPhenix,RunningPram.DataPath);
+Container=new DataSetChecking().CheckIfAllDataSetHasProcessed(Container , RunningParameter.LogsDirPhenix,RunningParameter.DataPath);
 			
 new ExcelSheet().FillInExcel(Container, "Phenix");
 	}

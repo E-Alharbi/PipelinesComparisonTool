@@ -20,7 +20,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import Comparison.Analyser.ExcelContents;
 import Comparison.Analyser.ExcelSheet;
 import Comparison.Analyser.REFMACFactors;
-import Comparison.Runner.RunningPram;
+import Comparison.Runner.RunningParameter;
 import Comparison.ToolsExecation.SingleThread.Castat2Data;
 import Comparison.ToolsExecation.SingleThread.CphasesMatch;
 import Comparison.ToolsExecation.SingleThread.Refmac;
@@ -50,24 +50,24 @@ public class BuccaneerResultsAnalysis extends Thread {
 			System.out.println("Refmac Path Script Path in CCP4 folder");
 			System.exit(-1);
 		}
-		RunningPram.DataPath=args[0];//Data folder path 
-		RunningPram.LogsDirBuccaneer=args[1];// logs files for Buccaneer
-		RunningPram.PDBsDirBuccaneer=args[2];// PDBS files that built by Buccaneer
-		RunningPram.castat2Path=args[3];// castat2 path
-		RunningPram.CphasesMatchScriptPath=args[4];//CphasesMatch Script Path in CCP4 folder
-		RunningPram.RefmacPath=args[5];	
+		RunningParameter.DataPath=args[0];//Data folder path 
+		RunningParameter.LogsDirBuccaneer=args[1];// logs files for Buccaneer
+		RunningParameter.PDBsDirBuccaneer=args[2];// PDBS files that built by Buccaneer
+		RunningParameter.castat2Path=args[3];// castat2 path
+		RunningParameter.CphasesMatchScriptPath=args[4];//CphasesMatch Script Path in CCP4 folder
+		RunningParameter.RefmacPath=args[5];	
 		
 		new BuccaneerResultsAnalysis().AnalysingBuccaneerResults();
 		
 	}
 	public void AnalysingBuccaneerResults() throws IOException
 	{
-		String DataPath=RunningPram.DataPath;//Data folder path 
-		String LogsDir=RunningPram.LogsDirBuccaneer;// logs files for Buccaneer
-		String PDBsDir=RunningPram.PDBsDirBuccaneer;// PDBS files that built by Buccaneer
-		String castat2Path=RunningPram.castat2Path;// castat2 path
-		String CphasesMatchScriptPath=RunningPram.CphasesMatchScriptPath;//CphasesMatch Script Path in CCP4 folder
-		String RefmacPath=RunningPram.RefmacPath;
+		String DataPath=RunningParameter.DataPath;//Data folder path 
+		String LogsDir=RunningParameter.LogsDirBuccaneer;// logs files for Buccaneer
+		String PDBsDir=RunningParameter.PDBsDirBuccaneer;// PDBS files that built by Buccaneer
+		String castat2Path=RunningParameter.castat2Path;// castat2 path
+		String CphasesMatchScriptPath=RunningParameter.CphasesMatchScriptPath;//CphasesMatch Script Path in CCP4 folder
+		String RefmacPath=RunningParameter.RefmacPath;
 		String LIBIN="FP=FP SIGFP=SIGFP FREE=FreeR_flag HLA=parrot.ABCD.A HLB=parrot.ABCD.B HLC=parrot.ABCD.C HLD=parrot.ABCD.D";
 		
 	
@@ -221,7 +221,7 @@ new RunBuccaneerMulti().WriteFileNameToList(file.getName().substring(0,file.getN
 				
 			 }
 		//}
-Container=new DataSetChecking().CheckIfAllDataSetHasProcessed(Container , RunningPram.LogsDirBuccaneer,RunningPram.DataPath);
+Container=new DataSetChecking().CheckIfAllDataSetHasProcessed(Container , RunningParameter.LogsDirBuccaneer,RunningParameter.DataPath);
 new ExcelSheet().FillInExcel(Container, "Buccaneer");
 	}
 

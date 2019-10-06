@@ -30,7 +30,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import Comparison.Analyser.PipelineLog;
 import Comparison.Analyser.REFMACFactors;
 import Comparison.Runner.RunComparison;
-import Comparison.Runner.RunningPram;
+import Comparison.Runner.RunningParameter;
 import Comparison.ToolsExecation.SingleThread.Refmac;
 
 public class RunCBuccaneer {
@@ -51,7 +51,7 @@ public class RunCBuccaneer {
 			System.exit(-1);
 		}
 		
-		RunningPram.DataPath=args[0];
+		RunningParameter.DataPath=args[0];
 		new RunCBuccaneer().RunBuccaneerTool();
 	}
 	
@@ -105,7 +105,7 @@ public class RunCBuccaneer {
 		RunCBuccaneer RBM=new RunCBuccaneer();
 		String CCP4Dir=System.getenv("CCP4");
 		//RunningPram.BuccaneerPipeLine=CCP4Dir+"/share/python/CCP4Dispatchers/buccaneer_pipeline.py";
-		RunningPram.BuccaneerPipeLine=CCP4Dir+"/share/python/CCP4Dispatchers/cbuccaneer.py";
+		RunningParameter.BuccaneerPipeLine=CCP4Dir+"/share/python/CCP4Dispatchers/cbuccaneer.py";
 		
 		//String BuccaneerPipeLine=args[1];
 		//System.out.print("DataPath: "+DataPath);
@@ -129,7 +129,7 @@ public class RunCBuccaneer {
 		 }
 		 
 		 
-     File[] files = new File(RunningPram.DataPath).listFiles();
+     File[] files = new File(RunningParameter.DataPath).listFiles();
      FilesNames=RBM.AddFileNameToList(FilesNames);
 		 for (File file : files) {
 	String CaseName=file.getName().replaceAll("."+FilenameUtils.getExtension(file.getName()),"");
@@ -195,7 +195,7 @@ public class RunCBuccaneer {
 	String pdbout=WorkingDir+"/build.pdb";	
 	String LIBINRefMac="FP=FP SIGFP=SIGFP FREE=FreeR_flag HLA=parrot.ABCD.A HLB=parrot.ABCD.B HLC=parrot.ABCD.C HLD=parrot.ABCD.D";
 	 String[]callAndArgs= {"python",
-			 RunningPram.BuccaneerPipeLine,
+			 RunningParameter.BuccaneerPipeLine,
 	"-seqin",seqin,
 	"-mtzin",mtzin,
 	"-colin-hl",colinhl,
@@ -244,8 +244,8 @@ public class RunCBuccaneer {
 	                
 		             }
 
-		              RunningPram.RefmacPath=System.getenv("CCP4")+"/bin/refmac5";
-			        REFMACFactors F=  new Refmac().RunRefmac(FilePathAndName+".mtz", WorkingDir+"/build.pdb",  RunningPram.RefmacPath, "CBuccaneer", WorkingDir+"/"+FileName,LIBINRefMac);
+		              RunningParameter.RefmacPath=System.getenv("CCP4")+"/bin/refmac5";
+			        REFMACFactors F=  new Refmac().RunRefmac(FilePathAndName+".mtz", WorkingDir+"/build.pdb",  RunningParameter.RefmacPath, "CBuccaneer", WorkingDir+"/"+FileName,LIBINRefMac);
 			        res.LogFile+=F.Log;
 			            for (int i =1 ; i< 25 ; ++i ) {
 			            
@@ -255,7 +255,7 @@ public class RunCBuccaneer {
 			            	String pdbin = WorkingDir+"/"+FileName+"Ref.pdb";
 			            	colinhl="HLACOMB,HLBCOMB,HLCCOMB,HLDCOMB";
 			            	 String [] callAndArgs1= {"python",
-			            			 RunningPram.BuccaneerPipeLine,
+			            			 RunningParameter.BuccaneerPipeLine,
 			            	"-seqin",seqin,
 			            	"-mtzin",mtzin,
 			            	"-colin-hl",colinhl,
@@ -291,8 +291,8 @@ public class RunCBuccaneer {
 				             }
 			            	 System.out.println("");
 			   System.out.println("##### Refmac is Running...  #####"); 
-			   System.out.println("##### Refmac Path: "+ RunningPram.RefmacPath); 
-			    F=  new Refmac().RunRefmac(FilePathAndName+".mtz", WorkingDir+"/build.pdb",  RunningPram.RefmacPath, "CBuccaneer", WorkingDir+"/"+FileName,LIBINRefMac);
+			   System.out.println("##### Refmac Path: "+ RunningParameter.RefmacPath); 
+			    F=  new Refmac().RunRefmac(FilePathAndName+".mtz", WorkingDir+"/build.pdb",  RunningParameter.RefmacPath, "CBuccaneer", WorkingDir+"/"+FileName,LIBINRefMac);
 			  System.out.println("##### End of Refmac Running  #####"); 
 			  res.LogFile+=F.Log;
 			            }

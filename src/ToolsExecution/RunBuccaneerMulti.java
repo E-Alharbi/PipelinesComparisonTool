@@ -26,7 +26,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import Comparison.Analyser.PipelineLog;
 import Comparison.Runner.RunComparison;
-import Comparison.Runner.RunningPram;
+import Comparison.Runner.RunningParameter;
 import NotUsed.ARPResultsAnalysis;
 
 public class RunBuccaneerMulti {
@@ -42,14 +42,14 @@ public class RunBuccaneerMulti {
 			System.exit(-1);
 		}
 		
-		RunningPram.DataPath=args[0];
+		RunningParameter.DataPath=args[0];
 		new RunBuccaneerMulti().RunBuccaneerTool();
 	}
 	public void RunBuccaneerTool() throws IOException
 	{
 		RunBuccaneerMulti RBM=new RunBuccaneerMulti();
 		String CCP4Dir=System.getenv("CCP4");
-		RunningPram.BuccaneerPipeLine=CCP4Dir+"/share/python/CCP4Dispatchers/buccaneer_pipeline.py";
+		RunningParameter.BuccaneerPipeLine=CCP4Dir+"/share/python/CCP4Dispatchers/buccaneer_pipeline.py";
 		//RunningPram.BuccaneerPipeLine=CCP4Dir+"/share/python/CCP4Dispatchers/cbuccaneer.py";
 		
 		//String BuccaneerPipeLine=args[1];
@@ -72,7 +72,7 @@ public class RunBuccaneerMulti {
 		 }
 		 
 		 
-     File[] files = new File(RunningPram.DataPath).listFiles();
+     File[] files = new File(RunningParameter.DataPath).listFiles();
      FilesNames=RBM.AddFileNameToList(FilesNames);
 		 for (File file : files) {
 	if(!FilesNames.contains(file.getName().substring(0,file.getName().indexOf('.')))){
@@ -111,7 +111,7 @@ public class RunBuccaneerMulti {
 	String BuccaneerFast="-buccaneer-fast";	
 	String BKV="verbose 5"; 
 	 String[]callAndArgs= {"python",
-			 RunningPram.BuccaneerPipeLine,
+			 RunningParameter.BuccaneerPipeLine,
 	"-seqin",seqin,
 	"-mtzin",mtzin,
 	"-colin-hl",colinhl,

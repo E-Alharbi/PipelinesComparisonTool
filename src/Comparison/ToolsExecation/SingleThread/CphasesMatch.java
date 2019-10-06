@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.Vector;
 
 import Comparison.Analyser.ExcelSheet;
-import Comparison.Runner.RunningPram;
+import Comparison.Runner.RunningParameter;
 
 public class CphasesMatch {
 
@@ -28,7 +28,7 @@ public class CphasesMatch {
 		 String E_mapCorrelation="";
 		         try {
 	String mtzin=FilePathAndName+".mtz";
-	String colinhl=RunningPram.PhasesUsedCPhasesMatch;
+	String colinhl=RunningParameter.PhasesUsedCPhasesMatch;
 	String colinfo="FP,SIGFP";
 	String colinhl2="sfcalc.ABCD.A,sfcalc.ABCD.B,sfcalc.ABCD.C,sfcalc.ABCD.D";
 	 

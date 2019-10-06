@@ -36,7 +36,7 @@ import Comparison.Analyser.ExcelSheet;
 import Comparison.Analyser.PipelineLog;
 import Comparison.Analyser.MultiThreadedAnalyser;
 import Comparison.Runner.RunComparison;
-import Comparison.Runner.RunningPram;
+import Comparison.Runner.RunningParameter;
 import NotUsed.ARPResultsAnalysis;
 import table.draw.LogFile;
 
@@ -54,8 +54,8 @@ public class PhenixRunner extends Tool{
 			System.exit(-1);
 		}
 		
-		RunningPram.DataPath=args[0];
-		RunningPram.PhenixAutobuild=args[1];
+		RunningParameter.DataPath=args[0];
+		RunningParameter.PhenixAutobuild=args[1];
 	
 		//new RunPhenixThreads().RunPhenixTool();
 	}
@@ -208,7 +208,7 @@ String seqin=FilePathAndName+".seq";
 //String labels=" FP SIGFP PHIB FOM parrot.ABCD.A parrot.ABCD.B parrot.ABCD.C parrot.ABCD.D FreeR_flag";
 
 	 String[]callAndArgs= {
-			 RunningPram.PhenixAutobuild,
+			 RunningParameter.PhenixAutobuild,
 	"data=",mtzin,
 	"seq_file=",seqin,
 	//"input_labels="," FP SIGFP PHIB FOM HLA HLB HLC HLD"

@@ -11,7 +11,7 @@ import java.util.Arrays;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
-import Comparison.Runner.RunningPram;
+import Comparison.Runner.RunningParameter;
 import NotUsed.ARPResultsAnalysis;
 
 public class PhenixTempCleaner {

@@ -34,7 +34,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import Comparison.Analyser.ExcelSheet;
 import Comparison.Analyser.PipelineLog;
 import Comparison.Runner.RunComparison;
-import Comparison.Runner.RunningPram;
+import Comparison.Runner.RunningParameter;
 import NotUsed.ARPResultsAnalysis;
 
 public class RunPhenix2 {
@@ -51,8 +51,8 @@ public class RunPhenix2 {
 			System.exit(-1);
 		}
 		
-		RunningPram.DataPath=args[0];
-		RunningPram.PhenixAutobuild=args[1];
+		RunningParameter.DataPath=args[0];
+		RunningParameter.PhenixAutobuild=args[1];
 	
 		new RunPhenix2().RunPhenixTool();
 	}
@@ -148,7 +148,7 @@ public class RunPhenix2 {
 	
    
     
-	File[] files = new File(RunningPram.DataPath).listFiles();
+	File[] files = new File(RunningParameter.DataPath).listFiles();
     FilesNames=AddFileNameToList(FilesNames);
 		 for (File file : files) {
 			 String CaseName=file.getName().replaceAll("."+FilenameUtils.getExtension(file.getName()),"");
@@ -212,7 +212,7 @@ String seqin=FilePathAndName+".seq";
 //String labels=" FP SIGFP PHIB FOM parrot.ABCD.A parrot.ABCD.B parrot.ABCD.C parrot.ABCD.D FreeR_flag";
 
 	 String[]callAndArgs= {
-			 RunningPram.PhenixAutobuild,
+			 RunningParameter.PhenixAutobuild,
 	"data=",mtzin,
 	"seq_file=",seqin,
 	//"input_labels="," FP SIGFP PHIB FOM HLA HLB HLC HLD"

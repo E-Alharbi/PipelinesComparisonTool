@@ -30,7 +30,7 @@ import Comparison.Analyser.ExcelSheet;
 import Comparison.Analyser.PipelineLog;
 import Comparison.Analyser.MultiThreadedAnalyser;
 import Comparison.Runner.RunComparison;
-import Comparison.Runner.RunningPram;
+import Comparison.Runner.RunningParameter;
 import Comparison.Utilities.DataSetChecking;
 import NotUsed.ARPResultsAnalysis;
 
@@ -48,9 +48,9 @@ public class RunPhenixMultiThreads implements Runnable {
 			System.exit(-1);
 		}
 		
-		RunningPram.DataPath=args[0];
-		RunningPram.PhenixAutobuild=args[1];
-		RunningPram.NumberofThreads=args[2];
+		RunningParameter.DataPath=args[0];
+		RunningParameter.PhenixAutobuild=args[1];
+		RunningParameter.NumberofThreads=args[2];
 		new RunPhenixMultiThreads().RunPhenixTool();
 	}
 public synchronized String GetFile() {
@@ -75,10 +75,10 @@ public synchronized String GetFile() {
 			 }
 		 
 			 RunPhenixMultiThreads Phenix = new RunPhenixMultiThreads();
-				int NumberpfThreads= Integer.valueOf(RunningPram.NumberofThreads);
+				int NumberpfThreads= Integer.valueOf(RunningParameter.NumberofThreads);
 					
 					
-					 File[] files = new File(RunningPram.DataPath).listFiles();
+					 File[] files = new File(RunningParameter.DataPath).listFiles();
 					 for (File file : files) {
 						 if(!Phenix.Files.contains(file.getName().substring(0,file.getName().indexOf('.'))))
 						 Phenix.Files.push(file.getName().substring(0,file.getName().indexOf('.'))); 
@@ -112,8 +112,8 @@ public synchronized String GetFile() {
 		 
 		         try {
 	
-String mtzin=RunningPram.DataPath+"/"+FileName+".mtz";
-String seqin=RunningPram.DataPath+"/"+FileName+".seq";
+String mtzin=RunningParameter.DataPath+"/"+FileName+".mtz";
+String seqin=RunningParameter.DataPath+"/"+FileName+".seq";
 //String[]callAndArgss= {"source","/Applications/ccp4-7.0/setup-scripts/ccp4.setup-sh"};
 //Process pp = Runtime.getRuntime().exec(callAndArgss);
 
@@ -121,7 +121,7 @@ String seqin=RunningPram.DataPath+"/"+FileName+".seq";
 String labels=" FP SIGFP PHIB FOM parrot.ABCD.A parrot.ABCD.B parrot.ABCD.C parrot.ABCD.D FreeR_flag";
 
 	 String[]callAndArgs= {
-			 RunningPram.PhenixAutobuild,
+			 RunningParameter.PhenixAutobuild,
 	"data=",mtzin,
 	"seq_file=",seqin,
 	//"input_labels="," FP SIGFP PHIB FOM HLA HLB HLC HLD"

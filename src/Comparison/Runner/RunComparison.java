@@ -21,6 +21,7 @@ import Comparison.ToolsExecation.SingleThread.Phenix;
 import Comparison.ToolsExecation.SingleThread.RunnerManager;
 import Comparison.ToolsExecation.SingleThread.cfakeAnom;
 import Comparison.ToolsExecation.SingleThread.chltofom;
+import Comparison.ToolsExecation.SingleThread.shelxe;
 import Comparison.Utilities.PhenixTempCleaner;
 import NotToSync.Buccaneeri1Testing;
 import NotUsed.ArpResultsAnalysis2;
@@ -60,11 +61,11 @@ public class RunComparison {
 		}
 		else{
 			String CCP4Dir=System.getenv("CCP4");
-			RunningPram.BuccaneerPipeLine=CCP4Dir+"/share/python/CCP4Dispatchers/buccaneer_pipeline.py";
+			RunningParameter.BuccaneerPipeLine=CCP4Dir+"/share/python/CCP4Dispatchers/buccaneer_pipeline.py";
 			 //RunningPram.CphasesMatchScriptPath=System.getenv("CCP4")+"/share/python/CCP4Dispatchers/cphasematch.py";//CphasesMatch Script Path in CCP4 folder
-			 RunningPram.CphasesMatchScriptPath=System.getenv("CCP4")+"/bin/cphasematch";//CphasesMatch Script Path in CCP4 folder
+			 RunningParameter.CphasesMatchScriptPath=System.getenv("CCP4")+"/bin/cphasematch";//CphasesMatch Script Path in CCP4 folder
 
-			 RunningPram.RefmacPath=System.getenv("CCP4")+"/bin/refmac5";
+			 RunningParameter.RefmacPath=System.getenv("CCP4")+"/bin/refmac5";
 			
 			 //System.out.println(" BuccaneerPipeLine "+RunningPram.BuccaneerPipeLine);
 			 //System.out.println(" CphasesMatchScriptPath "+RunningPram.CphasesMatchScriptPath);
@@ -177,7 +178,7 @@ public class RunComparison {
 				 }
 				if(checkArg(Parm,"Cfake")!=null){
 					
-					 RunningPram.CfakeAnom= checkArg(Parm,"Cfake");
+					 RunningParameter.CfakeAnom= checkArg(Parm,"Cfake");
 				 }
 					new cfakeAnom().Run(DataPath);
 			 }
@@ -199,14 +200,14 @@ public class RunComparison {
 					System.exit(-1);
 				}
 					 if(checkArg(Parm,"PhenixWorkingDirList")!=null){
-						 RunningPram.PhenixWorkingDirList=checkArg(Parm,"PhenixWorkingDirList");
+						 RunningParameter.PhenixWorkingDirList=checkArg(Parm,"PhenixWorkingDirList");
 						
 					 }
 					 if(checkArg(Parm,"LogsDirPhenix")!=null){
-						 RunningPram.LogsDirPhenix=checkArg(Parm,"LogsDirPhenix");
+						 RunningParameter.LogsDirPhenix=checkArg(Parm,"LogsDirPhenix");
 						
 					 }
-					new PhenixTempCleaner().CleanTemp(RunningPram.LogsDirPhenix,RunningPram.PhenixWorkingDirList);	
+					new PhenixTempCleaner().CleanTemp(RunningParameter.LogsDirPhenix,RunningParameter.PhenixWorkingDirList);	
 			 }
 			 else if(args[0].equals("RunBuccaneer")){
 				
@@ -221,7 +222,7 @@ public class RunComparison {
 					System.exit(-1);
 				}
 					 if(checkArg(Parm,"data")!=null){
-						 RunningPram.DataPath=checkArg(Parm,"data");
+						 RunningParameter.DataPath=checkArg(Parm,"data");
 						
 					 }
 					new RunBuccaneerMulti().RunBuccaneerTool();	
@@ -240,16 +241,16 @@ public class RunComparison {
 					System.exit(-1);
 				}
 					 if(checkArg(Parm,"data")!=null){
-						 RunningPram.DataPath=checkArg(Parm,"data");
+						 RunningParameter.DataPath=checkArg(Parm,"data");
 						
 					 }
 					 if(checkArg(Parm,"CrankPipeLine")!=null){
-						 RunningPram.CrankPipeLine=checkArg(Parm,"CrankPipeLine");
+						 RunningParameter.CrankPipeLine=checkArg(Parm,"CrankPipeLine");
 						
 					 }
 					 
 					 if(checkArg(Parm,"UsingRFree")!=null){
-						 RunningPram.UsingRFree=checkArg(Parm,"UsingRFree");
+						 RunningParameter.UsingRFree=checkArg(Parm,"UsingRFree");
 						
 					 }
 				//	new CrankRunner().RunCrank(new CrankRunner().PickACase());	
@@ -270,21 +271,21 @@ public class RunComparison {
 					System.exit(-1);
 				}
 					 if(checkArg(Parm,"data")!=null){
-						 RunningPram.DataPath=checkArg(Parm,"data");
+						 RunningParameter.DataPath=checkArg(Parm,"data");
 						
 					 }
 					 if(checkArg(Parm,"Buccaneeri2")!=null){
-						 RunningPram.Buccaneeri2PipeLine=checkArg(Parm,"Buccaneeri2");
+						 RunningParameter.Buccaneeri2PipeLine=checkArg(Parm,"Buccaneeri2");
 						
 					 }
 					 
 					 if(checkArg(Parm,"UsingRFree")!=null){
-						 RunningPram.UsingRFree=checkArg(Parm,"UsingRFree");
+						 RunningParameter.UsingRFree=checkArg(Parm,"UsingRFree");
 						
 					 }
 					 
 					 if(checkArg(Parm,"Iterations")!=null){
-						 RunningPram.BuccaneerIterations=checkArg(Parm,"Iterations");
+						 RunningParameter.BuccaneerIterations=checkArg(Parm,"Iterations");
 						
 					 }
 					//new Buccaneeri2().RunBuccaneerTool(new Buccaneeri2().PickACase());	
@@ -309,48 +310,90 @@ public class RunComparison {
 					System.out.println("cstat2= path for cstat2 core folder");
 					System.out.println("UsingMolProbity= T or F");
 					System.out.println("PhasesUsedCPhasesMatch= Default is (parrot.ABCD.A,parrot.ABCD.B,parrot.ABCD.C,parrot.ABCD.D)");
+					System.out.println("SlurmAccount= you project account in slurm [optional] ");
 					System.out.println("UsingRfree= T or F");
+					System.out.println("SlurmEmail= you email to receive notifications about jobs status [optional]   ");
+					System.out.println("CCP4ModuleLoadingCommand= for example module load chem/ccp4/7.0.066   ");
+					System.out.println("PhenixLoadingCommand= for example module load chem/phenix/1.14-3260   ");
 					System.exit(-1);
 				}
 					 if(checkArg(Parm,"Pipelines")!=null){
-						 RunningPram.Pipelines=checkArg(Parm,"Pipelines");
+						 RunningParameter.Pipelines=checkArg(Parm,"Pipelines");
 						
 					 }
 					 if(checkArg(Parm,"FOMDataPath")!=null){
-						 RunningPram.ChltomDataPath=checkArg(Parm,"FOMDataPath");
+						 RunningParameter.ChltomDataPath=checkArg(Parm,"FOMDataPath");
 						
 					 }
 					 if(checkArg(Parm,"DataPath")!=null){
-						 RunningPram.DataPath=checkArg(Parm,"DataPath");
+						 RunningParameter.DataPath=checkArg(Parm,"DataPath");
 						
 					 }
 					 if(checkArg(Parm,"ccp4i2Core")!=null){
-						 RunningPram.ccp4i2Core=checkArg(Parm,"ccp4i2Core");
+						 RunningParameter.ccp4i2Core=checkArg(Parm,"ccp4i2Core");
 						
 					 }
 					 if(checkArg(Parm,"DatafakeAnomalous")!=null){
-						 RunningPram.DatafakeAnomalous=checkArg(Parm,"DatafakeAnomalous");
+						 RunningParameter.DatafakeAnomalous=checkArg(Parm,"DatafakeAnomalous");
 						
 					 }
 					 if(checkArg(Parm,"cstat2")!=null){
-						 RunningPram.castat2Path=checkArg(Parm,"cstat2");
+						 RunningParameter.castat2Path=checkArg(Parm,"cstat2");
 						
 					 }
 					 
 					 if(checkArg(Parm,"UsingMolProbity")!=null){
-						 RunningPram.UsingMolProbity=checkArg(Parm,"UsingMolProbity");
+						 RunningParameter.UsingMolProbity=checkArg(Parm,"UsingMolProbity");
 						
 					 }
 					 
 					 if(checkArg(Parm,"PhasesUsedCPhasesMatch")!=null){
-						 RunningPram.PhasesUsedCPhasesMatch=checkArg(Parm,"PhasesUsedCPhasesMatch");
+						 RunningParameter.PhasesUsedCPhasesMatch=checkArg(Parm,"PhasesUsedCPhasesMatch");
 						
 					 }
 					 if(checkArg(Parm,"UsingRfree")!=null){
-						 RunningPram.UsingRFree=checkArg(Parm,"UsingRfree");
+						 RunningParameter.UsingRFree=checkArg(Parm,"UsingRfree");
 						
 					 }
-					 Vector <String>PipelinesNames=  new Vector<String>(Arrays.asList(RunningPram.Pipelines.split(",")));
+					 
+					 if(checkArg(Parm,"SlurmAccount")!=null){
+						 RunningParameter.SlurmAccount=checkArg(Parm,"SlurmAccount");
+						
+					 }
+					 
+					 if(checkArg(Parm,"SlurmEmail")!=null){
+						 RunningParameter.SlurmEmail=checkArg(Parm,"SlurmEmail");
+						
+					 }
+					 
+					 if(checkArg(Parm,"CCP4ModuleLoadingCommand")!=null){
+						 RunningParameter.CCP4ModuleLoadingCommand=checkArg(Parm,"CCP4ModuleLoadingCommand");
+						
+					 }
+					 
+					 if(checkArg(Parm,"PhenixLoadingCommand")!=null){
+						 RunningParameter.PhenixLoadingCommand=checkArg(Parm,"PhenixLoadingCommand");
+						
+					 }
+					 if(checkArg(Parm,"ShelxeData")!=null){
+						 RunningParameter.ShelxeData=checkArg(Parm,"ShelxeData");
+						
+					 }
+					 
+					 
+					 if(checkArg(Parm,"SlurmAccount")==null) {
+						 System.out.println("Warning: you do not set SlurmAccount");
+					 }
+					 if(checkArg(Parm,"SlurmEmail")==null) {
+						 System.out.println("Warning: you do not set SlurmEmail");
+					 }
+					 if(checkArg(Parm,"CCP4ModuleLoadingCommand")==null) {
+						 System.out.println("CCP4ModuleLoadingCommand="+RunningParameter.CCP4ModuleLoadingCommand+" default is used");
+					 }
+					 if(checkArg(Parm,"PhenixLoadingCommand")==null) {
+						 System.out.println("PhenixLoadingCommand="+RunningParameter.PhenixLoadingCommand+" default is used");
+					 }
+					 Vector <String>PipelinesNames=  new Vector<String>(Arrays.asList(RunningParameter.Pipelines.split(",")));
 					
 					new Preparer().Prepare(PipelinesNames);	
 			 }
@@ -366,14 +409,18 @@ public class RunComparison {
 					System.out.println("The required parameters are : ");
 					System.out.println("ToolName= the path for tool script");
 					System.out.println("PDBDir= the path for tool PDBs. If not provided, will create scripts for the all files");
+					
+						
 					System.exit(-1);
 				}
 				if(checkArg(Parm,"PDBDir")!=null)	 
-					RunningPram.PDBsDir=checkArg(Parm,"PDBDir");
+					RunningParameter.PDBsDir=checkArg(Parm,"PDBDir");
 				if(checkArg(Parm,"PDBDir")==null)
-					RunningPram.PDBsDir=null;
+					RunningParameter.PDBsDir=null;
 				
-					new JobCreater().CreateJobs(checkArg(Parm,"ToolName"));
+				
+				
+				new JobCreater().CreateJobs(checkArg(Parm,"ToolName"));
 			 }
 			  
 			 else if(args[0].equals("Cleaner")){
@@ -393,24 +440,24 @@ public class RunComparison {
 				}
 				
 				if(checkArg(Parm,"PDBDir")!=null)	 
-					RunningPram.PDBsDir=checkArg(Parm,"PDBDir");
+					RunningParameter.PDBsDir=checkArg(Parm,"PDBDir");
 				if(checkArg(Parm,"PDBDir")==null)
-					RunningPram.PDBsDir=null;
+					RunningParameter.PDBsDir=null;
 				
 				if(checkArg(Parm,"LogsDir")!=null)	 
-					RunningPram.LogsDir=checkArg(Parm,"LogsDir");
+					RunningParameter.LogsDir=checkArg(Parm,"LogsDir");
 				if(checkArg(Parm,"LogsDir")==null)
-					RunningPram.LogsDir=null;
+					RunningParameter.LogsDir=null;
 				
 				if(checkArg(Parm,"LogsDirInter")!=null)	 
-					RunningPram.IntermediateLogs=checkArg(Parm,"LogsDirInter");
+					RunningParameter.IntermediateLogs=checkArg(Parm,"LogsDirInter");
 				if(checkArg(Parm,"LogsDirInter")==null)
-					RunningPram.IntermediateLogs=null;
+					RunningParameter.IntermediateLogs=null;
 				
 				if(checkArg(Parm,"PDBDirInter")!=null)	 
-					RunningPram.IntermediatePDBs=checkArg(Parm,"PDBDirInter");
+					RunningParameter.IntermediatePDBs=checkArg(Parm,"PDBDirInter");
 				if(checkArg(Parm,"PDBDirInter")==null)
-					RunningPram.IntermediatePDBs=null;
+					RunningParameter.IntermediatePDBs=null;
 				
 					new CleanerForRunner().Clean();
 			 }
@@ -431,7 +478,8 @@ public class RunComparison {
 							System.out.println("ExcelDir= the path for root folder that contain three folders: hancs, mrncs and nonce. Each contains excel files belong to the same DM type. At less you need a one folder (such as noncs) in the root folder ");
 							System.exit(-1);
 						}
-					 String [] p =  {checkArg(Parm,"ExcelDir")};
+					 String [] p =  {checkArg(Parm,"ExcelDir"),checkArg(Parm,"UpdateCom"),checkArg(Parm,"FillInMissingData"),checkArg(Parm,"ExcludeFromOrginal"),checkArg(Parm,"ExcludeFromSynthetic"),checkArg(Parm,"SetRfreeToZero")};
+					 
 						new LatexTablesCreater().main( p);
 				 }
 				  
@@ -452,14 +500,14 @@ public class RunComparison {
 					System.exit(-1);
 				}
 					 if(checkArg(Parm,"shScriptPath")!=null){
-						 RunningPram.shScriptPath=checkArg(Parm,"shScriptPath");
+						 RunningParameter.shScriptPath=checkArg(Parm,"shScriptPath");
 						
 					 }
 					 if(checkArg(Parm,"NumberofTimes")!=null){
-						 RunningPram.NoofTime=checkArg(Parm,"NumberofTimes");
+						 RunningParameter.NoofTime=checkArg(Parm,"NumberofTimes");
 						
 					 }
-					new RunnerManager().ScriptRunnerManager(RunningPram.shScriptPath, Integer.parseInt(RunningPram.NoofTime.trim()));
+					new RunnerManager().ScriptRunnerManager(RunningParameter.shScriptPath, Integer.parseInt(RunningParameter.NoofTime.trim()));
 			 }
 			  
 			  
@@ -478,19 +526,53 @@ public class RunComparison {
 					System.exit(-1);
 				}
 					 if(checkArg(Parm,"data")!=null){
-						 RunningPram.DataPath=checkArg(Parm,"data");
+						 RunningParameter.DataPath=checkArg(Parm,"data");
 						
 					 }
 					 if(checkArg(Parm,"Iterations")!=null){
-						 RunningPram.BuccaneerIterations=checkArg(Parm,"Iterations");
+						 RunningParameter.BuccaneerIterations=checkArg(Parm,"Iterations");
 						
 					 }
 					 
 					 if(checkArg(Parm,"UsingRFree")!=null){
-						 RunningPram.UsingRFree=checkArg(Parm,"UsingRFree");
+						 RunningParameter.UsingRFree=checkArg(Parm,"UsingRFree");
+						
+					 }
+					 if(checkArg(Parm,"UseInitialModels")!=null) {
+						 RunningParameter.UseInitialModels=checkArg(Parm,"UseInitialModels"); 
+					 }
+					 if(checkArg(Parm,"InitialModels")!=null){
+						 RunningParameter.InitialModels=checkArg(Parm,"InitialModels");
 						
 					 }
 					 new Buccaneeri1().RunBuccaneerTool();
+			 }
+			  
+			  
+			 else if(args[0].equals("RunShelxe")){
+					
+				 
+					
+				 Parm.addAll(Arrays.asList(args));
+			
+				if(checkArg(Parm,"data")==null || checkArg(Parm,"Shelxe")==null){
+					System.out.println("One or more of the required parameters is missing! ");
+					System.out.println("The required parameters are : ");
+					System.out.println("data= the path for data folder");
+					System.out.println("Shelxe= path to shelxe file");
+					System.exit(-1);
+				}
+					 if(checkArg(Parm,"data")!=null){
+						 RunningParameter.DataPath=checkArg(Parm,"data");
+						
+					 }
+					 if(checkArg(Parm,"Shelxe")!=null){
+						 RunningParameter.Shelxe=checkArg(Parm,"Shelxe");
+						
+					 }
+					 
+					 
+					 new shelxe().RunshelxeTool();
 			 }
 			 else if(args[0].equals("Buccaneeri1TestMode")){
 					
@@ -506,16 +588,16 @@ public class RunComparison {
 					System.exit(-1);
 				}
 					 if(checkArg(Parm,"data")!=null){
-						 RunningPram.DataPath=checkArg(Parm,"data");
+						 RunningParameter.DataPath=checkArg(Parm,"data");
 						
 					 }
 					 if(checkArg(Parm,"Iterations")!=null){
-						 RunningPram.BuccaneerIterations=checkArg(Parm,"Iterations");
+						 RunningParameter.BuccaneerIterations=checkArg(Parm,"Iterations");
 						
 					 }
 					 
 					 if(checkArg(Parm,"UsingRFree")!=null){
-						 RunningPram.UsingRFree=checkArg(Parm,"UsingRFree");
+						 RunningParameter.UsingRFree=checkArg(Parm,"UsingRFree");
 						
 					 }
 					//new RunCBuccaneer().RunBuccaneerTool(	new RunCBuccaneer().PickACase());
@@ -537,7 +619,7 @@ public class RunComparison {
 					System.exit(-1);
 				}
 					 if(checkArg(Parm,"data")!=null){
-						 RunningPram.DataPath=checkArg(Parm,"data");
+						 RunningParameter.DataPath=checkArg(Parm,"data");
 						
 					 }
 					new RunCBuccaneerTestingProupse().RunBuccaneerTool();
@@ -558,24 +640,31 @@ public class RunComparison {
 					System.exit(-1);
 				}
 					 if(checkArg(Parm,"data")!=null){
-						 RunningPram.DataPath=checkArg(Parm,"data");
+						 RunningParameter.DataPath=checkArg(Parm,"data");
 						
 					 }
 					 if(checkArg(Parm,"wArpAutotracing")!=null){
-						 RunningPram.wArpAutotracing=checkArg(Parm,"wArpAutotracing");
+						 RunningParameter.wArpAutotracing=checkArg(Parm,"wArpAutotracing");
 						
 					 }
 					 if(checkArg(Parm,"UseBuccModels")!=null){
-						 RunningPram.UseBuccModels=checkArg(Parm,"UseBuccModels");
-						
+						 //RunningPram.UseBuccModels=checkArg(Parm,"UseBuccModels");
+						 RunningParameter.UseInitialModels=checkArg(Parm,"UseBuccModels");
+					 }
+					 if(checkArg(Parm,"UseInitialModels")!=null) {
+						 RunningParameter.UseInitialModels=checkArg(Parm,"UseInitialModels"); 
 					 }
 					 if(checkArg(Parm,"BuccModels")!=null){
-						 RunningPram.BuccModels=checkArg(Parm,"BuccModels");
+						 //RunningPram.BuccModels=checkArg(Parm,"BuccModels");
+						 RunningParameter.InitialModels=checkArg(Parm,"BuccModels");
 						
 					 }
-					 
+					 if(checkArg(Parm,"InitialModels")!=null){
+						 RunningParameter.InitialModels=checkArg(Parm,"InitialModels");
+						
+					 }
 					 if(checkArg(Parm,"UsingRFree")!=null){
-						 RunningPram.UsingRFree=checkArg(Parm,"UsingRFree");
+						 RunningParameter.UsingRFree=checkArg(Parm,"UsingRFree");
 						
 					 }
 
@@ -598,19 +687,28 @@ public class RunComparison {
 					System.exit(-1);
 				}
 					 if(checkArg(Parm,"data")!=null){
-						 RunningPram.DataPath=checkArg(Parm,"data");
+						 RunningParameter.DataPath=checkArg(Parm,"data");
 						
 					 }
 					 if(checkArg(Parm,"wArpAutotracing")!=null){
-						 RunningPram.wArpAutotracing=checkArg(Parm,"wArpAutotracing");
+						 RunningParameter.wArpAutotracing=checkArg(Parm,"wArpAutotracing");
 						
 					 }
 					 if(checkArg(Parm,"UseBuccModels")!=null){
-						 RunningPram.UseBuccModels=checkArg(Parm,"UseBuccModels");
+						 //RunningPram.UseBuccModels=checkArg(Parm,"UseBuccModels");
+						 RunningParameter.UseInitialModels=checkArg(Parm,"UseBuccModels");
 						
 					 }
+					 if(checkArg(Parm,"UseInitialModels")!=null) {
+						 RunningParameter.UseInitialModels=checkArg(Parm,"UseInitialModels"); 
+					 }
 					 if(checkArg(Parm,"BuccModels")!=null){
-						 RunningPram.BuccModels=checkArg(Parm,"BuccModels");
+						 //RunningPram.BuccModels=checkArg(Parm,"BuccModels");
+						 RunningParameter.InitialModels=checkArg(Parm,"BuccModels");
+						
+					 }
+					 if(checkArg(Parm,"InitialModels")!=null){
+						 RunningParameter.InitialModels=checkArg(Parm,"InitialModels");
 						
 					 }
 
@@ -634,32 +732,45 @@ public class RunComparison {
 					System.exit(-1);
 				}
 					if(checkArg(Parm,"data")!= null){
-						 RunningPram.DataPath=checkArg(Parm,"data");
+						 RunningParameter.DataPath=checkArg(Parm,"data");
 						 
 					 }
 				
 					 if(checkArg(Parm,"PhenixAutobuild")!= null){
-						 RunningPram.PhenixAutobuild=checkArg(Parm,"PhenixAutobuild");
+						 RunningParameter.PhenixAutobuild=checkArg(Parm,"PhenixAutobuild");
 						
 					 }
 					 if(checkArg(Parm,"UsingRFree")!= null){
-						 RunningPram.UsingRFree=checkArg(Parm,"UsingRFree");
+						 RunningParameter.UsingRFree=checkArg(Parm,"UsingRFree");
 						
 					 }
 					 if(checkArg(Parm,"Phases")!= null){
-						 RunningPram.PhenixPhases=checkArg(Parm,"Phases");
+						 RunningParameter.PhenixPhases=checkArg(Parm,"Phases");
 						 
 					 }
 					 
 					 
 					 if(checkArg(Parm,"DensityModified")!= null){
-						 RunningPram.DensityModifiedPhenix=checkArg(Parm,"DensityModified");
+						 RunningParameter.DensityModifiedPhenix=checkArg(Parm,"DensityModified");
 						 
 					 }
 					 
-					 RunningPram.PhenixPhases= RunningPram.PhenixPhases.replaceAll(",", " ");
-					 System.out.println("data = "+RunningPram.DataPath);
-					 System.out.println("PhenixAutobuild = "+RunningPram.PhenixAutobuild);
+					 if(checkArg(Parm,"UseInitialModels")!=null) {
+						 RunningParameter.UseInitialModels=checkArg(Parm,"UseInitialModels"); 
+					 }
+					 if(checkArg(Parm,"InitialModels")!=null){
+						 RunningParameter.InitialModels=checkArg(Parm,"InitialModels");
+						
+					 }
+					 if(checkArg(Parm,"UsuingPhenixRebuild_in_place")!=null) {
+						 RunningParameter.UsingPhenixRebuild_in_place=checkArg(Parm,"UsuingPhenixRebuild_in_place"); 
+					 }
+					 if(checkArg(Parm,"PhenixRebuild_in_place")!=null) {
+						 RunningParameter.PhenixRebuild_in_place=checkArg(Parm,"PhenixRebuild_in_place"); 
+					 }
+					 RunningParameter.PhenixPhases= RunningParameter.PhenixPhases.replaceAll(",", " ");
+					 System.out.println("data = "+RunningParameter.DataPath);
+					 System.out.println("PhenixAutobuild = "+RunningParameter.PhenixAutobuild);
 					
 					new Phenix().RunPhenixTool();
 			 }
@@ -680,20 +791,20 @@ public class RunComparison {
 					System.exit(-1);
 				}
 					if(checkArg(Parm,"data")!= null){
-						 RunningPram.DataPath=checkArg(Parm,"data");
+						 RunningParameter.DataPath=checkArg(Parm,"data");
 						 
 					 }
 				
 					 if(checkArg(Parm,"PhenixAutobuild")!= null){
-						 RunningPram.PhenixAutobuild=checkArg(Parm,"PhenixAutobuild");
+						 RunningParameter.PhenixAutobuild=checkArg(Parm,"PhenixAutobuild");
 						
 					 }
 					 if(checkArg(Parm,"Threads")!=null){
-						 RunningPram.NumberofThreads=checkArg(Parm,"Threads");
+						 RunningParameter.NumberofThreads=checkArg(Parm,"Threads");
 						
 					 }
-					 System.out.println("data = "+RunningPram.DataPath);
-					 System.out.println("PhenixAutobuild = "+RunningPram.PhenixAutobuild);
+					 System.out.println("data = "+RunningParameter.DataPath);
+					 System.out.println("PhenixAutobuild = "+RunningParameter.PhenixAutobuild);
 					 new RunPhenixMultiThreads().RunPhenixTool(); 
 			 }
 			 
@@ -717,20 +828,20 @@ public class RunComparison {
 					System.exit(-1);
 				}
 					 if(checkArg(Parm,"data")!=null){
-						 RunningPram.DataPath=checkArg(Parm,"data");
+						 RunningParameter.DataPath=checkArg(Parm,"data");
 						
 					 }
 					
 					 if(checkArg(Parm,"castat2Path")!=null){
-						 RunningPram.castat2Path=checkArg(Parm,"castat2Path");
+						 RunningParameter.castat2Path=checkArg(Parm,"castat2Path");
 						
 					 }
 					 if(checkArg(Parm,"LogsDir")!=null){
-						 RunningPram.LogsDirBuccaneer=checkArg(Parm,"LogsDir");
+						 RunningParameter.LogsDirBuccaneer=checkArg(Parm,"LogsDir");
 						
 					 }
 					 if(checkArg(Parm,"PDBsDir")!=null){
-						 RunningPram.PDBsDirBuccaneer=checkArg(Parm,"PDBsDir");
+						 RunningParameter.PDBsDirBuccaneer=checkArg(Parm,"PDBsDir");
 						
 					 }
 					
@@ -762,50 +873,50 @@ public class RunComparison {
 					System.exit(-1);
 				}
 					 if(checkArg(Parm,"data")!=null){
-						 RunningPram.DataPath=checkArg(Parm,"data");
+						 RunningParameter.DataPath=checkArg(Parm,"data");
 						
 					 }
 					
 					 if(checkArg(Parm,"castat2Path")!=null){
-						 RunningPram.castat2Path=checkArg(Parm,"castat2Path");
+						 RunningParameter.castat2Path=checkArg(Parm,"castat2Path");
 						
 					 }
 					 if(checkArg(Parm,"LogsDir")!=null){
-						 RunningPram.LogsDir=checkArg(Parm,"LogsDir");
+						 RunningParameter.LogsDir=checkArg(Parm,"LogsDir");
 						
 					 }
 					 if(checkArg(Parm,"PDBsDir")!=null){
-						 RunningPram.PDBsDir=checkArg(Parm,"PDBsDir");
+						 RunningParameter.PDBsDir=checkArg(Parm,"PDBsDir");
 						
 					 }
 					 if(checkArg(Parm,"Threads")!=null){
-						 RunningPram.NumberofThreads=checkArg(Parm,"Threads");
+						 RunningParameter.NumberofThreads=checkArg(Parm,"Threads");
 						
 					 }
 					 if(checkArg(Parm,"ToolName")!=null){
-						 RunningPram.ToolName=checkArg(Parm,"ToolName");
+						 RunningParameter.ToolName=checkArg(Parm,"ToolName");
 						
 					 }
 					 if(checkArg(Parm,"IPDBsDir")!=null){
-						 RunningPram.IntermediatePDBs=checkArg(Parm,"IPDBsDir");
+						 RunningParameter.IntermediatePDBs=checkArg(Parm,"IPDBsDir");
 						
 					 }
 					 
 					 if(checkArg(Parm,"ILogsDir")!=null){
-						 RunningPram.IntermediateLogs=checkArg(Parm,"ILogsDir");
+						 RunningParameter.IntermediateLogs=checkArg(Parm,"ILogsDir");
 						
 					 }
 					 if(checkArg(Parm,"MolProbity")!=null){
-						 RunningPram.PhenixMolProbity=checkArg(Parm,"MolProbity");
+						 RunningParameter.PhenixMolProbity=checkArg(Parm,"MolProbity");
 						
 					 }
 					 if(checkArg(Parm,"UsingMolProbity")!=null){
-						 RunningPram.UsingMolProbity=checkArg(Parm,"UsingMolProbity");
+						 RunningParameter.UsingMolProbity=checkArg(Parm,"UsingMolProbity");
 						
 					 }
 					 
 					 if(checkArg(Parm,"PhasesUsedCPhasesMatch")!=null){
-						 RunningPram.PhasesUsedCPhasesMatch=checkArg(Parm,"PhasesUsedCPhasesMatch");
+						 RunningParameter.PhasesUsedCPhasesMatch=checkArg(Parm,"PhasesUsedCPhasesMatch");
 						
 					 }
 						new MultiThreadedAnalyser().Analyses();
@@ -831,28 +942,28 @@ public class RunComparison {
 		System.exit(-1);
 	}
 		 if(checkArg(Parm,"data")!=null){
-			 RunningPram.DataPath=checkArg(Parm,"data");
+			 RunningParameter.DataPath=checkArg(Parm,"data");
 			
 		 }
 		
 		 if(checkArg(Parm,"MolProbity")!=null){
-			 RunningPram.PhenixMolProbity=checkArg(Parm,"MolProbity");
+			 RunningParameter.PhenixMolProbity=checkArg(Parm,"MolProbity");
 			
 		 }
 		 if(checkArg(Parm,"PDBs")!=null){
-			 RunningPram.PDBs=checkArg(Parm,"PDBs");
+			 RunningParameter.PDBs=checkArg(Parm,"PDBs");
 			
 		 }
 		 if(checkArg(Parm,"Excel")!=null){
-			 RunningPram.ExcellPath=checkArg(Parm,"Excel");
+			 RunningParameter.ExcellPath=checkArg(Parm,"Excel");
 			
 		 }
 		 if(checkArg(Parm,"Threads")!=null){
-			 RunningPram.NumberofThreads=checkArg(Parm,"Threads");
+			 RunningParameter.NumberofThreads=checkArg(Parm,"Threads");
 			
 		 }
 		 if(checkArg(Parm,"ToolName")!=null){
-			 RunningPram.ToolName=checkArg(Parm,"ToolName");
+			 RunningParameter.ToolName=checkArg(Parm,"ToolName");
 			
 		 }
 		
@@ -876,20 +987,20 @@ public class RunComparison {
 					System.exit(-1);
 				}
 					 if(checkArg(Parm,"data")!=null){
-						 RunningPram.DataPath=checkArg(Parm,"data");
+						 RunningParameter.DataPath=checkArg(Parm,"data");
 						
 					 }
 					
 					 if(checkArg(Parm,"castat2Path")!=null){
-						 RunningPram.castat2Path=checkArg(Parm,"castat2Path");
+						 RunningParameter.castat2Path=checkArg(Parm,"castat2Path");
 						
 					 }
 					 if(checkArg(Parm,"LogsDir")!=null){
-						 RunningPram.LogsDirwArp=checkArg(Parm,"LogsDir");
+						 RunningParameter.LogsDirwArp=checkArg(Parm,"LogsDir");
 						
 					 }
 					 if(checkArg(Parm,"PDBsDir")!=null){
-						 RunningPram.PDBsDirwArp=checkArg(Parm,"PDBsDir");
+						 RunningParameter.PDBsDirwArp=checkArg(Parm,"PDBsDir");
 						
 					 }
 					
@@ -914,20 +1025,20 @@ public class RunComparison {
 					System.exit(-1);
 				}
 					 if(checkArg(Parm,"data")!=null){
-						 RunningPram.DataPath=checkArg(Parm,"data");
+						 RunningParameter.DataPath=checkArg(Parm,"data");
 						
 					 }
 					
 					 if(checkArg(Parm,"castat2Path")!=null){
-						 RunningPram.castat2Path=checkArg(Parm,"castat2Path");
+						 RunningParameter.castat2Path=checkArg(Parm,"castat2Path");
 						
 					 }
 					 if(checkArg(Parm,"LogsDir")!=null){
-						 RunningPram.LogsDirPhenix=checkArg(Parm,"LogsDir");
+						 RunningParameter.LogsDirPhenix=checkArg(Parm,"LogsDir");
 						
 					 }
 					 if(checkArg(Parm,"PDBsDir")!=null){
-						 RunningPram.PDBsDirPhenix=checkArg(Parm,"PDBsDir");
+						 RunningParameter.PDBsDirPhenix=checkArg(Parm,"PDBsDir");
 						
 					 }
 					

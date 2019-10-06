@@ -27,7 +27,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import Comparison.Analyser.PipelineLog;
 import Comparison.Analyser.REFMACFactors;
 import Comparison.Runner.RunComparison;
-import Comparison.Runner.RunningPram;
+import Comparison.Runner.RunningParameter;
 import NotUsed.ARPResultsAnalysis;
 
 public class RunCBuccaneerTestingProupse {
@@ -43,7 +43,7 @@ public class RunCBuccaneerTestingProupse {
 			System.exit(-1);
 		}
 		
-		RunningPram.DataPath=args[0];
+		RunningParameter.DataPath=args[0];
 		new RunCBuccaneerTestingProupse().RunBuccaneerTool();
 	}
 	public void RunBuccaneerTool() throws IOException
@@ -52,7 +52,7 @@ public class RunCBuccaneerTestingProupse {
 		RunCBuccaneerTestingProupse RBM=new RunCBuccaneerTestingProupse();
 		String CCP4Dir=System.getenv("CCP4");
 		//RunningPram.BuccaneerPipeLine=CCP4Dir+"/share/python/CCP4Dispatchers/buccaneer_pipeline.py";
-		RunningPram.BuccaneerPipeLine=CCP4Dir+"/share/python/CCP4Dispatchers/cbuccaneer.py";
+		RunningParameter.BuccaneerPipeLine=CCP4Dir+"/share/python/CCP4Dispatchers/cbuccaneer.py";
 		
 		//String BuccaneerPipeLine=args[1];
 		//System.out.print("DataPath: "+DataPath);
@@ -74,7 +74,7 @@ public class RunCBuccaneerTestingProupse {
 		 }
 		 
 		 
-     File[] files = new File(RunningPram.DataPath).listFiles();
+     File[] files = new File(RunningParameter.DataPath).listFiles();
      FilesNames=RBM.AddFileNameToList(FilesNames);
 		 for (File file : files) {
 	if(!FilesNames.contains(file.getName().substring(0,file.getName().indexOf('.')))){
@@ -117,7 +117,7 @@ public class RunCBuccaneerTestingProupse {
 	String pdbout=WorkingDir+"/build.pdb";	
 	String LIBINRefMac="FP=FP SIGFP=SIGFP FREE=FreeR_flag HLA=parrot.ABCD.A HLB=parrot.ABCD.B HLC=parrot.ABCD.C HLD=parrot.ABCD.D";
 	 String[]callAndArgs= {"python",
-			 RunningPram.BuccaneerPipeLine,
+			 RunningParameter.BuccaneerPipeLine,
 	"-seqin",seqin,
 	"-mtzin",mtzin,
 	"-colin-hl",colinhl,

@@ -11,7 +11,7 @@ import java.util.Vector;
 import Comparison.Analyser.ExcelContents;
 import Comparison.Analyser.ExcelLoader;
 import Comparison.Analyser.ExcelSheet;
-import Comparison.Runner.RunningPram;
+import Comparison.Runner.RunningParameter;
 
 public class UpdateExcel {
 

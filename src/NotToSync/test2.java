@@ -16,9 +16,9 @@ public class test2 {
 		ExcelLoader e = new ExcelLoader();
 		
 		// To compare ArpWithRFree with ArpWithNoRFree
-		Vector<ExcelContents> ArpWithRFree = e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/Run13UpdatingReso/All/OrginalAndSynthetic/noncs/Phenix.xlsx.xlsx");
+		Vector<ExcelContents> ArpWithRFree = e.ReadExcel("/Users/emadalharbi/Downloads/Buccaneeri1I5U.xlsx");
 		
-		Vector<ExcelContents> ArpWithNoRFree = e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun3ArpNoFree/noncs/Phenix.xlsx.xlsx.xlsx.xlsx.xlsx.xlsx");
+		Vector<ExcelContents> ArpWithNoRFree = e.ReadExcel("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRun3ArpNoFreeNoCrankRemovedAvgTestFixedLatexBugs/noncs/Buccaneeri1I5.xlsx.xlsx.xlsx.xlsx.xlsx.xlsx");
 		
 		int better=0;
 		int better10=0;
@@ -137,12 +137,12 @@ public class test2 {
 					 if(Math.round(Double.parseDouble(d.Completeness)) -20 > Math.round(Double.parseDouble(dd.Completeness))) {
 							
 							worse20++;
-							System.out.println(d.PDB_ID);
-							System.out.println(dd.Resolution);
-							System.out.println(d.Completeness);
-							System.out.println(dd.Completeness);
-							System.out.println(d.TimeTaking);
-							System.out.println(dd.TimeTaking);
+							//System.out.println(d.PDB_ID);
+							//System.out.println(dd.Resolution);
+							//System.out.println(d.Completeness);
+							//System.out.println(dd.Completeness);
+							//System.out.println(d.TimeTaking);
+							//System.out.println(dd.TimeTaking);
 							
 							
 						}
@@ -173,11 +173,17 @@ public class test2 {
 					 if(Double.parseDouble(dd.R_factor0Cycle) == Double.parseDouble(dd.R_free0Cycle))  {
 						 EqualRworkAndRfree++;
 						
+							
+						
 					 }
 					 
 					 if(Double.parseDouble(dd.R_factor0Cycle) > Double.parseDouble(dd.R_free0Cycle))  {
 						 EqualRworkHigherRfree++;
-						
+						 System.out.println("PDB "+dd.PDB_ID);
+							System.out.println(dd.Resolution);
+							System.out.println(dd.Completeness);
+							
+							System.out.println(dd.TimeTaking);
 					 }
 					 
 					 if(Double.parseDouble(dd.R_factor0Cycle) < Double.parseDouble(dd.R_free0Cycle))  {
@@ -185,14 +191,14 @@ public class test2 {
 						
 					 }
 					 
-					 if(Double.parseDouble(dd.R_factor0Cycle) == Double.parseDouble(d.R_factor0Cycle))  {
-						 Rwork++;
+					 //if(Double.parseDouble(dd.R_factor0Cycle) == Double.parseDouble(d.R_factor0Cycle))  {
+					//	 Rwork++;
 						
-					 }
-					 if(Double.parseDouble(dd.R_free0Cycle) == Double.parseDouble(d.R_free0Cycle))  {
-						 Rfree++;
+					 //}
+					// if(Double.parseDouble(dd.R_free0Cycle) == Double.parseDouble(d.R_free0Cycle))  {
+					//	 Rfree++;
 						
-					 }
+					 //}
 					 
 				}
 			}

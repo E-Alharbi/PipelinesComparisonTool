@@ -13,7 +13,7 @@ import java.util.Vector;
 
 import org.apache.commons.io.FilenameUtils;
 
-import Comparison.Runner.RunningPram;
+import Comparison.Runner.RunningParameter;
 import NotUsed.ARPResultsAnalysis;
 
 public  class Tool {
@@ -48,7 +48,7 @@ public  class Tool {
 			
 		 System.out.println("PickACase() "+this.getClass().getSimpleName());
 			Vector<String> FilesNames= new Vector <String>();
-			File[] files = new File(RunningPram.DataPath).listFiles();
+			File[] files = new File(RunningParameter.DataPath).listFiles();
 			
 		    FilesNames=AddFileNameToList(FilesNames);
 		    System.out.println(FilesNames.size());

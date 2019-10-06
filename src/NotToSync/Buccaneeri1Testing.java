@@ -33,7 +33,7 @@ import Comparison.Analyser.REFMACFactors;
 import Comparison.Analyser.MultiThreadedAnalyser;
 import Comparison.Runner.Preparer;
 import Comparison.Runner.RunComparison;
-import Comparison.Runner.RunningPram;
+import Comparison.Runner.RunningParameter;
 import NotUsed.ARPResultsAnalysis;
 
 public class Buccaneeri1Testing {
@@ -54,7 +54,7 @@ public class Buccaneeri1Testing {
 			System.exit(-1);
 		}
 		
-		RunningPram.DataPath=args[0];
+		RunningParameter.DataPath=args[0];
 		new Buccaneeri1Testing().RunBuccaneerTool();
 	}
 	
@@ -108,7 +108,7 @@ public class Buccaneeri1Testing {
 		Buccaneeri1Testing RBM=new Buccaneeri1Testing();
 		String CCP4Dir=System.getenv("CCP4");
 		//RunningPram.BuccaneerPipeLine=CCP4Dir+"/share/python/CCP4Dispatchers/buccaneer_pipeline.py";
-		RunningPram.BuccaneerPipeLine=CCP4Dir+"/share/python/CCP4Dispatchers/cbuccaneer.py";
+		RunningParameter.BuccaneerPipeLine=CCP4Dir+"/share/python/CCP4Dispatchers/cbuccaneer.py";
 		
 		//String BuccaneerPipeLine=args[1];
 		//System.out.print("DataPath: "+DataPath);
@@ -134,12 +134,12 @@ public class Buccaneeri1Testing {
 		 
 		 
 		 File[] files=null ;
-	     if(new File(RunningPram.DataPath).isDirectory()) {
-	    	 files = new File(RunningPram.DataPath).listFiles();
+	     if(new File(RunningParameter.DataPath).isDirectory()) {
+	    	 files = new File(RunningParameter.DataPath).listFiles();
 	     }
-		if(new File(RunningPram.DataPath).isFile()) {
+		if(new File(RunningParameter.DataPath).isFile()) {
 			
-			files = ArrayUtils.add(files, new File(RunningPram.DataPath));
+			files = ArrayUtils.add(files, new File(RunningParameter.DataPath));
 		}
      FilesNames=RBM.AddFileNameToList(FilesNames);
 		 for (File file : files) {
@@ -191,17 +191,17 @@ public class Buccaneeri1Testing {
 		seqin=FilePathAndName+".fa";
 		if(new File(FilePathAndName+".seq").exists())	        	 
 		seqin=FilePathAndName+".seq";
-		String cycles=RunningPram.BuccaneerIterations;
+		String cycles=RunningParameter.BuccaneerIterations;
 		
 		BuccScript=BuccScript.replace("@1", BuccPipeline);
 		BuccScript=BuccScript.replace("@2", mtzin);
 		BuccScript=BuccScript.replace("@3", seqin);
 		BuccScript=BuccScript.replace("@4", cycles);
 		BuccScript=BuccScript.replace("@5", FileName);
-		 if(RunningPram.UsingRFree.equals("T")) {
+		 if(RunningParameter.UsingRFree.equals("T")) {
 			 BuccScript=BuccScript.replace("@6", "-colin-free FreeR_flag"); 
 		 }
-		 if(RunningPram.UsingRFree.equals("F")) {
+		 if(RunningParameter.UsingRFree.equals("F")) {
 			 BuccScript=BuccScript.replace("@6", " "); 
 		 }
 		new Preparer().WriteTxtFile(FileName+"/"+FileName+".sh", BuccScript);

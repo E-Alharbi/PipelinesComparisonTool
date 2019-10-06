@@ -34,7 +34,7 @@ import Comparison.Analyser.ExcelSheet;
 import Comparison.Analyser.PipelineLog;
 import Comparison.Runner.Preparer;
 import Comparison.Runner.RunComparison;
-import Comparison.Runner.RunningPram;
+import Comparison.Runner.RunningParameter;
 import NotUsed.ARPResultsAnalysis;
 
 public class Crank {
@@ -51,8 +51,8 @@ public class Crank {
 			System.exit(-1);
 		}
 		
-		RunningPram.DataPath=args[0];
-		RunningPram.CrankPipeLine=args[1];
+		RunningParameter.DataPath=args[0];
+		RunningParameter.CrankPipeLine=args[1];
 		new Crank().RunCrank();
 	}
 	boolean SaveIntermediateResults(String JobDirectory , String PDBID) throws InterruptedException, IOException {
@@ -121,12 +121,12 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 		new RunComparison().CheckDirAndFile("ParametersUsed");
      Vector<String> FilesNames= new Vector <String>();
      File[] files=null ;
-     if(new File(RunningPram.DataPath).isDirectory()) {
-    	 files = new File(RunningPram.DataPath).listFiles();
+     if(new File(RunningParameter.DataPath).isDirectory()) {
+    	 files = new File(RunningParameter.DataPath).listFiles();
      }
-	if(new File(RunningPram.DataPath).isFile()) {
+	if(new File(RunningParameter.DataPath).isFile()) {
 		
-		files = ArrayUtils.add(files, new File(RunningPram.DataPath));
+		files = ArrayUtils.add(files, new File(RunningParameter.DataPath));
 	}
 	
 	
@@ -202,18 +202,18 @@ seqin=FilePathAndName+".seq";
 		"sh","crank.sh",
 		
 		FileName,
-		RunningPram.CrankPipeLine,
+		RunningParameter.CrankPipeLine,
 		seqin,
 		mtzin,
 		"./CrankResults/PDBs/"+FileName+".pdb",
 		"./CrankResults/MTZout/"+FileName+".mtz",};
 	
-	 if(RunningPram.UsingRFree.equals("F")) {
+	 if(RunningParameter.UsingRFree.equals("F")) {
 		 String[]callAndArgsNoRfree= {
 					"sh","crankNoRfree.sh",
 					
 					FileName,
-					RunningPram.CrankPipeLine,
+					RunningParameter.CrankPipeLine,
 					seqin,
 					mtzin,
 					"./CrankResults/PDBs/"+FileName+".pdb",

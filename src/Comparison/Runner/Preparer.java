@@ -33,29 +33,25 @@ String ScriptHeader="";
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		Vector<String> Tools = new Vector<String>();
-		Tools.add("Phenix");
-		Tools.add("ArpWArp");
-		Tools.add("Bucci1");
-		Tools.add("Bucci2");
-		Tools.add("BucciW");
-		Tools.add("Crank");
-		Tools.add("ArpWArpAfterBucci1");
+	
 		
 	}
 public void Prepare(Vector<String> Tools) throws IOException {
-	if(RunningPram.ClusterServerGrid=="Slurm") {
+	if(RunningParameter.ClusterServerGrid=="Slurm") {
 		ScriptHeader="#!/bin/bash \n";
 		
-		ScriptHeader+="#SBATCH --time=8:00:00                # Time limit hrs:min:sec \n";
-		ScriptHeader+="#SBATCH --mem=4000                     # Total memory limit \n";
+		ScriptHeader+="#SBATCH --time=8:00:00               \n";
+		ScriptHeader+="#SBATCH --mem=4000                      \n";
 		
-		ScriptHeader+="#SBATCH --mail-type=ALL         # Mail events (NONE, BEGIN, END, FAIL, ALL) \n";
-		ScriptHeader+="#SBATCH --mail-user=emra500@york.ac.uk   # Where to send mail \n";	
-		ScriptHeader+="#SBATCH --ntasks-per-node=1            # How many tasks on each node \n";
-		ScriptHeader+="#SBATCH --account=CS-MPMSEDM-2018 \n";
-		ScriptHeader+="module load chem/ccp4/7.0.066 \n";
-		ScriptHeader+="module load chem/phenix/1.14-3260 \n";
+		if(RunningParameter.SlurmEmail.length()!=0) {
+		ScriptHeader+="#SBATCH --mail-type=ALL         \n";
+		ScriptHeader+="#SBATCH --mail-user="+RunningParameter.SlurmEmail+"    \n";	
+		}
+		if(RunningParameter.SlurmAccount.length()!=0)
+		ScriptHeader+="#SBATCH --account="+RunningParameter.SlurmAccount+" \n";
+		
+		ScriptHeader+=RunningParameter.CCP4ModuleLoadingCommand+" \n";
+		ScriptHeader+=RunningParameter.PhenixLoadingCommand+" \n";
 		
 	}
 	else {
@@ -77,7 +73,7 @@ public void Prepare(Vector<String> Tools) throws IOException {
 	 Vector<File> a = new Vector<File>();
 		a.addAll(files);
 		
-		RunningPram.PhenixMolProbity=a.get(0).getAbsolutePath();
+		RunningParameter.PhenixMolProbity=a.get(0).getAbsolutePath();
 		
 		if(Tools.contains("Buccaneeri1"))
 		   Tools.add("Buccaneeri1I5");
@@ -89,15 +85,19 @@ public void Prepare(Vector<String> Tools) throws IOException {
 		   Tools.add("PhenixHLA");
 		if(Tools.contains("Buccaneeri1I5"))
 		   Tools.add("ArpWArpAfterBuccaneeri1I5");
+		if(Tools.contains("Shelxe"))
+		   Tools.add("Shelxe");
+		if(Tools.contains("ShelxeAfterParrot"))
+		   Tools.add("ShelxeAfterParrot");
 	
 		
 	 CreaterFolders(Tools);
 	 if(Tools.contains("Phenix")) {
 		
-	   PhenixPrepare(RunningPram.PhenixPhases,"Phenix");
+	   PhenixPrepare(RunningParameter.PhenixPhases,"Phenix",true);
 	 }
 	 if(Tools.contains("PhenixHLA"))
-	   PhenixPrepare("PHIB,FOM,HLA,HLB,HLC,HLD","PhenixHLA");
+	   PhenixPrepare("PHIB,FOM,HLA,HLB,HLC,HLD","PhenixHLA",false);
 	 if(Tools.contains("ArpWArp"))
 	ArpwArpPrepare(false, null,null);
 	 if(Tools.contains("Buccaneeri1"))
@@ -118,9 +118,12 @@ public void Prepare(Vector<String> Tools) throws IOException {
 	 ArpwArpPrepare(true,"ArpWArpAfterBuccaneeri1","Buccaneeri1");
 	 if(Tools.contains("ArpWArpAfterBuccaneeri1I5"))
 	 ArpwArpPrepare(true,"ArpWArpAfterBuccaneeri1I5","Buccaneeri1I5");
-	
+	 if(Tools.contains("Shelxe"))
+	 ShelxePrepare("Shelxe");
+	 if(Tools.contains("ShelxeAfterParrot"))
+	   ShelxePrepare("ShelxeAfterParrot");
 }
-boolean PhenixPrepare(String Phases, String WorkFolder) throws IOException {
+boolean PhenixPrepare(String Phases, String WorkFolder, boolean DensityModifiedPhenix) throws IOException {
 	String PHENIX=System.getenv("PHENIX");
 	if(PHENIX.equals(""))
 	{
@@ -144,15 +147,19 @@ return false;
 		Vector<File> a = new Vector<File>();
 		a.addAll(files);
 		
-		RunningPram.PhenixAutobuild=a.get(0).getAbsolutePath();
-		int NumberOfFile=new File(RunningPram.ChltomDataPath).listFiles().length;
+		RunningParameter.PhenixAutobuild=a.get(0).getAbsolutePath();
+		int NumberOfFile=new File(RunningParameter.ChltomDataPath).listFiles().length;
 		NumberOfFile=NumberOfFile/3;//because mtz,seq and pdb	
 	Vector<String> PhenixScript = new Vector<String>();
 	PhenixScript.addAll(Arrays.asList(ScriptHeader.split("\n")));
 	
 	PhenixScript.add("export MALLOC_ARENA_MAX=4");
 	PhenixScript.add("vmArgs=\"-Xmx100m -XX:ParallelGCThreads=1\"");
-	PhenixScript.add("java $vmArgs -jar RunComparison.jar RunPhenix data="+new File(RunningPram.ChltomDataPath).getAbsolutePath()+" PhenixAutobuild="+RunningPram.PhenixAutobuild+" UsingRFree="+RunningPram.UsingRFree+" Phases="+Phases+" \\ << eor");
+	if(DensityModifiedPhenix==true)
+	PhenixScript.add("java $vmArgs -jar RunComparison.jar RunPhenix data="+new File(RunningParameter.ChltomDataPath).getAbsolutePath()+" PhenixAutobuild="+RunningParameter.PhenixAutobuild+" UsingRFree="+RunningParameter.UsingRFree+" Phases="+Phases+" DensityModified=T \\ << eor");
+
+	else	
+	PhenixScript.add("java $vmArgs -jar RunComparison.jar RunPhenix data="+new File(RunningParameter.ChltomDataPath).getAbsolutePath()+" PhenixAutobuild="+RunningParameter.PhenixAutobuild+" UsingRFree="+RunningParameter.UsingRFree+" Phases="+Phases+" \\ << eor");
 	PhenixScript.add("END");	
 	PhenixScript.add("eor");	
 	String PhenixSh="";
@@ -164,19 +171,21 @@ return false;
 	new JobCreater().CreateJobs("Phenix.sh", "./"+WorkFolder);
 	//Analyser
 	String Analyser= ReadResourceAsString("/Analyser.sh");
-	if(RunningPram.ClusterServerGrid=="Slurm")
-		Analyser= ReadResourceAsString("/AnalyserSlurm.sh");
+	if(RunningParameter.ClusterServerGrid=="Slurm")
+	Analyser= ReadResourceAsString("/AnalyserSlurm.sh");
+	Analyser=Analyser.replace("&ccp4moduleload&", RunningParameter.CCP4ModuleLoadingCommand);
+	Analyser=Analyser.replace("&phenixmoduleload&", RunningParameter.PhenixLoadingCommand);
 	Analyser=Analyser.replace("&ccp4&", System.getenv("CCP4"));
-	Analyser=Analyser.replace("&data&", new File(RunningPram.DataPath).getAbsolutePath());
-	Analyser=Analyser.replace("&cstat&", RunningPram.castat2Path);
+	Analyser=Analyser.replace("&data&", new File(RunningParameter.DataPath).getAbsolutePath());
+	Analyser=Analyser.replace("&cstat&", RunningParameter.castat2Path);
 	Analyser=Analyser.replace("&Logs&", "../"+WorkFolder+"/PhenixResults/PhinexLogs");
 	Analyser=Analyser.replace("&PDBs&", "../"+WorkFolder+"/PhenixResults/PDBs/");
 	Analyser=Analyser.replace("&Tool&", "Phenix");
 	Analyser=Analyser.replace("&IPDBs&", "../"+WorkFolder+"/PhenixResults/IntermediatePDBs/");
 	Analyser=Analyser.replace("&ILogs&", "../"+WorkFolder+"/PhenixResults/IntermediateLogs/");
-	Analyser=Analyser.replace("&Mol&", RunningPram.PhenixMolProbity);
-	Analyser=Analyser.replace("&UsingMol&", RunningPram.UsingMolProbity);
-	Analyser=Analyser.replace("&CPhasesMatchPhases&", RunningPram.PhasesUsedCPhasesMatch);
+	Analyser=Analyser.replace("&Mol&", RunningParameter.PhenixMolProbity);
+	Analyser=Analyser.replace("&UsingMol&", RunningParameter.UsingMolProbity);
+	Analyser=Analyser.replace("&CPhasesMatchPhases&", RunningParameter.PhasesUsedCPhasesMatch);
 	WriteTxtFile("./"+WorkFolder+"Analyser/PhenixAnalyser.sh",Analyser);
 	return true;
 }
@@ -190,17 +199,17 @@ boolean ArpwArpPrepare(boolean Bucc, String WorkFolder, String BuccFolder) throw
 	return false;
 	}
 			
-	RunningPram.wArpAutotracing=warpbin+"/auto_tracing.sh";
-	int NumberOfFile=new File(RunningPram.ChltomDataPath).listFiles().length;
+	RunningParameter.wArpAutotracing=warpbin+"/auto_tracing.sh";
+	int NumberOfFile=new File(RunningParameter.ChltomDataPath).listFiles().length;
 	NumberOfFile=NumberOfFile/3;//because mtz,seq and pdb	
 	Vector<String> Script = new Vector<String>();
 	Script.addAll(Arrays.asList(ScriptHeader.split("\n")));
 	Script.add("export MALLOC_ARENA_MAX=4");
 	Script.add("vmArgs=\"-Xmx100m -XX:ParallelGCThreads=1\"");
 	if(Bucc==false)
-	Script.add("java $vmArgs -jar RunComparison.jar RunwArp data="+new File(RunningPram.ChltomDataPath).getAbsolutePath()+" wArpAutotracing="+RunningPram.wArpAutotracing+" UsingRFree="+RunningPram.UsingRFree+" UseBuccModels=F \\ << eor");
+	Script.add("java $vmArgs -jar RunComparison.jar RunwArp data="+new File(RunningParameter.ChltomDataPath).getAbsolutePath()+" wArpAutotracing="+RunningParameter.wArpAutotracing+" UsingRFree="+RunningParameter.UsingRFree+" UseBuccModels=F \\ << eor");
 	if(Bucc==true)
-    Script.add("java $vmArgs -jar RunComparison.jar RunwArp data="+new File(RunningPram.ChltomDataPath).getAbsolutePath()+" wArpAutotracing="+RunningPram.wArpAutotracing+" UsingRFree="+RunningPram.UsingRFree+" UseBuccModels=T BuccModels=../"+BuccFolder+"/BuccaneerResults/PDBs/ \\ << eor");
+    Script.add("java $vmArgs -jar RunComparison.jar RunwArp data="+new File(RunningParameter.ChltomDataPath).getAbsolutePath()+" wArpAutotracing="+RunningParameter.wArpAutotracing+" UsingRFree="+RunningParameter.UsingRFree+" UseBuccModels=T BuccModels=../"+BuccFolder+"/BuccaneerResults/PDBs/ \\ << eor");
 
 	Script.add("END");	
 	Script.add("eor");	
@@ -222,15 +231,17 @@ boolean ArpwArpPrepare(boolean Bucc, String WorkFolder, String BuccFolder) throw
 	
 	//Analyser
 		String Analyser= ReadResourceAsString("/Analyser.sh");
-		if(RunningPram.ClusterServerGrid=="Slurm")
+		if(RunningParameter.ClusterServerGrid=="Slurm")
 			Analyser= ReadResourceAsString("/AnalyserSlurm.sh");
+		Analyser=Analyser.replace("&ccp4moduleload&", RunningParameter.CCP4ModuleLoadingCommand);
+		Analyser=Analyser.replace("&phenixmoduleload&", RunningParameter.PhenixLoadingCommand);
 		Analyser=Analyser.replace("&ccp4&", System.getenv("CCP4"));
-		Analyser=Analyser.replace("&data&", new File(RunningPram.DataPath).getAbsolutePath());
-		Analyser=Analyser.replace("&cstat&", RunningPram.castat2Path);
+		Analyser=Analyser.replace("&data&", new File(RunningParameter.DataPath).getAbsolutePath());
+		Analyser=Analyser.replace("&cstat&", RunningParameter.castat2Path);
 		
-		Analyser=Analyser.replace("&Mol&", RunningPram.PhenixMolProbity);
-		Analyser=Analyser.replace("&UsingMol&", RunningPram.UsingMolProbity);
-		Analyser=Analyser.replace("&CPhasesMatchPhases&", RunningPram.PhasesUsedCPhasesMatch);
+		Analyser=Analyser.replace("&Mol&", RunningParameter.PhenixMolProbity);
+		Analyser=Analyser.replace("&UsingMol&", RunningParameter.UsingMolProbity);
+		Analyser=Analyser.replace("&CPhasesMatchPhases&", RunningParameter.PhasesUsedCPhasesMatch);
 		if(Bucc==false) {
 		Analyser=Analyser.replace("&Tool&", "ARPwARP");
 		Analyser=Analyser.replace("&Logs&", "../ArpWArp/wArpResults/ArpLogs");
@@ -256,13 +267,13 @@ boolean ArpwArpPrepare(boolean Bucc, String WorkFolder, String BuccFolder) throw
 
 boolean Bucci1Prepare(String Iterations,String WorkFolder) throws IOException {
 	
-	int NumberOfFile=new File(RunningPram.DataPath).listFiles().length;
+	int NumberOfFile=new File(RunningParameter.DataPath).listFiles().length;
 	NumberOfFile=NumberOfFile/3;//because mtz,seq and pdb	
 	Vector<String> Script = new Vector<String>();
 	Script.addAll(Arrays.asList(ScriptHeader.split("\n")));
 	Script.add("export MALLOC_ARENA_MAX=4");
 	Script.add("vmArgs=\"-Xmx100m -XX:ParallelGCThreads=1\"");
-	Script.add("java $vmArgs -jar RunComparison.jar RunCBuccaneer data="+new File(RunningPram.DataPath).getAbsolutePath()+" Iterations="+Iterations+" UsingRFree="+RunningPram.UsingRFree+" \\ << eor");
+	Script.add("java $vmArgs -jar RunComparison.jar RunCBuccaneer data="+new File(RunningParameter.DataPath).getAbsolutePath()+" Iterations="+Iterations+" UsingRFree="+RunningParameter.UsingRFree+" \\ << eor");
 	Script.add("END");	
 	Script.add("eor");	
 	String Buccaneeri1="";
@@ -277,22 +288,66 @@ boolean Bucci1Prepare(String Iterations,String WorkFolder) throws IOException {
 	
 	//Analyser
 	String Analyser= ReadResourceAsString("/Analyser.sh");
-	if(RunningPram.ClusterServerGrid=="Slurm")
+	if(RunningParameter.ClusterServerGrid=="Slurm")
 		Analyser= ReadResourceAsString("/AnalyserSlurm.sh");
+	Analyser=Analyser.replace("&ccp4moduleload&", RunningParameter.CCP4ModuleLoadingCommand);
+	Analyser=Analyser.replace("&phenixmoduleload&", RunningParameter.PhenixLoadingCommand);
 	Analyser=Analyser.replace("&ccp4&", System.getenv("CCP4"));
-	Analyser=Analyser.replace("&data&", new File(RunningPram.DataPath).getAbsolutePath());
-	Analyser=Analyser.replace("&cstat&", RunningPram.castat2Path);
+	Analyser=Analyser.replace("&data&", new File(RunningParameter.DataPath).getAbsolutePath());
+	Analyser=Analyser.replace("&cstat&", RunningParameter.castat2Path);
 	Analyser=Analyser.replace("&Logs&", "../"+WorkFolder+"/BuccaneerResults/BuccaneerLogs");
 	Analyser=Analyser.replace("&PDBs&", "../"+WorkFolder+"/BuccaneerResults/PDBs/");
 	Analyser=Analyser.replace("&Tool&", WorkFolder);
 	Analyser=Analyser.replace("&IPDBs&", "../"+WorkFolder+"/BuccaneerResults/IntermediatePDBs/");
 	Analyser=Analyser.replace("&ILogs&", "../"+WorkFolder+"/BuccaneerResults/IntermediateLogs/");
-	Analyser=Analyser.replace("&Mol&", RunningPram.PhenixMolProbity);
-	Analyser=Analyser.replace("&UsingMol&", RunningPram.UsingMolProbity);
-	Analyser=Analyser.replace("&CPhasesMatchPhases&", RunningPram.PhasesUsedCPhasesMatch);
+	Analyser=Analyser.replace("&Mol&", RunningParameter.PhenixMolProbity);
+	Analyser=Analyser.replace("&UsingMol&", RunningParameter.UsingMolProbity);
+	Analyser=Analyser.replace("&CPhasesMatchPhases&", RunningParameter.PhasesUsedCPhasesMatch);
 	WriteTxtFile("./"+WorkFolder+"Analyser/Buccaneeri1Analyser.sh",Analyser);
 	return true;
 }
+boolean ShelxePrepare(String WorkFolder) throws IOException {
+	
+	RunningParameter.Shelxe=System.getenv("CBIN")+"/shelxe";
+	
+	Vector<String> Script = new Vector<String>();
+	Script.addAll(Arrays.asList(ScriptHeader.split("\n")));
+	Script.add("export MALLOC_ARENA_MAX=4");
+	Script.add("vmArgs=\"-Xmx100m -XX:ParallelGCThreads=1\"");
+	Script.add("java $vmArgs -jar RunComparison.jar RunShelxe data="+new File(RunningParameter.ShelxeData).getAbsolutePath()+" Shelxe="+RunningParameter.Shelxe+" \\ << eor");
+	Script.add("END");	
+	Script.add("eor");	
+	String Shelxe="";
+	for(int i=0 ; i < Script.size();++i) {
+		Shelxe+=Script.get(i)+"\n";
+	}
+	WriteTxtFile("./"+WorkFolder+"/Shelxe.sh",Shelxe);
+	//CreateManagerScript(NumberOfFile,WorkFolder,"Buccaneeri1.sh");
+	
+	new JobCreater().CreateJobs("Shelxe.sh", "./"+WorkFolder);
+	
+	
+	//Analyser
+	String Analyser= ReadResourceAsString("/Analyser.sh");
+	if(RunningParameter.ClusterServerGrid=="Slurm")
+	Analyser= ReadResourceAsString("/AnalyserSlurm.sh");
+	Analyser=Analyser.replace("&ccp4moduleload&", RunningParameter.CCP4ModuleLoadingCommand);
+	Analyser=Analyser.replace("&phenixmoduleload&", RunningParameter.PhenixLoadingCommand);
+	Analyser=Analyser.replace("&ccp4&", System.getenv("CCP4"));
+	Analyser=Analyser.replace("&data&", new File(RunningParameter.DataPath).getAbsolutePath());
+	Analyser=Analyser.replace("&cstat&", RunningParameter.castat2Path);
+	Analyser=Analyser.replace("&Logs&", "../"+WorkFolder+"/shelxeResults/shelxeLogs");
+	Analyser=Analyser.replace("&PDBs&", "../"+WorkFolder+"/shelxeResults/PDBs/");
+	Analyser=Analyser.replace("&Tool&", WorkFolder);
+	Analyser=Analyser.replace("&IPDBs&", "../"+WorkFolder+"/shelxeResults/IntermediatePDBs/");
+	Analyser=Analyser.replace("&ILogs&", "../"+WorkFolder+"/shelxeResults/IntermediateLogs/");
+	Analyser=Analyser.replace("&Mol&", RunningParameter.PhenixMolProbity);
+	Analyser=Analyser.replace("&UsingMol&", RunningParameter.UsingMolProbity);
+	Analyser=Analyser.replace("&CPhasesMatchPhases&", RunningParameter.PhasesUsedCPhasesMatch);
+	WriteTxtFile("./"+WorkFolder+"Analyser/ShelxeAnalyser.sh",Analyser);
+	return true;
+}
+
 boolean Crank() throws IOException {
 
 	//WriteTxtFile("./Crank/crank.sh",ReadResourceAsString("/crank.sh"));
@@ -308,33 +363,35 @@ boolean Crank() throws IOException {
 	Script.addAll(Arrays.asList(ScriptHeader.split("\n")));
 	Script.add("export MALLOC_ARENA_MAX=4");
 	Script.add("vmArgs=\"-Xmx100m -XX:ParallelGCThreads=1\"");
-	Script.add("java $vmArgs -jar RunComparison.jar RunCrank data="+new File(RunningPram.DatafakeAnomalous).getAbsolutePath()+" UsingRFree="+RunningPram.UsingRFree+" CrankPipeLine="+RunningPram.ccp4i2Core+"/pipelines/crank2/crank2/crank2.py \\ << eor");
+	Script.add("java $vmArgs -jar RunComparison.jar RunCrank data="+new File(RunningParameter.DatafakeAnomalous).getAbsolutePath()+" UsingRFree="+RunningParameter.UsingRFree+" CrankPipeLine="+RunningParameter.ccp4i2Core+"/pipelines/crank2/crank2/crank2.py \\ << eor");
 	Script.add("END");	
 	Script.add("eor");	
 	String Crank="";
 	for(int i=0 ; i < Script.size();++i) {
 		Crank+=Script.get(i)+"\n";
 	}
-	int NumberOfFile=new File(RunningPram.DatafakeAnomalous).listFiles().length;
+	int NumberOfFile=new File(RunningParameter.DatafakeAnomalous).listFiles().length;
 	NumberOfFile=NumberOfFile/3;//because mtz,seq and pdb	
 	WriteTxtFile("./Crank/CrankJava.sh",Crank);
 	CreateManagerScript(NumberOfFile,"Crank","CrankJava.sh");
 	new JobCreater().CreateJobs("CrankJava.sh", "./"+"Crank");
 	//Analyser
 		String Analyser= ReadResourceAsString("/Analyser.sh");
-		if(RunningPram.ClusterServerGrid=="Slurm")
+		if(RunningParameter.ClusterServerGrid=="Slurm")
 			Analyser= ReadResourceAsString("/AnalyserSlurm.sh");
+		Analyser=Analyser.replace("&ccp4moduleload&", RunningParameter.CCP4ModuleLoadingCommand);
+		Analyser=Analyser.replace("&phenixmoduleload&", RunningParameter.PhenixLoadingCommand);
 		Analyser=Analyser.replace("&ccp4&", System.getenv("CCP4"));
-		Analyser=Analyser.replace("&data&", new File(RunningPram.DataPath).getAbsolutePath());
-		Analyser=Analyser.replace("&cstat&", RunningPram.castat2Path);
+		Analyser=Analyser.replace("&data&", new File(RunningParameter.DataPath).getAbsolutePath());
+		Analyser=Analyser.replace("&cstat&", RunningParameter.castat2Path);
 		Analyser=Analyser.replace("&Logs&", "../Crank/CrankResults/CrankLogs");
 		Analyser=Analyser.replace("&PDBs&", "../Crank/CrankResults/PDBs/");
 		Analyser=Analyser.replace("&Tool&", "Crank");
 		Analyser=Analyser.replace("&IPDBs&", "../Crank/CrankResults/IntermediatePDBs/");
 		Analyser=Analyser.replace("&ILogs&", "../Crank/CrankResults/IntermediateLogs/");
-		Analyser=Analyser.replace("&Mol&", RunningPram.PhenixMolProbity);
-		Analyser=Analyser.replace("&UsingMol&", RunningPram.UsingMolProbity);
-		Analyser=Analyser.replace("&CPhasesMatchPhases&", RunningPram.PhasesUsedCPhasesMatch);
+		Analyser=Analyser.replace("&Mol&", RunningParameter.PhenixMolProbity);
+		Analyser=Analyser.replace("&UsingMol&", RunningParameter.UsingMolProbity);
+		Analyser=Analyser.replace("&CPhasesMatchPhases&", RunningParameter.PhasesUsedCPhasesMatch);
 		WriteTxtFile("./CrankAnalyser/CrankAnalyser.sh",Analyser);
 	
 	return true;
@@ -342,9 +399,9 @@ boolean Crank() throws IOException {
 boolean Bucci2Prepare(boolean Water , String Iterations,String WorkFolder ) throws IOException {
 
 	String bucrefi2= ReadResourceAsString("/bucrefi2.py");
-	bucrefi2=bucrefi2.replace("ccp4i2Core", RunningPram.ccp4i2Core);
+	bucrefi2=bucrefi2.replace("ccp4i2Core", RunningParameter.ccp4i2Core);
 	String PluginUtils= ReadResourceAsString("/PluginUtils.py");
-	PluginUtils=PluginUtils.replace("ccp4i2Core", RunningPram.ccp4i2Core);
+	PluginUtils=PluginUtils.replace("ccp4i2Core", RunningParameter.ccp4i2Core);
 	
 	if(Water==true)
 	{
@@ -363,13 +420,13 @@ boolean Bucci2Prepare(boolean Water , String Iterations,String WorkFolder ) thro
 		WriteTxtFile("./"+WorkFolder+"/PluginUtils.py",PluginUtils);
 	}
 
-	int NumberOfFile=new File(RunningPram.DataPath).listFiles().length;
+	int NumberOfFile=new File(RunningParameter.DataPath).listFiles().length;
 	NumberOfFile=NumberOfFile/3;//because mtz,seq and pdb	
 	Vector<String> Script = new Vector<String>();
 	Script.addAll(Arrays.asList(ScriptHeader.split("\n")));
 	Script.add("export MALLOC_ARENA_MAX=4");
 	Script.add("vmArgs=\"-Xmx100m -XX:ParallelGCThreads=1\"");
-	Script.add("java $vmArgs -jar RunComparison.jar RunBuccaneeri2 data="+new File(RunningPram.DataPath).getAbsolutePath()+" Buccaneeri2=bucrefi2.py"+" Iterations="+Iterations+" UsingRFree="+RunningPram.UsingRFree+" \\ << eor");
+	Script.add("java $vmArgs -jar RunComparison.jar RunBuccaneeri2 data="+new File(RunningParameter.DataPath).getAbsolutePath()+" Buccaneeri2=bucrefi2.py"+" Iterations="+Iterations+" UsingRFree="+RunningParameter.UsingRFree+" \\ << eor");
 	Script.add("END");	
 	Script.add("eor");	
 	String Buccaneeri2="";
@@ -391,14 +448,16 @@ boolean Bucci2Prepare(boolean Water , String Iterations,String WorkFolder ) thro
 	
 	//Analyser
 			String Analyser= ReadResourceAsString("/Analyser.sh");
-			if(RunningPram.ClusterServerGrid=="Slurm")
-				Analyser= ReadResourceAsString("/AnalyserSlurm.sh");
+			if(RunningParameter.ClusterServerGrid=="Slurm")
+			Analyser= ReadResourceAsString("/AnalyserSlurm.sh");
+			Analyser=Analyser.replace("&ccp4moduleload&", RunningParameter.CCP4ModuleLoadingCommand);
+			Analyser=Analyser.replace("&phenixmoduleload&", RunningParameter.PhenixLoadingCommand);
 			Analyser=Analyser.replace("&ccp4&", System.getenv("CCP4"));
-			Analyser=Analyser.replace("&data&", new File(RunningPram.DataPath).getAbsolutePath());
-			Analyser=Analyser.replace("&cstat&", RunningPram.castat2Path);
-			Analyser=Analyser.replace("&Mol&", RunningPram.PhenixMolProbity);
-			Analyser=Analyser.replace("&UsingMol&", RunningPram.UsingMolProbity);
-			Analyser=Analyser.replace("&CPhasesMatchPhases&", RunningPram.PhasesUsedCPhasesMatch);
+			Analyser=Analyser.replace("&data&", new File(RunningParameter.DataPath).getAbsolutePath());
+			Analyser=Analyser.replace("&cstat&", RunningParameter.castat2Path);
+			Analyser=Analyser.replace("&Mol&", RunningParameter.PhenixMolProbity);
+			Analyser=Analyser.replace("&UsingMol&", RunningParameter.UsingMolProbity);
+			Analyser=Analyser.replace("&CPhasesMatchPhases&", RunningParameter.PhasesUsedCPhasesMatch);
 			if(Water==false) {
 				Analyser=Analyser.replace("&Tool&", WorkFolder);
 				Analyser=Analyser.replace("&Logs&", "../"+WorkFolder+"/BuccaneerResults/BuccaneerLogs");
