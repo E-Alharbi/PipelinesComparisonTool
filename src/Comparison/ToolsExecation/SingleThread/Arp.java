@@ -37,7 +37,7 @@ import Comparison.Analyser.ExcelSheet;
 import Comparison.Analyser.PipelineLog;
 import Comparison.Runner.Preparer;
 import Comparison.Runner.RunComparison;
-import Comparison.Runner.RunningPram;
+import Comparison.Runner.RunningParameter;
 import NotUsed.ARPResultsAnalysis;
 
 public class Arp {
@@ -54,8 +54,8 @@ public class Arp {
 			System.exit(-1);
 		}
 		
-		RunningPram.DataPath=args[0];
-		RunningPram.wArpAutotracing=args[1];
+		RunningParameter.DataPath=args[0];
+		RunningParameter.wArpAutotracing=args[1];
 		new Arp().RunwArpTool();
 	}
 	boolean SaveIntermediateResults(String JobDirectory , String PDBID) throws InterruptedException, IOException {
@@ -151,12 +151,12 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 		Vector<String> FilesNames= new Vector <String>();
     // File[] files = new File(RunningPram.DataPath).listFiles();
      File[] files=null ;
-     if(new File(RunningPram.DataPath).isDirectory()) {
-    	 files = new File(RunningPram.DataPath).listFiles();
+     if(new File(RunningParameter.DataPath).isDirectory()) { // Read dir
+    	 files = new File(RunningParameter.DataPath).listFiles();
      }
-	if(new File(RunningPram.DataPath).isFile()) {
+	if(new File(RunningParameter.DataPath).isFile()) { 
 		
-		files = ArrayUtils.add(files, new File(RunningPram.DataPath));
+		files = ArrayUtils.add(files, new File(RunningParameter.DataPath));
 	}
 	
 	
@@ -224,11 +224,11 @@ seqin=FilePathAndName+".fa";
 if(new File(FilePathAndName+".seq").exists())	        	 
 seqin=FilePathAndName+".seq";
 String[]ArpParm;
-if(RunningPram.UseBuccModels.trim().equals("T")) {
+if(RunningParameter.UseInitialModels.trim().equals("T")) {
 	
 	String[]callAndArgs= {
 			// /Applications/arp_warp_7.6/share/auto_tracing.sh 
-		RunningPram.wArpAutotracing,
+		RunningParameter.wArpAutotracing,
 		"datafile",mtzin,
 		"workdir",System.getProperty("user.dir")+"/wArpResults/WorkingDir",
 		//"phibest","parrot.F_phi.phi",
@@ -243,10 +243,10 @@ if(RunningPram.UseBuccModels.trim().equals("T")) {
 		"modelin",GetModelPath(FileName+".pdb")
 		};
 	ArpParm=callAndArgs;
-	if(RunningPram.UsingRFree.equals("F")) {
+	if(RunningParameter.UsingRFree.equals("F")) {
 		String[]callAndArgsNoRfree= {
 				// /Applications/arp_warp_7.6/share/auto_tracing.sh 
-			RunningPram.wArpAutotracing,
+			RunningParameter.wArpAutotracing,
 			"datafile",mtzin,
 			"workdir",System.getProperty("user.dir")+"/wArpResults/WorkingDir",
 			//"phibest","parrot.F_phi.phi",
@@ -272,7 +272,7 @@ if(RunningPram.UseBuccModels.trim().equals("T")) {
 else {
 	 String[]callAndArgs= {
 		// /Applications/arp_warp_7.6/share/auto_tracing.sh 
-	RunningPram.wArpAutotracing,
+	RunningParameter.wArpAutotracing,
 	"datafile",mtzin,
 	"workdir",System.getProperty("user.dir")+"/wArpResults/WorkingDir",
 	//"phibest","parrot.F_phi.phi",
@@ -288,10 +288,10 @@ else {
 	};
 	 ArpParm=callAndArgs;
 	 
-	 if(RunningPram.UsingRFree.equals("F")) {
+	 if(RunningParameter.UsingRFree.equals("F")) {
 		 String[]callAndArgsNoRFree= {
 					// /Applications/arp_warp_7.6/share/auto_tracing.sh 
-				RunningPram.wArpAutotracing,
+				RunningParameter.wArpAutotracing,
 				"datafile",mtzin,
 				"workdir",System.getProperty("user.dir")+"/wArpResults/WorkingDir",
 				//"phibest","parrot.F_phi.phi",
@@ -426,13 +426,13 @@ new Preparer().WriteTxtFile("ParametersUsed/"+FileName+".txt", new Date().toStri
 		}
 		String GetModelPath(String PDBId){
 			
-				 File[] BuccModels = new File(RunningPram.BuccModels).listFiles();
+				 File[] BuccModels = new File(RunningParameter.InitialModels).listFiles();
 				 for (File PDB : BuccModels) {
 					 if(PDBId.trim().equals(PDB.getName())) {
 						 return PDB.getAbsolutePath();
 					 }
 				 }
-		     BuccModels = new File(RunningPram.BuccModels.replaceAll("PDBs", "IntermediatePDBs")).listFiles(); 
+		     BuccModels = new File(RunningParameter.InitialModels.replaceAll("PDBs", "IntermediatePDBs")).listFiles(); 
 		     for (File PDB : BuccModels) {
 				 if(PDBId.trim().equals(PDB.getName())) {
 					 return PDB.getAbsolutePath();
