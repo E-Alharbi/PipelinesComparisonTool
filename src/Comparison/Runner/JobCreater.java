@@ -28,29 +28,37 @@ String ScriptAnotherCopy=DataPath;
 DataPath=DataPath.substring(DataPath.indexOf("data="));
 DataPath=DataPath.substring(DataPath.indexOf("data="),DataPath.indexOf(" "));
 DataPath=DataPath.replaceAll("data=", "");
-System.out.println(DataPath);
+
 File [] files= new File(DataPath).listFiles();
+
 Vector<String> FilesNames= new Vector <String>();
-if(RunningPram.PDBsDir!=null){
-	File [] PDBs= new File(RunningPram.PDBsDir).listFiles();
+if(RunningParameter.PDBsDir!=null){
+	File [] PDBs= new File(RunningParameter.PDBsDir).listFiles();
 	for(File PDB : PDBs)
 	  FilesNames.addElement(PDB.getName().replaceAll("."+FilenameUtils.getExtension(PDB.getName()),""));
 }
-String Qsub="#!/bin/bash \n" + 
-		"#SBATCH --time=48:00:00                # Time limit hrs:min:sec \n" + 
-		"#SBATCH --mem=1000                     # Total memory limit \n" + 
-		"#SBATCH --mail-type=ALL         # Mail events (NONE, BEGIN, END, FAIL, ALL) \n" + 
-		"#SBATCH --mail-user=emra500@york.ac.uk   # Where to send mail \n" + 
-		"#SBATCH --ntasks-per-node=1            # How many tasks on each node \n" + 
-		"#SBATCH --account=CS-MPMSEDM-2018 \n";
+String Qsub="#!/bin/bash \n" ; 
+		Qsub+="#SBATCH --time=48:00:00                 \n" ; 
+Qsub+="#SBATCH --mem=1000                      \n" ; 
+		if(RunningParameter.SlurmEmail.length()!=0) {
+			Qsub+="#SBATCH --mail-type=ALL          \n" ; 
+		
+Qsub+="#SBATCH --mail-user="+RunningParameter.SlurmEmail+"   \n" ;  
+		}
+		if(RunningParameter.SlurmAccount.length()!=0)
+		Qsub+="#SBATCH --account="+RunningParameter.SlurmAccount+" \n";
+		
 for (File file : files) {
 	String CaseName=file.getName().replaceAll("."+FilenameUtils.getExtension(file.getName()),"");
+	
 	if(!FilesNames.contains(CaseName)) {
 		Script=Script.replaceAll(DataPath, DataPath+"/"+file.getName());
 		
 		FilesNames.add(CaseName);
+		
 		new Preparer().WriteTxtFile(PathToWrite+"J"+CaseName+".sh",Script);
-		if(RunningPram.ClusterServerGrid=="Slurm")
+		
+		if(RunningParameter.ClusterServerGrid=="Slurm")
 			Qsub+="sbatch J"+CaseName+".sh \n";
 		else
 			Qsub+="qsub J"+CaseName+".sh \n";
