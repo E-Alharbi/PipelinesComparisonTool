@@ -2,7 +2,6 @@
 #$ -V
 #$ -l h_vmem=2G
 #$ -l h_rt=48:00:00
-#$ -M emra500@york.ac.uk
 #$ -m be
 #$ -pe smp 10
 LD_LIBRARY_PATH=$LD_LIBRARY_PATH:&ccp4&/lib
