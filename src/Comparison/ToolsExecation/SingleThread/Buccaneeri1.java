@@ -14,8 +14,10 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
@@ -32,7 +34,8 @@ import Comparison.Analyser.PipelineLog;
 import Comparison.Analyser.REFMACFactors;
 import Comparison.Runner.Preparer;
 import Comparison.Runner.RunComparison;
-import Comparison.Runner.RunningPram;
+import Comparison.Runner.RunningParameter;
+import Comparison.Utilities.FilesManagements;
 import NotUsed.ARPResultsAnalysis;
 
 public class Buccaneeri1 {
@@ -51,7 +54,7 @@ public class Buccaneeri1 {
 			System.exit(-1);
 		}
 		
-		RunningPram.DataPath=args[0];
+		RunningParameter.DataPath=args[0];
 		new Buccaneeri1().RunBuccaneerTool();
 	}
 	
@@ -104,7 +107,7 @@ public class Buccaneeri1 {
 		long beforeUsedMem=Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
 		Buccaneeri1 RBM=new Buccaneeri1();
 		String CCP4Dir=System.getenv("CCP4");
-		RunningPram.BuccaneerPipeLine=CCP4Dir+"/share/python/CCP4Dispatchers/cbuccaneer.py";
+		RunningParameter.BuccaneerPipeLine=CCP4Dir+"/share/python/CCP4Dispatchers/cbuccaneer.py";
 		
 		
 		
@@ -128,12 +131,12 @@ public class Buccaneeri1 {
 		 
 		 
 		 File[] files=null ;
-	     if(new File(RunningPram.DataPath).isDirectory()) {
-	    	 files = new File(RunningPram.DataPath).listFiles();
+	     if(new File(RunningParameter.DataPath).isDirectory()) {
+	    	 files = new File(RunningParameter.DataPath).listFiles();
 	     }
-		if(new File(RunningPram.DataPath).isFile()) {
+		if(new File(RunningParameter.DataPath).isFile()) {
 			
-			files = ArrayUtils.add(files, new File(RunningPram.DataPath));
+			files = ArrayUtils.add(files, new File(RunningParameter.DataPath));
 		}
      FilesNames=RBM.AddFileNameToList(FilesNames);
 		 for (File file : files) {
@@ -167,7 +170,7 @@ public class Buccaneeri1 {
 	PipelineLog RunBuccaneer(String FilePathAndName,String FileName) throws IOException{
 		System.out.println("FilePathAndName "+FilePathAndName);
 		System.out.println("FileName "+FileName);
-		
+		 PipelineLog res= new PipelineLog();
 		new RunComparison().CheckDirAndFile(FileName);
 		
 		
@@ -183,18 +186,34 @@ public class Buccaneeri1 {
 		seqin=FilePathAndName+".fa";
 		if(new File(FilePathAndName+".seq").exists())	        	 
 		seqin=FilePathAndName+".seq";
-		String cycles=RunningPram.BuccaneerIterations;
+		String cycles=RunningParameter.BuccaneerIterations;
 		
 		BuccScript=BuccScript.replace("@1", BuccPipeline);
 		BuccScript=BuccScript.replace("@2", mtzin);
 		BuccScript=BuccScript.replace("@3", seqin);
 		BuccScript=BuccScript.replace("@4", cycles);
 		BuccScript=BuccScript.replace("@5", FileName);
-		 if(RunningPram.UsingRFree.equals("T")) {
+		 if(RunningParameter.UsingRFree.equals("T")) {
 			 BuccScript=BuccScript.replace("@6", "-colin-free FreeR_flag"); 
 		 }
-		 if(RunningPram.UsingRFree.equals("F")) {
+		 if(RunningParameter.UsingRFree.equals("F")) {
 			 BuccScript=BuccScript.replace("@6", " "); 
+		 }
+		 
+		 if(RunningParameter.UseInitialModels.equals("T")) {
+			
+			 if(new FilesManagements().GetModelPath(FileName+".pdb").equals("")) {
+					res.LogFile+="model not found!!";
+					return res;
+			}
+			 else {
+				 
+				 BuccScript=BuccScript.replace("@7", "-buccaneer-keyword pdbin "+new FilesManagements().GetModelPath(FileName+".pdb")+" "); 
+			 }
+			
+		 }
+		 if(RunningParameter.UseInitialModels.equals("F")) {
+			 BuccScript=BuccScript.replace("@7", " "); 
 		 }
 		new Preparer().WriteTxtFile(FileName+"/"+FileName+".sh", BuccScript);
 		
@@ -205,7 +224,7 @@ public class Buccaneeri1 {
 		 String st = null;
 		 Date ProStartTime = new java.util.Date();
 		  StartTime= new java.util.Date();
-		 PipelineLog res= new PipelineLog();
+		
 	try {
 	
 	 String[]callAndArgs= {"sh",
