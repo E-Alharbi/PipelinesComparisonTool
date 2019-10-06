@@ -32,7 +32,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import Comparison.Analyser.PipelineLog;
 import Comparison.Runner.RunComparison;
-import Comparison.Runner.RunningPram;
+import Comparison.Runner.RunningParameter;
 import NotUsed.ARPResultsAnalysis;
 
 public class Buccaneeri2Runner  extends Tool{
@@ -51,7 +51,7 @@ public class Buccaneeri2Runner  extends Tool{
 			System.exit(-1);
 		}
 		
-		RunningPram.DataPath=args[0];
+		RunningParameter.DataPath=args[0];
 		//new Buccaneeri2().RunBuccaneerTool();
 	}
 	String Log(String JobDirectory) throws IOException {
@@ -194,7 +194,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 	String mtzin=FilePathAndName+".mtz";
 	// add water option is set in bucrefi2.py not here!!!
 	 String[]callAndArgs= {
-			 "ccp4-python",RunningPram.Buccaneeri2PipeLine,
+			 "ccp4-python",RunningParameter.Buccaneeri2PipeLine,
 			 "--mtzin",mtzin,
 			 "--seqin",seqin,
 			 "--colinfo","FP,SIGFP",
