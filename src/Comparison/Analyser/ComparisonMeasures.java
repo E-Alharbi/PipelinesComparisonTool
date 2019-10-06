@@ -600,7 +600,8 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 		}
 
 	}
-
+	
+/*
 	void PrepareExcelForSpss(String ResultsDir) throws IOException {
 		File[] Folders = new File(ResultsDir).listFiles();
 
@@ -631,12 +632,7 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 					for (int i = 0; i < Container.size(); ++i) {
 						for (int y = 0; y < Container.get(i).size(); ++y) {
 							Double Value = Double.parseDouble(Container.get(i).get(y).Resolution);
-							/*
-							 * if(GroupedByPhases==true) {
-							 * if(NumberUtils.isParsable(Container.get(i).get(y).E_mapCorrelation)) Value =
-							 * Double.parseDouble(Container.get(i).get(y).E_mapCorrelation)*10; else Value
-							 * =-1.0;// not calculated phases }
-							 */
+							
 
 							if (Reso.get(r).equals(Value.intValue())) {
 								ToBeInExcel.add(Container.get(i).get(y));
@@ -777,7 +773,7 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 		new Preparer().WriteTxtFile(PathToLatexFolder+"/" + "TheComparsionResults.tex", TheFullTable);
 
 	}
-
+*/
 	void GroupByPhases(String ResultsDir) throws IOException {
 		File[] Folders = new File(ResultsDir).listFiles();
 		ExcelLoader e = new ExcelLoader();

@@ -574,6 +574,7 @@ public class RunComparison {
 					 
 					 new shelxe().RunshelxeTool();
 			 }
+			  /*
 			 else if(args[0].equals("Buccaneeri1TestMode")){
 					
 				 
@@ -606,6 +607,7 @@ public class RunComparison {
 					// new RunCBuccaneer().RunBuccaneerTool();
 					 new Buccaneeri1Testing().RunBuccaneerTool();
 			 }
+			  */
 			 else if(args[0].equals("RunCBuccaneerTestingProupse")){
 					
 				 
