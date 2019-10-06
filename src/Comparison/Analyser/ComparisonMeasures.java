@@ -30,8 +30,7 @@ import com.ibm.statistics.plugin.*;
 import Comparison.Runner.Preparer;
 import Comparison.Runner.RunComparison;
 import Comparison.Runner.RunningParameter;
-import NotToSync.SPSS;
-import NotToSync.SPSSDescriptivesTable;
+
 
 public class ComparisonMeasures {
 
