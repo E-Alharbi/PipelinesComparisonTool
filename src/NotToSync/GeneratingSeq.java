@@ -7,7 +7,7 @@ package NotToSync;
 import java.io.File;
 import java.io.IOException;
 
-import Comparison.Runner.RunningPram;
+import Comparison.Runner.RunningParameter;
 
 public class GeneratingSeq {
 
