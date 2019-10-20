@@ -17,6 +17,9 @@ import Comparison.Utilities.FilesManagements;
 
 public class Refmac {
 
+	/*
+	 * R-work and R-free are parsed from Refmac log. Changing in Refmac log format might lead to incorrect parsing. It is recommended to validate R-work and R-free which parsed from this method with the actual log.       
+	 */
 	
 
 	public REFMACFactors RunRefmac (String mtzPath , String pdbPath, String RefmacPath,String ToolName, String FileName, String LIBIN) throws IOException{
