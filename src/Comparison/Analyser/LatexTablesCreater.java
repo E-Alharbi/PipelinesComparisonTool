@@ -59,7 +59,7 @@ public class LatexTablesCreater {
     				System.out.println(". Completeness is updated ");
     			}
 else {
-if(new CAInCorrectPosition().IsCalculatedFromSeq(new ExcelLoader().ReadExcel(excel.getAbsolutePath())) ==false) {
+if(new CAInCorrectPosition().IsCalculatedFromSeq(new ExcelLoader().ReadExcel(excel.getAbsolutePath())) ==true) {
 	System.out.println("\n .Completeness calculated from the number of sequenced residues. If you want to change it to calculate from number Ca in correct position, use UpdateCom=ExcelFileName1,ExcelFileName2 (use a comma to split excel files names )  ");	
 
 }
