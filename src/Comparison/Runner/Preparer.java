@@ -282,7 +282,7 @@ boolean Bucci1Prepare(String Iterations,String WorkFolder) throws IOException {
 	}
 	WriteTxtFile("./"+WorkFolder+"/Buccaneeri1.sh",Buccaneeri1);
 	CreateManagerScript(NumberOfFile,WorkFolder,"Buccaneeri1.sh");
-	WriteRefMacScriptForBucci1();
+	WriteRefMacScriptForBucci1(); // Not using 
 	new JobCreater().CreateJobs("Buccaneeri1.sh", "./"+WorkFolder);
 	
 	
@@ -482,6 +482,7 @@ boolean Bucci2Prepare(boolean Water , String Iterations,String WorkFolder ) thro
 	return true;
 }
 void WriteRefMacScriptForBucci1() throws IOException {
+	//Not Using
 	Vector<String> Script = new Vector<String>();
 	Script.add("#!/bin/csh -f");
 	Script.add("#");
@@ -559,15 +560,13 @@ void WriteRefMacScriptForBucci1() throws IOException {
 
 public String ReadResourceAsString (String FileName) throws IOException {
 	String Txt="";
-InputStream res =
-Map.class.getResourceAsStream(FileName);
-
+InputStream res =Map.class.getResourceAsStream(FileName);
 BufferedReader reader = new BufferedReader(new InputStreamReader(res));
 String line = null;
 
 while ((line = reader.readLine()) != null) {
 
-Txt+=line +" \n";
+Txt+=line +"\n";
 }
 		    reader.close();
 	return 	  Txt;  
