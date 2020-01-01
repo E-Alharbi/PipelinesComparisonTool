@@ -1,7 +1,5 @@
 package Comparison.Analyser;
 
-import static org.junit.Assume.assumeNoException;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -60,11 +58,11 @@ public class LatexTablesCreater {
     			}
 else {
 if(new CAInCorrectPosition().IsCalculatedFromSeq(new ExcelLoader().ReadExcel(excel.getAbsolutePath())) ==true) {
-	System.out.println("\n .Completeness calculated from the number of sequenced residues. If you want to change it to calculate from number Ca in correct position, use UpdateCom=ExcelFileName1,ExcelFileName2 (use a comma to split excel files names )  ");	
+	System.out.println("\n .Completeness calculated from the number of sequenced residues. If you want to change it to calculate from number Ca in correct position, use UpdateCom=ExcelFileName1,ExcelFileName2 (use a comma to split excel files names ). If you are sure is not calculated the number of sequenced residues, then ignore this warning  ");	
 
 }
 else {
-	System.out.println("\n .Completeness calculated from the number of Ca in the correct position");
+	System.out.println("\n .Completeness calculated from the number of Ca in the correct position. If you are sure is not calculated from Ca in the correct position, then ignore this warning");
 }
     		}
     		}

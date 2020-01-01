@@ -1,9 +1,50 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>BioToolsScript</groupId>
-  <artifactId>BioToolsScript</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <groupId>com.github.e-alharbi</groupId>
+  <artifactId>crystallographic-model-building-pipelines-comparison-tool</artifactId>
+  <version>1.1</version>
+  
+  <name>crystallographic-model-building-pipelines-comparison-tool</name>
+  <description>A tool to comapre automated crystallographic model-building pipelines</description>
+  <url>https://github.com/E-Alharbi/PipelinesComparisonTool</url>
+  <licenses>
+    <license>
+      <name>GNU GENERAL PUBLIC LICENSE Version 3</name>
+      <url>https://www.gnu.org/licenses/gpl-3.0.txt</url>
+    </license>
+  </licenses>
+  
+  <developers>
+    <developer>
+      <name>Emad Alharbi</name>
+      <email>emad.alharbi@york.ac.uk</email>
+      <organization>University of York </organization>
+      <organizationUrl>https://www.york.ac.uk</organizationUrl>
+    </developer>
+     <developer>
+      <name>Emad Alharbi</name>
+      <email>emalharbi@ut.edu.sa</email>
+      <organization>University of Tabuk</organization>
+      <organizationUrl>https://www.ut.edu.sa</organizationUrl>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git:git://github.com/E-Alharbi/PipelinesComparisonTool.git</connection>
+    <developerConnection>scm:git:ssh://github.com:E-Alharbi/PipelinesComparisonTool.git</developerConnection>
+    <url>https://github.com/E-Alharbi/PipelinesComparisonTool</url>
+   </scm>
+  <distributionManagement>
+  <snapshotRepository>
+    <id>ossrh</id>
+    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+  </snapshotRepository>
+  <repository>
+    <id>ossrh</id>
+    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+  </repository>
+</distributionManagement>
   <build>
+  <defaultGoal>install</defaultGoal>
     <sourceDirectory>src</sourceDirectory>
     <resources>
       <resource>
@@ -28,6 +69,63 @@
           <target>1.8</target>
         </configuration>
       </plugin>
+       <plugin>
+      <groupId>org.sonatype.plugins</groupId>
+      <artifactId>nexus-staging-maven-plugin</artifactId>
+      <version>1.6.7</version>
+      <extensions>true</extensions>
+      <configuration>
+        <serverId>ossrh</serverId>
+        <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+        <autoReleaseAfterClose>false</autoReleaseAfterClose>
+      </configuration>
+    </plugin>
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-source-plugin</artifactId>
+      <version>2.2.1</version>
+      <executions>
+        <execution>
+          <id>attach-sources</id>
+          <goals>
+            <goal>jar-no-fork</goal>
+          </goals>
+        </execution>
+      </executions>
+    </plugin>
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-javadoc-plugin</artifactId>
+      <version>2.9.1</version>
+      <executions>
+        <execution>
+          <id>attach-javadocs</id>
+          <goals>
+            <goal>jar</goal>
+          </goals>
+        </execution>
+      </executions>
+    </plugin>
+     <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-gpg-plugin</artifactId>
+      <version>1.5</version>
+      <executions>
+        <execution>
+          <id>sign-artifacts</id>
+          <phase>verify</phase>
+          <goals>
+            <goal>sign</goal>
+          </goals>
+          <configuration>
+                <gpgArguments>
+                    <arg>--pinentry-mode</arg>
+                    <arg>loopback</arg>
+                </gpgArguments>
+            </configuration>
+        </execution>
+      </executions>
+    </plugin>
     </plugins>
   </build>
     <dependencies>
@@ -51,6 +149,25 @@
     <groupId>org.apache.poi</groupId>
     <artifactId>poi-ooxml</artifactId>
     <version>3.17</version>
+</dependency>
+
+<dependency>
+    <groupId>org.json</groupId>
+    <artifactId>json</artifactId>
+    <version>20190722</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
+<dependency>
+    <groupId>com.googlecode.json-simple</groupId>
+    <artifactId>json-simple</artifactId>
+    <version>1.1.1</version>
+</dependency>
+
+
+<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-math3</artifactId>
+    <version>3.2</version>
 </dependency>
 
 

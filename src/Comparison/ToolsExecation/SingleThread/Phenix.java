@@ -33,6 +33,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.json.simple.parser.ParseException;
 
 import Comparison.Analyser.ExcelSheet;
 import Comparison.Analyser.PipelineLog;
@@ -40,13 +41,14 @@ import Comparison.Runner.Preparer;
 import Comparison.Runner.RunComparison;
 import Comparison.Runner.RunningParameter;
 import Comparison.Utilities.FilesManagements;
+import Comparison.Utilities.JSONReader;
 
 
 public class Phenix {
 	
 	static boolean FinshedBuilding=false;
 	static Date StartTime;
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, ParseException {
 		// TODO Auto-generated method stub
 
 		
@@ -119,7 +121,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 		    },
 		    0,1000); 
 	}
-	public void RunPhenixTool() throws IOException
+	public void RunPhenixTool() throws IOException, ParseException
 	{
 		
 		
@@ -197,7 +199,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 		 FinshedBuilding =true;
 	}
 
-	PipelineLog Run(String FilePathAndName,String FileName) throws IOException{
+	PipelineLog Run(String FilePathAndName,String FileName) throws IOException, ParseException{
 		Timer timer = new Timer();
 		 new RunComparison().CheckDirAndFile(FileName);
 		
@@ -276,7 +278,9 @@ seqin=FilePathAndName+".seq";
 		 a.toArray(myArray);
 		 callAndArgs=myArray;
 	 }
+	
 	 if(RunningParameter.UsingPhenixRebuild_in_place.equals("T") || RunningParameter.UsingPhenixRebuild_in_place.equals("F")) {
+		
 		 List<String> a = new ArrayList<String>();
 		 a.addAll(Arrays.asList(callAndArgs));
 		 a.add("rebuild_in_place=");
@@ -286,6 +290,76 @@ seqin=FilePathAndName+".seq";
 		 callAndArgs=myArray;
 	 }
 	 
+	 if(RunningParameter.MR.equals("T") && RunningParameter.UsingRFree.equals("T")) {
+		 String[]callAndArgs1= {
+				 RunningParameter.PhenixAutobuild,
+		"data=",mtzin,
+		"seq_file=",seqin,
+		"input_labels=","FP SIGFP None None None None None None FREE", 
+		
+		"model=",FilePathAndName+".pdb",
+		//"use_hl_if_present=","False",
+
+
+		"clean_up=","True"
+		
+		
+		 };
+		 
+		 
+		 callAndArgs=callAndArgs1;
+		 
+		 String semet=new JSONReader().JSONToHashMap(FilePathAndName+".json").get("semet");
+			if(semet.toLowerCase().equals("true"))
+			{
+				List<String> a = new ArrayList<String>();
+				 a.addAll(Arrays.asList(callAndArgs));
+				 a.add("semet=");
+				 a.add("True");
+				 String[] myArray = new String[a.size()];
+				 a.toArray(myArray);
+				 callAndArgs=myArray;
+			}
+			
+			if(RunningParameter.UsingPhenixRebuild_in_place.equals("T") || RunningParameter.UsingPhenixRebuild_in_place.equals("F")) {
+				
+				 List<String> a = new ArrayList<String>();
+				 a.addAll(Arrays.asList(callAndArgs));
+				 a.add("rebuild_in_place=");
+				 a.add(RunningParameter.PhenixRebuild_in_place);
+				 String[] myArray = new String[a.size()];
+				 a.toArray(myArray);
+				 callAndArgs=myArray;
+			 }
+			
+			if(RunningParameter.PhenixCluster.equals("T")) {
+				//"check_run_command=","True",
+				//"run_command=","sbatch",
+				//"nproc=","Auto",
+				//"background=","False",
+				//"queue_commands=","#SBATCH --time=48:00:00",
+				//"queue_commands=","#SBATCH --mem=5000",
+				//"queue_commands=","#SBATCH --account=CS-MPMSEDM-2018",
+				 List<String> a = new ArrayList<String>();
+				 a.addAll(Arrays.asList(callAndArgs));
+				 a.add("run_command=");
+				 a.add("sbatch");
+				 a.add("nproc=");
+				 a.add("Auto");
+				 a.add("background=");
+				 a.add("False");
+				 a.add("queue_commands=");
+				 a.add("#SBATCH --time=48:00:00");
+				 a.add("queue_commands=");
+				 a.add("#SBATCH --mem=20000");
+				 a.add("queue_commands=");
+				 a.add("#SBATCH --account=CS-MPMSEDM-2018");
+				 String[] myArray = new String[a.size()];
+				 a.toArray(myArray);
+				 callAndArgs=myArray;
+			}
+			
+	 }
 	 new Preparer().WriteTxtFile("ParametersUsed/"+FileName+".txt", new Date().toString()+" \n "+ Arrays.toString(callAndArgs));
 	
 	
@@ -313,16 +387,16 @@ seqin=FilePathAndName+".seq";
 		            	 System.out.println(st);
 		            	 res.LogFile+=st+"\n";
 		            	 
-	                 if(st.contains("Resolution range:")){
+	                // if(st.contains("Resolution range:")){
 	                	
-	                  Resolution=st;
+	                 // Resolution=st;
 		              
-	                 }
-	                 if(st.contains("After refmac, R =")){
+	                // }
+	                // if(st.contains("After refmac, R =")){
 		
-	               Rfactor=st;
+	               //Rfactor=st; 
 	   	              
-	                    }
+	                    //}
 	                 if(st.contains("Working directory:") && Working_directory.equals("")){
 	                	 Working_directory=st.split(":")[st.split(":").length-1].trim();
 	                	 
@@ -343,8 +417,8 @@ seqin=FilePathAndName+".seq";
 	         		System.out.println("Time Taking "+TimeTaking ) ;
 	         		res.LogFile+="TimeTaking "+TimeTaking+"\n";
 		            
-	         		res.Roslution=Resolution;
-	         		res.Rfactor=Rfactor;
+	         		res.Roslution=Resolution;// Not Used 
+	         		res.Rfactor=Rfactor; // Not Used 
 	         		res.TimeTaking=TimeTaking;
 	         		res.ProcessStatus="Success";
 	         		
@@ -391,6 +465,8 @@ seqin=FilePathAndName+".seq";
 		         }
 		         timer.cancel();
 		         
+		 if(RunningParameter.MR.equals("F")){// we do not want to use these fixes when we test MR
+		 if(RunningParameter.UsingPhenixRebuild_in_place.equals("None")) {// Only use this when PhenixAutoBuild set to default        
 		 if(RunningParameter.UseInitialModels.equals("T")&& res.LogFile.contains("the segment")&&res.LogFile.contains("could not be matched")) {
 			 System.out.println("Now, try with Rebuild_in_place set false");
 			 RunningParameter.UsingPhenixRebuild_in_place="F";
@@ -398,7 +474,40 @@ seqin=FilePathAndName+".seq";
 			 FileUtils.deleteDirectory(new File (FileName));
 			 return Run(FilePathAndName,FileName);
 		 }
-		 
+		 if(RunningParameter.UseInitialModels.equals("T")&& res.LogFile.contains("the PDB file and sequence file could not be aligned")) {
+			 System.out.println("Now, try with Rebuild_in_place set false because the PDB file and sequence file could not be aligned");
+			 RunningParameter.UsingPhenixRebuild_in_place="F";
+			 RunningParameter.PhenixRebuild_in_place="False"; 
+			 FileUtils.deleteDirectory(new File (FileName));
+			 return Run(FilePathAndName,FileName);
+		 }
+		 if(RunningParameter.UseInitialModels.equals("T")&& res.LogFile.contains("This can be caused by 'TER' records separating parts of a chain")) {
+			 System.out.println("Now, try with removing TER and re-order chains ");
+			 FileUtils.deleteDirectory(new File (FileName));
+			 new  Coord_format().RunCoord_format(new FilesManagements().GetModelPath(FileName+".pdb"),true,false);// it will remove TER even it set to false. False here just to avoid infinite recursion
+			 RunningParameter.InitialModels="./ModifiedPDB"; // set the path to current folder because Coord_format will write the new PDB in main folder   
+			 return Run(FilePathAndName,FileName);
+		 }
+	}
+	}
+		 if(RunningParameter.MR.equals("T")) {// some models have mismatch that rebuild can not be used 
+			 if(RunningParameter.UsingPhenixRebuild_in_place.equals("None")) {
+				 if(res.LogFile.contains("the segment")&&res.LogFile.contains("could not be matched")) {
+					 System.out.println("Now, try with Rebuild_in_place set false");
+					 RunningParameter.UsingPhenixRebuild_in_place="F";
+					 RunningParameter.PhenixRebuild_in_place="False"; 
+					 FileUtils.deleteDirectory(new File (FileName));
+					 return Run(FilePathAndName,FileName);
+				 } 
+				 if(res.LogFile.contains("the PDB file and sequence file could not be aligned")) {
+					 System.out.println("Now, try with Rebuild_in_place set false because the PDB file and sequence file could not be aligned");
+					 RunningParameter.UsingPhenixRebuild_in_place="F";
+					 RunningParameter.PhenixRebuild_in_place="False"; 
+					 FileUtils.deleteDirectory(new File (FileName));
+					 return Run(FilePathAndName,FileName);
+				 }
+			 }
+		 }
 		 return res;
 	}
 	

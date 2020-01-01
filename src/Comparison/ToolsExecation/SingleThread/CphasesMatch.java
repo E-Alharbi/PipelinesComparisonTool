@@ -30,7 +30,8 @@ public class CphasesMatch {
 	String mtzin=FilePathAndName+".mtz";
 	String colinhl=RunningParameter.PhasesUsedCPhasesMatch;
 	String colinfo="FP,SIGFP";
-	String colinhl2="sfcalc.ABCD.A,sfcalc.ABCD.B,sfcalc.ABCD.C,sfcalc.ABCD.D";
+	//String colinhl2="sfcalc.ABCD.A,sfcalc.ABCD.B,sfcalc.ABCD.C,sfcalc.ABCD.D";
+	String colinhl2=RunningParameter.FinalPhasesCPhasesMatch;
 	 
 	 String[]callAndArgs= {
 			 CphasesMatchScriptPath,

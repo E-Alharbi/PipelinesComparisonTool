@@ -115,13 +115,24 @@ public class shelxe extends Tool{
 		 timer(WorkingDir+FileName,FileName,timer);
 		
 		//Create a working dir 
-		
+		if(RunningParameter.MR.equals("F")) {
 		 FileUtils.copyFile(new File(FilePathAndName+".phi"),  new File(WorkingDir+FileName+".phi"));
 		 FileUtils.copyFile(new File(FilePathAndName+".ins"),  new File(WorkingDir+FileName+".ins"));
 		 FileUtils.copyFile(new File(FilePathAndName+".hkl"),  new File(WorkingDir+FileName+".hkl"));
-		 String[]callAndArgs= {RunningParameter.Shelxe,WorkingDir+FileName+".phi","-a","-n","-t20"};
+		}
 		
-		 if(new File("SolventFraction.txt").exists()) {
+		String[]callAndArgs= {RunningParameter.Shelxe,WorkingDir+FileName+".phi","-a","-n","-t20"};
+		
+		if(RunningParameter.MR.equals("T")) {
+			FileUtils.copyFile(new File(FilePathAndName+".hkl"),  new File(WorkingDir+FileName+".hkl"));
+			FileUtils.copyFile(new File(FilePathAndName+".pda"),  new File(WorkingDir+FileName+".pda"));
+			String[]callAndArgsMR= {RunningParameter.Shelxe,WorkingDir+FileName+".pda","-a15","-m20","-q","-o","-n","-t4",RunningParameter.ShelxeReflectionsSpace};
+		
+			callAndArgs=callAndArgsMR;
+		}
+		 
+		
+		 if(new File("SolventFraction.txt").exists()) {// Txt file content : PDB ID SolventFraction
 			String [] SolventFraction = new String ( Files.readAllBytes( Paths.get("SolventFraction.txt") ) ).split("\n");
           System.out.println("SolventFraction "+SolventFraction.length);
 		boolean Found=false;	
@@ -189,6 +200,12 @@ public class shelxe extends Tool{
  		 if(res.LogFile.contains("Best trace")) // this means is a normal termination 
 		 FileUtils.copyFile(new File(WorkingDir+FileName+".pdb"),   new File("./shelxeResults/PDBs/"+FileName+".pdb"));
 		
+ 		 if(RunningParameter.MR.equals("T")&&res.LogFile.contains("Too many reflections - use -l flag to increase array space")) {
+ 			 
+ 			FileUtils.deleteDirectory(new File(WorkingDir));
+ 			RunningParameter.ShelxeReflectionsSpace="-l10";
+ 			 return RunShelxe( FilePathAndName, FileName);
+ 		 }
 		return res;
 	}
 	@Override

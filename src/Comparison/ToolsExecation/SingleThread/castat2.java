@@ -13,7 +13,9 @@ import java.text.DecimalFormat;
 public class castat2 {
 
 	public Castat2Data Runcastat2(String PathPDB1,String PathPDB2,String castat2Path){
-		 String[]callAndArgs= {
+	
+		
+		String[]callAndArgs= {
 				 
 				 castat2Path,
 				 PathPDB1,
@@ -47,6 +49,7 @@ Castat2Data c = new Castat2Data();
 						            	  c.Seq=Results[4];
 						            	  c.n1m2=Results[5];
 						            	  c.n2m1=Results[6];
+						            	  
 						             }
 
 						           

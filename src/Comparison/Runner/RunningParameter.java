@@ -58,7 +58,7 @@ public class RunningParameter {
 	
 	public static String CfakeAnom;
 	public static String UsingMolProbity="T"; // Using Mol Probity in the Analyser. Default is False
-	public static String PhasesUsedCPhasesMatch="HLA,HLB,HLC,HLD";// Default is parrot phases.
+	public static String PhasesUsedCPhasesMatch="HLA,HLB,HLC,HLD";// Default is HL  phases.
 	
 	public static String ClusterServerGrid="Slurm";
 	public static String ExperimentType="Both";
@@ -75,5 +75,8 @@ public class RunningParameter {
     public static String CCP4ModuleLoadingCommand="module load chem/ccp4/7.0.066";
     public static String PhenixLoadingCommand="module load chem/phenix/1.14-3260";
     public static String ShelxeData;
-   
+    public static String MR="F";
+    public static String FinalPhasesCPhasesMatch="sfcalc.ABCD.A,sfcalc.ABCD.B,sfcalc.ABCD.C,sfcalc.ABCD.D";// Default is HL  phases.
+    public static String ShelxeReflectionsSpace="-l2";
+    public static String PhenixCluster="F";
 }

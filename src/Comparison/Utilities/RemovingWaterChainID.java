@@ -15,7 +15,9 @@ import Comparison.Runner.RunComparison;
 
 public class RemovingWaterChainID {
 
-	
+	public static void main(String[] args) throws IOException {
+		new RemovingWaterChainID().RemoveWaterChainID("/Users/emadalharbi/Downloads/2pnk-4.0-parrot-mrncs.pdb");
+	}
 
 	public void RemoveWaterChainID(String Path) throws IOException {
 		

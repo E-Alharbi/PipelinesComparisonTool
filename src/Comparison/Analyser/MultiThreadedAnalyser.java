@@ -9,37 +9,32 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.Thread.State;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Stack;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import Comparison.Runner.RunComparison;
 import Comparison.Runner.RunningParameter;
 import Comparison.ToolsExecation.SingleThread.Castat2Data;
 import Comparison.ToolsExecation.SingleThread.CphasesMatch;
+import Comparison.ToolsExecation.SingleThread.Csymmatch;
 import Comparison.ToolsExecation.SingleThread.MolProbity;
 import Comparison.ToolsExecation.SingleThread.Refmac;
 import Comparison.ToolsExecation.SingleThread.castat2;
 import Comparison.Utilities.DataSetChecking;
-import Comparison.Utilities.FilesManagements;
+import Comparison.Utilities.RemoveHeader;
+import Comparison.Utilities.RemovingDumAtoms;
 import Comparison.Utilities.RemovingWaterChainID;
-import ToolsExecution.RunBuccaneerMulti;
 import table.draw.LogFile;
-import java.util.Stack;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 public class MultiThreadedAnalyser implements Runnable {
 
 	// This the main class for the analyser that analysis the the tools outputs and creates an excel file for each tool. 
@@ -430,6 +425,29 @@ DC.WarringLogFile="F";
 			new LogFile().Log(RunningParameter.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "castat2 ", "Running ...",headersList);
 			new LogFile().Log(RunningParameter.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "castat2 ", "Done" ,headersList);
 
+			if(RunningParameter.MR.equals("T")) {//only MR
+				// First copy the PDB
+				new RunComparison().CheckDirAndFile("Csymmatch");
+				//check if exists. 
+				if(new File("Csymmatch/"+PDB.getName()).exists())
+				FileUtils.deleteQuietly(new File("Csymmatch/"+PDB.getName()));
+				// make a copy of PDB
+				FileUtils.copyFile(PDB, new File("Csymmatch/"+PDB.getName()));
+				
+				//remove DUM atoms if any because it cause an error with Csymmatch
+				new RemovingDumAtoms().RemovingWithOverwrite(new File("Csymmatch/"+PDB.getName()).getAbsolutePath());
+			
+				//apply Csymmatch 
+				 new Csymmatch().RunCsymmatch(new File("Csymmatch/"+PDB.getName()),new File(RunningParameter.DataPath+"/"+DC.PDB_ID+".pdb"));
+			
+				 Cas =  new castat2().Runcastat2(RunningParameter.DataPath+"/"+DC.PDB_ID+".pdb", new File("Csymmatch/"+PDB.getName()).getAbsolutePath(), RunningParameter.castat2Path);
+			
+				 if(Cas.n1m2.equals("None")) {// try to remove header line in Ref PDB
+					
+					 Cas =  new castat2().Runcastat2(new RemoveHeader().RemoveHeaderFromRefPDB(new File(RunningParameter.DataPath+"/"+DC.PDB_ID+".pdb")).getAbsolutePath(), new File("Csymmatch/"+PDB.getName()).getAbsolutePath(), RunningParameter.castat2Path);
+
+				 }
+			}
 			
 			if((RunningParameter.ToolName.equals("Buccaneeri2W") || RunningParameter.ToolName.equals("Buccaneeri2WI5"))  && Cas.n1m2.equals("None")) { // this occurs in very few cases when the water chain ID is Z and the PDB has many chains 
 				new RunComparison().CheckDirAndFile("PDBsWithEmptyWaterChainID");
@@ -441,6 +459,13 @@ DC.WarringLogFile="F";
 
 			}
 			
+			if(Cas.n1m2.equals("None") && new RemovingDumAtoms().CheckingIfContainsDUMAtoms(PDB.getAbsolutePath())==true ) { // castat might fail if there is too many DUM atoms in the PDB
+				
+				Cas =  new castat2().Runcastat2(RunningParameter.DataPath+"/"+DC.PDB_ID+".pdb", new RemovingDumAtoms().Removing(PDB.getAbsolutePath()).getAbsolutePath(), RunningParameter.castat2Path);
+				new LogFile().Log(RunningParameter.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "castat2 trying after removing DUM atoms", "Running ...",headersList);
+				new LogFile().Log(RunningParameter.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "castat2 trying after removing DUM atoms", "Done" ,headersList);
+
+			}
 			DC.NumberofAtomsinFirstPDB=Cas.NumberOfAtomsInFirstPDB;
 		
 			DC.NumberofAtomsinSecondPDB=Cas.NumberOfAtomsInSecondPDB;

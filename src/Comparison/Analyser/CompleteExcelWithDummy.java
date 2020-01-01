@@ -5,10 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Vector;
 
-import Comparison.Analyser.ExcelContents;
-import Comparison.Analyser.ExcelLoader;
-import Comparison.Analyser.ExcelSheet;
-
 public class CompleteExcelWithDummy {
 
 	public void FillInWithDummy(File Complete, File Missing) throws FileNotFoundException, IOException {

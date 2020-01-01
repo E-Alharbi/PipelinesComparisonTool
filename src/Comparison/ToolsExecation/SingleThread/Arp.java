@@ -14,9 +14,11 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
@@ -32,6 +34,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.json.simple.parser.ParseException;
 
 import Comparison.Analyser.ExcelSheet;
 import Comparison.Analyser.PipelineLog;
@@ -39,6 +42,7 @@ import Comparison.Runner.Preparer;
 import Comparison.Runner.RunComparison;
 import Comparison.Runner.RunningParameter;
 import Comparison.Utilities.FilesManagements;
+import Comparison.Utilities.JSONReader;
 
 
 public class Arp {
@@ -46,7 +50,7 @@ public class Arp {
 	static boolean FinshedBuilding=false;
 	static String LogTXT="";
 	static Date StartTime;
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, ParseException {
 		// TODO Auto-generated method stub
 
 		if(args.length<2){
@@ -136,7 +140,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 		    },
 		    0,1000); 
 	}
-	public void RunwArpTool() throws IOException
+	public void RunwArpTool() throws IOException, ParseException
 	{
 		
 		
@@ -200,7 +204,7 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 		
 	}
 	
-	PipelineLog RunArpTool(String FilePathAndName,String FileName){
+	PipelineLog RunArpTool(String FilePathAndName,String FileName) throws ParseException{
 		Timer timer = new Timer();
 		 //JobDirectory=System.getProperty("user.dir")+"/wArpResults/WorkingDir/"+FileName;
 		// PDBID=FileName;
@@ -309,6 +313,50 @@ else {
 	 }
 }
 
+if(RunningParameter.MR.equals("T") && RunningParameter.UsingRFree.equals("T")) {
+	 String[]callAndArgsRFree= {
+				// /Applications/arp_warp_7.6/share/auto_tracing.sh 
+			RunningParameter.wArpAutotracing,
+			"datafile",mtzin,
+			"workdir",System.getProperty("user.dir")+"/wArpResults/WorkingDir",
+			"fp","FP",
+			"sigfp","SIGFP",
+			"freelabin","FREE",
+			"jobId",FileName,
+			"seqin",seqin,
+			"modelin",FilePathAndName+".pdb",
+			
+			};
+	 ArpParm=callAndArgsRFree;
+}
+if(RunningParameter.MR.equals("T") && RunningParameter.UsingRFree.equals("F")) {
+	 String[]callAndArgsRFree= {
+				// /Applications/arp_warp_7.6/share/auto_tracing.sh 
+			RunningParameter.wArpAutotracing,
+			"datafile",mtzin,
+			"workdir",System.getProperty("user.dir")+"/wArpResults/WorkingDir",
+			"fp","FP",
+			"sigfp","SIGFP",
+			"jobId",FileName,
+			"seqin",seqin,
+			"modelin",FilePathAndName+".pdb",
+			
+			};
+	 ArpParm=callAndArgsRFree;
+}
+if(RunningParameter.MR.equals("T")) {
+	String semet=new JSONReader().JSONToHashMap(FilePathAndName+".json").get("semet");
+	if(semet.toLowerCase().equals("true"))
+	{
+		List<String> a = new ArrayList<String>();
+		 a.addAll(Arrays.asList(ArpParm));
+		 a.add("is_semet");
+		 a.add("1");
+		 String[] myArray = new String[a.size()];
+		 a.toArray(myArray);
+		 ArpParm=myArray;
+	}
+}
 new Preparer().WriteTxtFile("ParametersUsed/"+FileName+".txt", new Date().toString()+" \n "+ Arrays.toString(ArpParm));
 	 Process p = Runtime.getRuntime().exec(ArpParm);
 

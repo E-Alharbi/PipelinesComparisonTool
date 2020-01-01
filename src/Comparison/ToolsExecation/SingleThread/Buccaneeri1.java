@@ -29,6 +29,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.json.simple.parser.ParseException;
 
 import Comparison.Analyser.PipelineLog;
 import Comparison.Analyser.REFMACFactors;
@@ -36,6 +37,7 @@ import Comparison.Runner.Preparer;
 import Comparison.Runner.RunComparison;
 import Comparison.Runner.RunningParameter;
 import Comparison.Utilities.FilesManagements;
+import Comparison.Utilities.JSONReader;
 
 
 public class Buccaneeri1 {
@@ -45,7 +47,7 @@ public class Buccaneeri1 {
 	static boolean FinshedBuilding=false;
 	static String LogTXT="";
 	static Date StartTime;
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, ParseException {
 		// TODO Auto-generated method stub
 
 		if(args.length<1){
@@ -74,7 +76,7 @@ public class Buccaneeri1 {
 		}
 		return true;
 	}
-	public void RunBuccaneerTool() throws IOException
+	public void RunBuccaneerTool() throws IOException, ParseException
 	{
 		
 		Timer t = new Timer();
@@ -167,7 +169,7 @@ public class Buccaneeri1 {
 		
 	}
 
-	PipelineLog RunBuccaneer(String FilePathAndName,String FileName) throws IOException{
+	PipelineLog RunBuccaneer(String FilePathAndName,String FileName) throws IOException, ParseException{
 		System.out.println("FilePathAndName "+FilePathAndName);
 		System.out.println("FileName "+FileName);
 		 PipelineLog res= new PipelineLog();
@@ -176,6 +178,16 @@ public class Buccaneeri1 {
 		
 		String CCP4=System.getenv("CCP4");
 		String BuccScript=new Preparer().ReadResourceAsString("/BuccaneerPipeline.sh");
+		
+		if(RunningParameter.MR.equals("T")) {
+			BuccScript=new Preparer().ReadResourceAsString("/BuccaneerPipelineMR.sh");
+			BuccScript=BuccScript.replace("@8", FilePathAndName+".pdb");
+			String semet=new JSONReader().JSONToHashMap(FilePathAndName+".json").get("semet");
+			if(semet.toLowerCase().equals("true"))
+				BuccScript=BuccScript.replace("@9", "-buccaneer-build-semet");
+			if(semet.toLowerCase().equals("false"))
+				BuccScript=BuccScript.replace("@9", " ");
+		}
 		
 		String BuccPipeline=CCP4+"/share/python/CCP4Dispatchers/buccaneer_pipeline.py";
 		String mtzin=FilePathAndName+".mtz";
@@ -193,6 +205,13 @@ public class Buccaneeri1 {
 		BuccScript=BuccScript.replace("@3", seqin);
 		BuccScript=BuccScript.replace("@4", cycles);
 		BuccScript=BuccScript.replace("@5", FileName);
+		// Do not change if blocks order 
+		if(RunningParameter.MR.equals("T") && RunningParameter.UsingRFree.equals("T")) {
+			 BuccScript=BuccScript.replace("@6", "-colin-free FREE"); 
+		}
+		if(RunningParameter.MR.equals("T") && RunningParameter.UsingRFree.equals("F")) {
+			 BuccScript=BuccScript.replace("@6", " "); 
+		}
 		 if(RunningParameter.UsingRFree.equals("T")) {
 			 BuccScript=BuccScript.replace("@6", "-colin-free FreeR_flag"); 
 		 }
@@ -215,6 +234,8 @@ public class Buccaneeri1 {
 		 if(RunningParameter.UseInitialModels.equals("F")) {
 			 BuccScript=BuccScript.replace("@7", " "); 
 		 }
+		 
+		 
 		new Preparer().WriteTxtFile(FileName+"/"+FileName+".sh", BuccScript);
 		
 		

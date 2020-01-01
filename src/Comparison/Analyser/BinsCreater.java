@@ -9,25 +9,19 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 
 import Comparison.Runner.Preparer;
+import Comparison.Runner.RunningParameter;
 
 public class BinsCreater {
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		
-		new BinsCreater().Bining("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingRunShelxeForThePaperRevision/All/OrginalBuccEx54ExFaliedCases");
+		RunningParameter.MR="T";
+		new BinsCreater().Bining("/Users/emadalharbi/Downloads/TestBinning");
 	}
 	public  void Bining(String Path) throws IOException {
 		// TODO Auto-generated method stub
@@ -56,6 +50,7 @@ public class BinsCreater {
 						CSV+=Container.get(i).Resolution+","; 
 						CSV+=Container.get(i).Completeness+","; 
 						String Val="";
+						if(RunningParameter.MR.equals("F")) {
 						if(Double.parseDouble(Container.get(i).Resolution) <2) {
 							Val="1.0 - 1.9";
 							
@@ -78,7 +73,28 @@ public class BinsCreater {
 						 if(Double.parseDouble(Container.get(i).Resolution) == 4) {
 							 Val="4.0";
 						}
+					}
 						
+						if(RunningParameter.MR.equals("T")) {
+							if(Double.parseDouble(Container.get(i).Resolution) <1.6) {
+								Val="1.0 - 1.5";
+								
+							}
+							  if(Double.parseDouble(Container.get(i).Resolution) >=1.6 && Double.parseDouble(Container.get(i).Resolution) <=2) {
+								  Val="1.6 - 2.0";
+							}
+							  
+							  if(Double.parseDouble(Container.get(i).Resolution) >=2.1 && Double.parseDouble(Container.get(i).Resolution) <=2.5) {
+								  Val="2.1 - 2.5";
+							}
+							  
+							  if(Double.parseDouble(Container.get(i).Resolution) >=2.6 && Double.parseDouble(Container.get(i).Resolution) <=3.0) {
+								  Val="2.6 - 3.0";
+							}
+							  if(Double.parseDouble(Container.get(i).Resolution) >=3.1) {
+								  Val="3.1+";
+							}
+						}
 						 Container.get(i).Resolution=Val;
 						 
 						if(NumberOfDatasetsInReso.containsKey(Container.get(i).Resolution+"ReservedForNumOfDatasetsInResoBin")) {
@@ -97,6 +113,7 @@ public class BinsCreater {
 						CSV+=Container.get(i).E_mapCorrelation+",";
 						
 						//double IncorreclyBuilt= ((Double.parseDouble(Container.get(i).NumberofAtomsinSecondPDB) - Double.parseDouble(Container.get(i).NumberOfAtomsInSecondNotInFirst))) /Double.parseDouble(Container.get(i).NumberofAtomsinFirstPDB); 
+						
 						CSV+=new BigDecimal(Container.get(i).NumberofAtomsinSecondPDB).subtract(new BigDecimal(Container.get(i).NumberOfAtomsInSecondNotInFirst)).divide(new BigDecimal(Container.get(i).NumberofAtomsinFirstPDB),2,RoundingMode.HALF_UP)+",";
 						//CSV+=Math.round(IncorreclyBuilt)+",";
 						CSV+=Container.get(i).TimeTaking+",";
@@ -142,8 +159,9 @@ public class BinsCreater {
 				
 				for (String i : NumberOfDatasetsInReso.keySet()) {
 					  
-					 CSV=CSV.replaceAll(i, i.replaceAll("ReservedForNumOfDatasetsInResoBin", "")+"\t("+ String.valueOf(NumberOfDatasetsInReso.get(i)) +")");
-					 
+					 //CSV=CSV.replaceAll(i, i.replaceAll("ReservedForNumOfDatasetsInResoBin", "")+"\t("+ String.valueOf(NumberOfDatasetsInReso.get(i)) +")");
+					 CSV=CSV.replaceAll(Pattern.quote(i), i.replaceAll("ReservedForNumOfDatasetsInResoBin", "")+"\t("+ String.valueOf(NumberOfDatasetsInReso.get(i)) +")");
+
 					}
 				  
 				  for (String i : NumberOfDatasetsInSizeGroup.keySet()) {

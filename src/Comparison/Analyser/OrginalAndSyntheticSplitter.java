@@ -10,10 +10,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Vector;
 
-import org.apache.commons.io.FileUtils;
-
 import Comparison.Runner.RunComparison;
-import Comparison.Runner.RunningParameter;
 
 public class OrginalAndSyntheticSplitter {
 

@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.Vector;
 
 import Comparison.Runner.RunComparison;
-import Comparison.Runner.RunningParameter;
 
 public class FailedDatasetsExcluder {
 

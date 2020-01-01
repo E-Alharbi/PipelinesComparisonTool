@@ -32,6 +32,7 @@ public class CAInCorrectPosition {
 		new ExcelSheet().FillInExcel(Pipeline1Excel, excel.getAbsolutePath());
 		
 	}
+	// This method might predict wrongly when the number of CA in correct position same as the number of CA in the same sequence. It is advised to check excel files manually.       
 	public boolean IsCalculatedFromSeq(Vector<ExcelContents> Pipeline1Excel) {
 		
 	
@@ -41,6 +42,7 @@ public class CAInCorrectPosition {
 			df.setRoundingMode(RoundingMode.HALF_UP);
 			String Completeness= df.format((BigDecimal.valueOf((Double.parseDouble(Pipeline1Excel.get(i).NumberOfAtomsInSecondNotInFirst) * 100.00)/Double.parseDouble(Pipeline1Excel.get(i).NumberofAtomsinFirstPDB)) ));
 if(Pipeline1Excel.get(i).Completeness.equals(Completeness))
+	
 	return false;
 		}
 	}

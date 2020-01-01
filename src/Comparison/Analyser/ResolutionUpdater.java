@@ -11,13 +11,11 @@ import java.util.Vector;
 
 import org.apache.commons.io.FileUtils;
 
-
-import org.apache.commons.io.FilenameUtils;
-
-import Comparison.Runner.RunningParameter;
-
 public class ResolutionUpdater {
 
+public static void main(String[] args) throws Exception{
+		new ResolutionUpdater().Update("/Users/emadalharbi/Downloads/TestBinning");
+	}
 	/*
 	 * This class  updates resolution based on the MTZ not refmac   
 	 */

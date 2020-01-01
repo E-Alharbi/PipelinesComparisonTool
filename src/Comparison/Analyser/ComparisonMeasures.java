@@ -8,28 +8,23 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
-import java.util.Map.Entry;
 
 import org.apache.commons.io.FileUtils;
 //import  org.apache.commons.lang3.StringUtils;
-
 import org.apache.commons.lang3.math.NumberUtils;
-
-import com.ibm.statistics.plugin.*;
 
 import Comparison.Runner.Preparer;
 import Comparison.Runner.RunComparison;
-import Comparison.Runner.RunningParameter;
 
 
 public class ComparisonMeasures {
@@ -1481,8 +1476,28 @@ return FormattedTable;
 		Table=Table.replaceAll("\\bBuccaneeri1I3GA\\b", "i1(I3GA)");
 		Table=Table.replaceAll("\\bBuccaneeri1I4GA\\b", "i1(I4GA)");
 		Table=Table.replaceAll("\\bBuccaneeri1I5GA\\b", "i1(I5GA)");
-		Table=Table.replaceAll("\\ShelxeWithTFlagChFomPhi\\b", "SHELXE/Parrot");
-		Table=Table.replaceAll("\\ShelxeWithTFlag\\b", "SHELXE");
+		Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhi\\b", "SHELXE/Parrot");
+		Table=Table.replaceAll("\\bShelxeWithTFlag\\b", "SHELXE");
+		
+		Table=Table.replaceAll("\\bArpPhenix\\b", "ARP(P/Parrot)");
+		Table=Table.replaceAll("\\bArpPhenixHLA\\b", "ARP(P)");
+		Table=Table.replaceAll("\\bArpWArpBuccaneeri1I5\\b", "ARP(B)");
+		Table=Table.replaceAll("\\bBuccaneeri1I5Phenix\\b", "Buccaneer(P/Parrot)");
+		Table=Table.replaceAll("\\bBuccaneeri1I5PhenixHLA\\b", "Buccaneer(P)");
+		Table=Table.replaceAll("\\bPhenixArp\\b", "PHENIX(A)");
+		Table=Table.replaceAll("\\bPhenixBuccaneeri1I5\\b", "PHENIX/Parrot(B)");
+		Table=Table.replaceAll("\\bPhenixHLAArp\\b", "PHENIX(A)");
+		Table=Table.replaceAll("\\bPhenixHLABuccaneeri1I5\\b", "PHENIX(B)");
+		Table=Table.replaceAll("\\bShelxeWithTFlagArp\\b", "SHELXE(A)");
+		Table=Table.replaceAll("\\bShelxeWithTFlagBuccaneeri1I5\\b", "SHELXE(B)");
+		Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiArp\\b", "SHELXE/Parrot(A)");
+		Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiBuccaneeri1I5\\b", "SHELXE/Parrot(B)");
+		Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiPhenix\\b", "SHELXE/Parrot(P/Parrot)");
+		Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiPhenixHLA\\b", "SHELXE/Parrot(P)");
+		Table=Table.replaceAll("\\bShelxeWithTFlagPhenix\\b", "SHELXE(P/Parrot)");
+		Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiPhenixHLA\\b", "SHELXE/Parrot(P)");
+		Table=Table.replaceAll("\\bShelxeWithTFlagPhenix\\b", "SHELXE(P/Parrot)");
+		Table=Table.replaceAll("\\bShelxeWithTFlagPhenixHLA\\b", "SHELXE(P)");
 		
 		
 		return Table;

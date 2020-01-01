@@ -9,7 +9,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Vector;
 
+import org.apache.commons.io.FileUtils;
+import org.json.simple.parser.ParseException;
+
 import Comparison.Analyser.LatexTablesCreater;
+import Comparison.Analyser.MatchChainsToRef;
 import Comparison.Analyser.MultiThreadedAnalyser;
 import Comparison.ToolsExecation.SingleThread.Arp;
 import Comparison.ToolsExecation.SingleThread.Buccaneeri1;
@@ -23,15 +27,16 @@ import Comparison.ToolsExecation.SingleThread.cfakeAnom;
 import Comparison.ToolsExecation.SingleThread.chltofom;
 import Comparison.ToolsExecation.SingleThread.shelxe;
 import Comparison.Utilities.PhenixTempCleaner;
+import Comparison.Utilities.RemovingDumAtoms;
 
 
 public class RunComparison {
 
 	/*
-	 * Main class of the comparison script 
+	 * Main class of the comparison tool 
 	 */
 	
-	public static void main(String[] args) throws IOException, InterruptedException, InstantiationException, IllegalAccessException {
+	public static void main(String[] args) throws IOException, InterruptedException, InstantiationException, IllegalAccessException, ParseException {
 		// TODO Auto-generated method stub
 		if(System.getenv("PHENIX")==null) {
 			System.out.println("PHENIX installation cannot be found! if you instaled PHENIX, run the setup up script first. ");
@@ -295,7 +300,9 @@ public class RunComparison {
 					System.out.println("DatafakeAnomalous= path Data fake Anomalous");
 					System.out.println("cstat2= path for cstat2 core folder");
 					System.out.println("UsingMolProbity= T or F");
-					System.out.println("PhasesUsedCPhasesMatch= Default is (parrot.ABCD.A,parrot.ABCD.B,parrot.ABCD.C,parrot.ABCD.D)");
+					System.out.println("PhasesUsedCPhasesMatch= Default is (HLA,HLB,HLC,HLD)");
+					System.out.println("FinalPhasesCPhasesMatch= Default is (sfcalc.ABCD.A,sfcalc.ABCD.B,sfcalc.ABCD.C,sfcalc.ABCD.D)");
+
 					System.out.println("SlurmAccount= you project account in slurm [optional] ");
 					System.out.println("UsingRfree= T or F");
 					System.out.println("SlurmEmail= you email to receive notifications about jobs status [optional]   ");
@@ -335,6 +342,10 @@ public class RunComparison {
 					 
 					 if(checkArg(Parm,"PhasesUsedCPhasesMatch")!=null){
 						 RunningParameter.PhasesUsedCPhasesMatch=checkArg(Parm,"PhasesUsedCPhasesMatch");
+						
+					 }
+					 if(checkArg(Parm,"FinalPhasesCPhasesMatch")!=null){
+						 RunningParameter.FinalPhasesCPhasesMatch=checkArg(Parm,"FinalPhasesCPhasesMatch");
 						
 					 }
 					 if(checkArg(Parm,"UsingRfree")!=null){
@@ -464,6 +475,10 @@ public class RunComparison {
 							System.out.println("ExcelDir= the path for root folder that contain three folders: hancs, mrncs and nonce. Each contains excel files belong to the same DM type. At less you need a one folder (such as noncs) in the root folder ");
 							System.exit(-1);
 						}
+					 if(checkArg(Parm,"MR")!=null){
+						 RunningParameter.MR=checkArg(Parm,"MR");
+						
+					 }
 					 String [] p =  {checkArg(Parm,"ExcelDir"),checkArg(Parm,"UpdateCom"),checkArg(Parm,"FillInMissingData"),checkArg(Parm,"ExcludeFromOrginal"),checkArg(Parm,"ExcludeFromSynthetic"),checkArg(Parm,"SetRfreeToZero")};
 					 
 						new LatexTablesCreater().main( p);
@@ -531,6 +546,11 @@ public class RunComparison {
 						 RunningParameter.InitialModels=checkArg(Parm,"InitialModels");
 						
 					 }
+					 
+					 if(checkArg(Parm,"MR")!=null){
+						 RunningParameter.MR=checkArg(Parm,"MR");
+						
+					 }
 					 new Buccaneeri1().RunBuccaneerTool();
 			 }
 			  
@@ -556,7 +576,10 @@ public class RunComparison {
 						 RunningParameter.Shelxe=checkArg(Parm,"Shelxe");
 						
 					 }
-					 
+					 if(checkArg(Parm,"MR")!=null){
+						 RunningParameter.MR=checkArg(Parm,"MR");
+						
+					 }
 					 
 					 new shelxe().RunshelxeTool();
 			 }
@@ -657,7 +680,10 @@ public class RunComparison {
 						 RunningParameter.UsingRFree=checkArg(Parm,"UsingRFree");
 						
 					 }
-
+					 if(checkArg(Parm,"MR")!=null){
+						 RunningParameter.MR=checkArg(Parm,"MR");
+						
+					 }
 					
 					 new Arp().RunwArpTool();
 			 }
@@ -754,12 +780,23 @@ public class RunComparison {
 						 RunningParameter.InitialModels=checkArg(Parm,"InitialModels");
 						
 					 }
-					 if(checkArg(Parm,"UsuingPhenixRebuild_in_place")!=null) {
-						 RunningParameter.UsingPhenixRebuild_in_place=checkArg(Parm,"UsuingPhenixRebuild_in_place"); 
+					 if(checkArg(Parm,"UsingPhenixRebuild_in_place")!=null) {
+						 RunningParameter.UsingPhenixRebuild_in_place=checkArg(Parm,"UsingPhenixRebuild_in_place"); 
 					 }
 					 if(checkArg(Parm,"PhenixRebuild_in_place")!=null) {
 						 RunningParameter.PhenixRebuild_in_place=checkArg(Parm,"PhenixRebuild_in_place"); 
 					 }
+					 if(checkArg(Parm,"MR")!=null){
+						 RunningParameter.MR=checkArg(Parm,"MR");
+						
+					 }
+					 if(checkArg(Parm,"PhenixCluster")!=null){
+						 RunningParameter.PhenixCluster=checkArg(Parm,"PhenixCluster");
+						
+					 }
+					 
+					 
+					 
 					 RunningParameter.PhenixPhases= RunningParameter.PhenixPhases.replaceAll(",", " ");
 					 System.out.println("data = "+RunningParameter.DataPath);
 					 System.out.println("PhenixAutobuild = "+RunningParameter.PhenixAutobuild);
@@ -860,7 +897,7 @@ public class RunComparison {
 					System.out.println("ILogsDir= Intermediate Logs folder ");
 					System.out.println("IPDBsDir= Intermediate PDBs folder");
 					System.out.println("UsingMolProbity= T or F");
-					System.out.println("PhasesUsedCPhasesMatch= Default is (parrot.ABCD.A,parrot.ABCD.B,parrot.ABCD.C,parrot.ABCD.D)");
+					System.out.println("PhasesUsedCPhasesMatch= Default is (HLA,HLB,HLC,HLD)");
 					
 					System.exit(-1);
 				}
@@ -910,6 +947,48 @@ public class RunComparison {
 					 if(checkArg(Parm,"PhasesUsedCPhasesMatch")!=null){
 						 RunningParameter.PhasesUsedCPhasesMatch=checkArg(Parm,"PhasesUsedCPhasesMatch");
 						
+					 }
+					 
+					 if(checkArg(Parm,"FinalPhasesCPhasesMatch")!=null){
+						 RunningParameter.FinalPhasesCPhasesMatch=checkArg(Parm,"FinalPhasesCPhasesMatch");
+						
+					 }
+					 
+					 if(checkArg(Parm,"MR")!=null){
+						 RunningParameter.MR=checkArg(Parm,"MR");
+						
+					 }
+					 if(RunningParameter.MR.equals("T")) {
+						 
+						 String RefmacScript=new Preparer().ReadResourceAsString("/refmacscript.sh");
+						 RefmacScript=RefmacScript.replaceAll("FreeR_flag", "FREE");
+						 if(new File("refmacscript.sh").exists())
+							 FileUtils.deleteQuietly(new File("refmacscript.sh"));
+						 
+						 new Preparer().WriteTxtFile("refmacscript.sh", RefmacScript);
+						 
+						 //Moved to MultiThreadedAnalyser
+						 //Apply Csymmatch on final PDB
+						// new MatchChainsToRef().MatchUsingCsymmatch(new File(RunningParameter.DataPath).getAbsolutePath()+"/", new File(RunningParameter.PDBsDir).getAbsolutePath()+"/");
+						// RunningParameter.PDBsDir=new File(RunningParameter.PDBsDir).getName();
+					 
+						//Apply Csymmatch on IntermediatePDBs
+						// new MatchChainsToRef().MatchUsingCsymmatch(new File(RunningParameter.DataPath).getAbsolutePath()+"/", new File(RunningParameter.IntermediatePDBs).getAbsolutePath()+"/");
+						// RunningParameter.IntermediatePDBs=new File(RunningParameter.IntermediatePDBs).getName();
+					 
+						
+						 
+						 //Remove DUM from PDB
+						 //for(File PDB : new File(RunningParameter.PDBsDir).listFiles()) {
+							// if(new RemovingDumAtoms().CheckingIfContainsDUMAtomsMR(PDB.getAbsolutePath()))
+							// new RemovingDumAtoms().RemovingWithOverwrite(PDB.getAbsolutePath());
+						 //}
+						// for(File PDB : new File(RunningParameter.IntermediatePDBs).listFiles()) {
+							// if(new RemovingDumAtoms().CheckingIfContainsDUMAtomsMR(PDB.getAbsolutePath()))
+							// new RemovingDumAtoms().RemovingWithOverwrite(PDB.getAbsolutePath());
+						// }
+						
+						 
 					 }
 						new MultiThreadedAnalyser().Analyses();
 
@@ -1129,7 +1208,8 @@ public class RunComparison {
 				System.out.println("DatafakeAnomalous= path Data fake Anomalous");
 				System.out.println("cstat2= path for cstat2 core folder");
 				System.out.println("UsingMolProbity= T or F");
-				System.out.println("PhasesUsedCPhasesMatch= Default is (parrot.ABCD.A,parrot.ABCD.B,parrot.ABCD.C,parrot.ABCD.D)");
+				System.out.println("PhasesUsedCPhasesMatch= Default is (HLA,HLB,HLC,HLD)");
+				System.out.println("FinalPhasesCPhasesMatch= Default is (sfcalc.ABCD.A,sfcalc.ABCD.B,sfcalc.ABCD.C,sfcalc.ABCD.D)");
 				System.out.println("UsingRfree= T or F");
 
 				
