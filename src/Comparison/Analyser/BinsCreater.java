@@ -20,8 +20,9 @@ import Comparison.Runner.RunningParameter;
 
 public class BinsCreater {
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		RunningParameter.MR="T";
-		new BinsCreater().Bining("/Users/emadalharbi/Downloads/TestBinning");
+		//RunningParameter.MR="T";
+		RunningParameter.ReplaceToSingleLetter="T";
+		new BinsCreater().Bining("OrginalBuccEx54ExFaliedCases");
 	}
 	public  void Bining(String Path) throws IOException {
 		// TODO Auto-generated method stub
@@ -95,13 +96,18 @@ public class BinsCreater {
 								  Val="3.1+";
 							}
 						}
+						
+						if(Val.trim().length()==0)// if not grouped 
+							Val="unclassified";
+						
 						 Container.get(i).Resolution=Val;
-						 
+						
 						if(NumberOfDatasetsInReso.containsKey(Container.get(i).Resolution+"ReservedForNumOfDatasetsInResoBin")) {
 							NumberOfDatasetsInReso.put(Container.get(i).Resolution+"ReservedForNumOfDatasetsInResoBin", NumberOfDatasetsInReso.get(Container.get(i).Resolution+"ReservedForNumOfDatasetsInResoBin")+1);
 						}
 						else {
 							NumberOfDatasetsInReso.put(Container.get(i).Resolution+"ReservedForNumOfDatasetsInResoBin",1);
+							
 						}
 						
 						
@@ -161,8 +167,8 @@ public class BinsCreater {
 					  
 					 //CSV=CSV.replaceAll(i, i.replaceAll("ReservedForNumOfDatasetsInResoBin", "")+"\t("+ String.valueOf(NumberOfDatasetsInReso.get(i)) +")");
 					 CSV=CSV.replaceAll(Pattern.quote(i), i.replaceAll("ReservedForNumOfDatasetsInResoBin", "")+"\t("+ String.valueOf(NumberOfDatasetsInReso.get(i)) +")");
-
-					}
+					
+				}
 				  
 				  for (String i : NumberOfDatasetsInSizeGroup.keySet()) {
 					  CSV=CSV.replaceAll(Pattern.quote(i), i.replaceAll("ReservedForNumOfDatasetsInSizeBin", "")+"\t("+ String.valueOf(NumberOfDatasetsInSizeGroup.get(i)) +")"); // using Pattern.quote(i) because some of the cells contain plus character which cannot be replaced with using Pattern.quote(i) 
@@ -172,7 +178,8 @@ public class BinsCreater {
 			}
 		}  
 		FileUtils.deleteQuietly(new File(PathForDM+"/SPSSDatasetBins.csv")); // Removing previous csv if any 
-		  CSV=new ComparisonMeasures().FormatingPipelinesNames(CSV,false);
+		 
+		CSV=new ComparisonMeasures().FormatingPipelinesNames(CSV,false,false);
      	
 		  
 		  new Preparer().WriteTxtFile(PathForDM+"/SPSSDatasetBins.csv", CSV);
