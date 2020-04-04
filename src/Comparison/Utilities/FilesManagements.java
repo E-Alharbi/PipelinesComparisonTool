@@ -12,6 +12,7 @@ import java.util.Vector;
 
 import org.apache.commons.io.FileUtils;
 
+import Comparison.Runner.RunComparison;
 import Comparison.Runner.RunningParameter;
 
 
@@ -44,21 +45,35 @@ public class FilesManagements {
 		else
 		return false;
 }
-	public String GetModelPath(String PDBId){
+	public String GetModelPath(String PDBId) throws IOException{
 		
+		String PDBPath="";
 		 File[] initialmodels = new File(RunningParameter.InitialModels).listFiles();
 		 for (File PDB : initialmodels) {
 			 if(PDBId.trim().equals(PDB.getName())) {
-				 return PDB.getAbsolutePath();
+				 //return PDB.getAbsolutePath();
+				 PDBPath=PDB.getAbsolutePath();
 			 }
 		 }
+		 
+		 if(PDBPath.trim().length()==0) { //if not found in final PDB folder
 		 initialmodels = new File(RunningParameter.InitialModels.replaceAll("PDBs", "IntermediatePDBs")).listFiles(); 
     for (File PDB : initialmodels) {
 		 if(PDBId.trim().equals(PDB.getName())) {
-			 return PDB.getAbsolutePath();
+			 //return PDB.getAbsolutePath();
+			 PDBPath=PDB.getAbsolutePath();
 		 }
-	 } 
-		 return "";// Not Found
+	 } }
+		 //return "";// Not Found
+    if(PDBPath.trim().length()!=0 && RunningParameter.RemoveDummyAtomsFromInitialModel.equals("T")) {
+    	 new RunComparison().CheckDirAndFile("NoDummyAtomsPDB");
+		 FileUtils.deleteQuietly(new File("NoDummyAtomsPDB/"+new File(PDBPath).getName()));// if exists 
+		 FileUtils.copyFile(new File(PDBPath),new File("NoDummyAtomsPDB/"+new File(PDBPath).getName()));
+		 new RemovingDumAtoms().RemovingWithOverwrite(new File("NoDummyAtomsPDB/"+new File(PDBPath).getName()).getAbsolutePath());
+		 PDBPath=new File("NoDummyAtomsPDB/"+new File(PDBPath).getName()).getAbsolutePath();
+    }
+    
+    return PDBPath;
 }
 	public String readFileAsString(String filePath) throws IOException {
         StringBuffer fileData = new StringBuffer();
