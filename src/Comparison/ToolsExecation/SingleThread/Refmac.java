@@ -22,7 +22,7 @@ public class Refmac {
 	 */
 	
 
-	public REFMACFactors RunRefmac (String mtzPath , String pdbPath, String RefmacPath,String ToolName, String FileName, String LIBIN) throws IOException{
+	public REFMACFactors RunRefmac (String mtzPath , String pdbPath, String RefmacPath,String ToolName, String FileName, String LIBIN, String ExculdeSetOfFREE) throws IOException{
 		
 		 String st = null;
 		
@@ -33,7 +33,8 @@ public class Refmac {
 					mtzPath,
 					FileName+"Ref.mtz",
 					pdbPath,
-					FileName+"Ref.pdb",					
+					FileName+"Ref.pdb",	
+					ExculdeSetOfFREE,
 					};
 
 		 Process  p = Runtime.getRuntime().exec(callAndArgs);
@@ -54,7 +55,7 @@ public class Refmac {
 
 					String LogTxt="";
 					REFMACFactors F= new REFMACFactors();
-					boolean IsReadRfactor=false;
+					
 						             while ((st = stdInput.readLine()) != null) {
 						            	
 						            	LogTxt+=st+"\n";
