@@ -479,6 +479,20 @@ public class RunComparison {
 						 RunningParameter.MR=checkArg(Parm,"MR");
 						
 					 }
+					 
+					 if(checkArg(Parm,"ReplaceToSingleLetter")!=null){
+						 RunningParameter.ReplaceToSingleLetter=checkArg(Parm,"ReplaceToSingleLetter");
+						
+					 }
+					 if(checkArg(Parm,"UpdateResolutionRefmac")!=null){
+						 RunningParameter.UpdateResolutionRefmac=checkArg(Parm,"UpdateResolutionRefmac");
+						
+					 }
+					 if(checkArg(Parm,"LimitUpdateResolutionRefmac")!=null){
+						 RunningParameter.LimitUpdateResolutionFromRefmac=checkArg(Parm,"LimitUpdateResolutionRefmac");
+						
+					 }
+					 
 					 String [] p =  {checkArg(Parm,"ExcelDir"),checkArg(Parm,"UpdateCom"),checkArg(Parm,"FillInMissingData"),checkArg(Parm,"ExcludeFromOrginal"),checkArg(Parm,"ExcludeFromSynthetic"),checkArg(Parm,"SetRfreeToZero")};
 					 
 						new LatexTablesCreater().main( p);
@@ -551,6 +565,12 @@ public class RunComparison {
 						 RunningParameter.MR=checkArg(Parm,"MR");
 						
 					 }
+					 
+					 if(checkArg(Parm,"RemoveDummyAtomsFromInitialModel")!=null){
+						 RunningParameter.RemoveDummyAtomsFromInitialModel=checkArg(Parm,"RemoveDummyAtomsFromInitialModel");
+						
+					 }
+					 
 					 new Buccaneeri1().RunBuccaneerTool();
 			 }
 			  
@@ -958,9 +978,14 @@ public class RunComparison {
 						 RunningParameter.MR=checkArg(Parm,"MR");
 						
 					 }
+					 if(new File("refmacscript.sh").exists())// in case if refmac.sh got updated and to replace the existing one 
+						 FileUtils.deleteQuietly(new File("refmacscript.sh"));
+					 String RefmacScript=new Preparer().ReadResourceAsString("/refmacscript.sh");
+					 new Preparer().WriteTxtFile("refmacscript.sh", RefmacScript);
+					 
 					 if(RunningParameter.MR.equals("T")) {
 						 
-						 String RefmacScript=new Preparer().ReadResourceAsString("/refmacscript.sh");
+						  RefmacScript=new Preparer().ReadResourceAsString("/refmacscript.sh");
 						 RefmacScript=RefmacScript.replaceAll("FreeR_flag", "FREE");
 						 if(new File("refmacscript.sh").exists())
 							 FileUtils.deleteQuietly(new File("refmacscript.sh"));
