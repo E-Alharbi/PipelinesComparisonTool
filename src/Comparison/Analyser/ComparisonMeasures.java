@@ -25,6 +25,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import Comparison.Runner.Preparer;
 import Comparison.Runner.RunComparison;
+import Comparison.Runner.RunningParameter;
 
 
 public class ComparisonMeasures {
@@ -110,8 +111,8 @@ public static void main(String[] args) throws FileNotFoundException, IOException
 					
 					}
 				}
-				new Preparer().WriteTxtFile(PathToLatexFolder+"/ReproducibilityTable" + Folder.getName() + ".tex", FormatingPipelinesNames(Table,true) + "\n"+Comments);
-				new Preparer().WriteTxtFile(PathToLatexFolder+"/ReproducibilityTableOriginal" + Folder.getName() + ".tex", FormatingPipelinesNames(TableOriginal,true) + "\n"+Comments);
+				new Preparer().WriteTxtFile(PathToLatexFolder+"/ReproducibilityTable" + Folder.getName() + ".tex", FormatingPipelinesNames(Table,true,true) + "\n"+Comments);
+				new Preparer().WriteTxtFile(PathToLatexFolder+"/ReproducibilityTableOriginal" + Folder.getName() + ".tex", FormatingPipelinesNames(TableOriginal,true,true) + "\n"+Comments);
 
 			}
 		}
@@ -149,7 +150,7 @@ void TimeTakingTable(String ExcelDir) throws IOException {
 			}
 			
 			
-			new Preparer().WriteTxtFile(PathToLatexFolder+"/TimeTakingTable" + Folder.getName() + ".tex", FormatingPipelinesNames(Table,true) + "\n"+Comments);
+			new Preparer().WriteTxtFile(PathToLatexFolder+"/TimeTakingTable" + Folder.getName() + ".tex", FormatingPipelinesNames(Table,true,true) + "\n"+Comments);
 		}
 	}
 }
@@ -313,7 +314,7 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 				+ " \n";
 	
 		
-		Table=FormatingPipelinesNames(Table,true);
+		Table=FormatingPipelinesNames(Table,true,true);
 		new Preparer().WriteTxtFile(PathToLatexFolder+"/TheNumberOfCompletedCases.tex", Table.replace(".xlsx", "") +" \n "+Comments);
 	}
 
@@ -1247,83 +1248,83 @@ LogOfR0Equivalent+="\n Number of models: "+EquivalentR+" \n";
 				
 				Table += Col + " \\\\ \\hline \n ";
 				Table += RowCom0;
-				Table=ShadedTable(FormatingPipelinesNames(Table,true))+" \n "+Comments;
+				Table=ShadedTable(FormatingPipelinesNames(Table,true,true))+" \n "+Comments;
 				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatrixOfResults" + Folder.getName() + "Com0.tex", Table);
 			
 				String TableCom5 = Col + "\\\\ \\hline \n ";
 				TableCom5 += RowCom5;
-				TableCom5=ShadedTable(FormatingPipelinesNames(TableCom5,true))+" \n "+Comments; 
+				TableCom5=ShadedTable(FormatingPipelinesNames(TableCom5,true,true))+" \n "+Comments; 
 				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatrixOfResults" + Folder.getName() + "Com5.tex", TableCom5);
 				
 				String TableCom0Equivalent = Col + "\\\\ \\hline \n ";
 				TableCom0Equivalent += RowCom0Equivalent;
-				TableCom0Equivalent=	ShadedTable(FormatingPipelinesNames(TableCom0Equivalent,true)) +" \n "+Comments;
+				TableCom0Equivalent=	ShadedTable(FormatingPipelinesNames(TableCom0Equivalent,true,true)) +" \n "+Comments;
 				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatrixOfResults" + Folder.getName() + "Com0Equivalent.tex", TableCom0Equivalent);
 				
 				String TableCom5Equivalent = Col + "\\\\ \\hline \n ";
 				TableCom5Equivalent += RowCom5Equivalent;
-				TableCom5Equivalent=	ShadedTable(FormatingPipelinesNames(TableCom5Equivalent,true)) +" \n "+Comments;
+				TableCom5Equivalent=	ShadedTable(FormatingPipelinesNames(TableCom5Equivalent,true,true)) +" \n "+Comments;
 				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatrixOfResults" + Folder.getName() + "Com5Equivalent.tex", TableCom5Equivalent);
 			
 				String TableCom0Models = Col + "\\\\ \\hline \n ";
 				TableCom0Models += RowCom0Models;
-				TableCom0Models=ShadedTable(FormatingPipelinesNames(TableCom0Models,true)) +" \n "+Comments;
+				TableCom0Models=ShadedTable(FormatingPipelinesNames(TableCom0Models,true,true)) +" \n "+Comments;
 				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatrixOfResults" + Folder.getName() + "Com0Models.tex", TableCom0Models);
 				
 				
 				String TableCom5Models = Col + "\\\\ \\hline \n ";
 				TableCom5Models += RowCom5Models;
-				TableCom5Models=ShadedTable(FormatingPipelinesNames(TableCom5Models,true)) +" \n "+Comments;
+				TableCom5Models=ShadedTable(FormatingPipelinesNames(TableCom5Models,true,true)) +" \n "+Comments;
 				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatrixOfResults" + Folder.getName() + "Com5Models.tex", TableCom5Models);
 				
 				
 				String TableRModels = Col + "\\\\ \\hline \n ";
 				TableRModels += RowR0;
-				TableRModels=ShadedTable(FormatingPipelinesNames(TableRModels,true)) +" \n "+Comments;
+				TableRModels=ShadedTable(FormatingPipelinesNames(TableRModels,true,true)) +" \n "+Comments;
 				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatrixOfResults" + Folder.getName() + "RModels.tex", TableRModels);
 				
 				
 				String TableRModelsEquivalent = Col + "\\\\ \\hline \n ";
 				TableRModelsEquivalent += RowR0Equivalent;
-				TableRModelsEquivalent=ShadedTable(FormatingPipelinesNames(TableRModelsEquivalent,true)) +" \n "+Comments;
+				TableRModelsEquivalent=ShadedTable(FormatingPipelinesNames(TableRModelsEquivalent,true,true)) +" \n "+Comments;
 				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatrixOfResults" + Folder.getName() + "REquivalentModels.tex", TableRModelsEquivalent);
 			
 			
 				String TableR5Models = Col + "\\\\ \\hline \n ";
 				TableR5Models += RowR5;
-				TableR5Models=ShadedTable(FormatingPipelinesNames(TableR5Models,true)) +" \n "+Comments;
+				TableR5Models=ShadedTable(FormatingPipelinesNames(TableR5Models,true,true)) +" \n "+Comments;
 				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatrixOfResults" + Folder.getName() + "R5Models.tex", TableR5Models);
 			
 			
 				String TableRModelsEquivalent5 = Col + "\\\\ \\hline \n ";
 				TableRModelsEquivalent5 += RowR5Equivalent;
-				TableRModelsEquivalent5=ShadedTable(FormatingPipelinesNames(TableRModelsEquivalent5,true)) +" \n "+Comments;
+				TableRModelsEquivalent5=ShadedTable(FormatingPipelinesNames(TableRModelsEquivalent5,true,true)) +" \n "+Comments;
 				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatrixOfResults" + Folder.getName() + "REquivalent5Models.tex", TableRModelsEquivalent5);
 				
 				
 				new RunComparison().CheckDirAndFile("MatricesLogs");
-				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfR5Equivalent.txt", FormatingPipelinesNames(LogOfR5Equivalent,false));
+				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfR5Equivalent.txt", FormatingPipelinesNames(LogOfR5Equivalent,false,true));
 				
-				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfCom0.txt", FormatingPipelinesNames(LogOfCom0,false));
+				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfCom0.txt", FormatingPipelinesNames(LogOfCom0,false,true));
 
-				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfCom0Equivalent.txt", FormatingPipelinesNames(LogOfCom0Equivalent,false));
+				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfCom0Equivalent.txt", FormatingPipelinesNames(LogOfCom0Equivalent,false,true));
 				
-				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfCom5.txt", FormatingPipelinesNames(LogOfCom5,false));
-				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfCom5Equivalent.txt", FormatingPipelinesNames(LogOfCom5Equivalent,false));
-				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfR0.txt", FormatingPipelinesNames(LogOfR0,false));
-				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfRFree0.txt", FormatingPipelinesNames(LogOfRFree0,false));
+				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfCom5.txt", FormatingPipelinesNames(LogOfCom5,false,true));
+				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfCom5Equivalent.txt", FormatingPipelinesNames(LogOfCom5Equivalent,false,true));
+				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfR0.txt", FormatingPipelinesNames(LogOfR0,false,true));
+				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfRFree0.txt", FormatingPipelinesNames(LogOfRFree0,false,true));
 
 					  
 				
-				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfR0Equivalent.txt", FormatingPipelinesNames(LogOfR0Equivalent,false));
-						new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfRFree0Equivalent.txt", FormatingPipelinesNames(LogOfRFree0Equivalent,false));
+				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfR0Equivalent.txt", FormatingPipelinesNames(LogOfR0Equivalent,false,true));
+						new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfRFree0Equivalent.txt", FormatingPipelinesNames(LogOfRFree0Equivalent,false,true));
 
-						new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfR5.txt", FormatingPipelinesNames(LogOfR5,false));
+						new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfR5.txt", FormatingPipelinesNames(LogOfR5,false,true));
 	
 						
-						new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfRFree5.txt", FormatingPipelinesNames(LogOfRFree5,false));
+						new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfRFree5.txt", FormatingPipelinesNames(LogOfRFree5,false,true));
 						
-						new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfRFree5Equivalent.txt", FormatingPipelinesNames(LogOfRFree5Equivalent,false));
+						new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfRFree5Equivalent.txt", FormatingPipelinesNames(LogOfRFree5Equivalent,false,true));
 
 			}
 
@@ -1439,7 +1440,7 @@ return FormattedTable;
 
 
 	}
-	public String FormatingPipelinesNames(String Table, boolean RemoveDatasetNames) {
+	public String FormatingPipelinesNames(String Table, boolean RemoveDatasetNames, boolean latexSyntax) {
 	
 		if(RemoveDatasetNames==true) {
 		Table=Table.replaceAll("hancs", "");
@@ -1449,56 +1450,102 @@ return FormattedTable;
 		
 		Table=Table.replaceAll(".xlsx", "");
 		
+		if(RunningParameter.ReplaceToSingleLetter.equals("F")) {
 		Table=Table.replaceAll("\\bArpWArpAfterBuccaneeri1\\b", "ARP(B 25I)");
-		
-		
 		Table=Table.replaceAll("\\bArpWArpAfterBuccaneeri1I5\\b", "ARP(B 5I)");
 		Table=Table.replaceAll("\\bARPwARP\\b", "ARP");
-		
-		
+		Table=Table.replaceAll("\\bPhenix\\b", "PHENIX/Parrot");
+		Table=Table.replaceAll("\\bPhenixHAL\\b", "PHENIX");
+		Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhi\\b", "SHELXE/Parrot");
+		Table=Table.replaceAll("\\bShelxeWithTFlag\\b", "SHELXE");
 		Table=Table.replaceAll("\\bBuccaneeri1\\b", "i1(25I)");
+		Table=Table.replaceAll("\\bBuccaneeri1I5\\b", "i1(5I)");
+	}
+		
+		
+		if(RunningParameter.ReplaceToSingleLetter.equals("T")) {
+			Table=Table.replaceAll("\\bArpWArpAfterBuccaneeri1\\b", "A(B 25I)");
+			Table=Table.replaceAll("\\bArpWArpAfterBuccaneeri1I5\\b", "A(B 5I)");
+			Table=Table.replaceAll("\\bARPwARP\\b", "A");
+			
+			Table=Table.replaceAll("\\bPhenixHAL\\b", "P");
+			
+			Table=Table.replaceAll("\\bShelxeWithTFlag\\b", "S");
+			Table=Table.replaceAll("\\bBuccaneeri1I5\\b", "B");
+			Table=Table.replaceAll("\\bBuccaneeri1\\b", "B(25I)");
+			
+			if(latexSyntax==true) {
+				Table=Table.replaceAll("\\bPhenix\\b", "\\$P^{\\\\ast}\\$ ");
+				Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhi\\b", "\\$S^{\\\\ast}\\$ ");
+			}
+			if(latexSyntax==false) {
+				Table=Table.replaceAll("\\bPhenix\\b", "P*");
+				Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhi\\b", "S*");
+			}
+		}	
+		
+		
+		
+		
 		
 		Table=Table.replaceAll("\\bBuccaneeri2\\b", "i2(25I)");
 		
-		Table=Table.replaceAll("\\bBuccaneeri1I5\\b", "i1(5I)");
+		
 		
 		Table=Table.replaceAll("\\bBuccaneeri2I5\\b", "i2(5I)");
 		
 		Table=Table.replaceAll("\\bBuccaneeri2W\\b", "i2W(25I)");
 		
 		Table=Table.replaceAll("\\bBuccaneeri2WI5\\b", "i2W(5I)");
-		Table=Table.replaceAll("\\bPhenix\\b", "PHENIX/Parrot");
-		
-		Table=Table.replaceAll("\\bPhenixHAL\\b", "PHENIX");
-		
 		Table=Table.replaceAll("\\bBuccaneeri1I1GA\\b", "i1(I1GA)");
 		Table=Table.replaceAll("\\bBuccaneeri1I2GA\\b", "i1(I2GA)");
 		Table=Table.replaceAll("\\bBuccaneeri1I3GA\\b", "i1(I3GA)");
 		Table=Table.replaceAll("\\bBuccaneeri1I4GA\\b", "i1(I4GA)");
 		Table=Table.replaceAll("\\bBuccaneeri1I5GA\\b", "i1(I5GA)");
-		Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhi\\b", "SHELXE/Parrot");
-		Table=Table.replaceAll("\\bShelxeWithTFlag\\b", "SHELXE");
 		
-		Table=Table.replaceAll("\\bArpPhenix\\b", "ARP(P/Parrot)");
-		Table=Table.replaceAll("\\bArpPhenixHLA\\b", "ARP(P)");
-		Table=Table.replaceAll("\\bArpWArpBuccaneeri1I5\\b", "ARP(B)");
-		Table=Table.replaceAll("\\bBuccaneeri1I5Phenix\\b", "Buccaneer(P/Parrot)");
-		Table=Table.replaceAll("\\bBuccaneeri1I5PhenixHLA\\b", "Buccaneer(P)");
-		Table=Table.replaceAll("\\bPhenixArp\\b", "PHENIX(A)");
-		Table=Table.replaceAll("\\bPhenixBuccaneeri1I5\\b", "PHENIX/Parrot(B)");
-		Table=Table.replaceAll("\\bPhenixHLAArp\\b", "PHENIX(A)");
-		Table=Table.replaceAll("\\bPhenixHLABuccaneeri1I5\\b", "PHENIX(B)");
-		Table=Table.replaceAll("\\bShelxeWithTFlagArp\\b", "SHELXE(A)");
-		Table=Table.replaceAll("\\bShelxeWithTFlagBuccaneeri1I5\\b", "SHELXE(B)");
-		Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiArp\\b", "SHELXE/Parrot(A)");
-		Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiBuccaneeri1I5\\b", "SHELXE/Parrot(B)");
-		Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiPhenix\\b", "SHELXE/Parrot(P/Parrot)");
-		Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiPhenixHLA\\b", "SHELXE/Parrot(P)");
-		Table=Table.replaceAll("\\bShelxeWithTFlagPhenix\\b", "SHELXE(P/Parrot)");
-		Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiPhenixHLA\\b", "SHELXE/Parrot(P)");
-		Table=Table.replaceAll("\\bShelxeWithTFlagPhenix\\b", "SHELXE(P/Parrot)");
-		Table=Table.replaceAll("\\bShelxeWithTFlagPhenixHLA\\b", "SHELXE(P)");
+		if(latexSyntax==true) {
+		Table=Table.replaceAll("\\bArpPhenix\\b", "A\\$\\\\rightarrow\\$\\$P^{\\\\ast}\\$ ");
+		Table=Table.replaceAll("\\bArpPhenixHLA\\b", "A\\$\\\\rightarrow\\$\\$P\\$ ");
+		Table=Table.replaceAll("\\bArpWArpBuccaneeri1I5\\b", "A\\$\\\\rightarrow\\$\\$B\\$ ");
+		Table=Table.replaceAll("\\bBuccaneeri1I5Phenix\\b", "B\\$\\\\rightarrow\\$\\$P^{\\\\ast}\\$ ");
+		Table=Table.replaceAll("\\bBuccaneeri1I5PhenixHLA\\b", "B\\$\\\\rightarrow\\$\\$P\\$ ");
+		Table=Table.replaceAll("\\bPhenixArp\\b", "\\$P^{\\\\ast}\\$\\\\rightarrow\\$A\\$ ");
+		Table=Table.replaceAll("\\bPhenixBuccaneeri1I5\\b", "\\$P^{\\\\ast}\\$\\\\rightarrow\\$B\\$ ");
+		Table=Table.replaceAll("\\bPhenixHLAArp\\b", "P\\$\\\\rightarrow\\$\\$A\\$ ");
+		Table=Table.replaceAll("\\bPhenixHLABuccaneeri1I5\\b", "P\\$\\\\rightarrow\\$\\$B\\$ ");
+		Table=Table.replaceAll("\\bShelxeWithTFlagArp\\b", "S\\$\\\\rightarrow\\$\\$A\\$ ");
+		Table=Table.replaceAll("\\bShelxeWithTFlagBuccaneeri1I5\\b", "S\\$\\\\rightarrow\\$\\$B\\$ ");
+		Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiArp\\b", "\\$S^{\\\\ast}\\$\\\\rightarrow\\$A\\$ ");
+		Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiBuccaneeri1I5\\b", "\\$S^{\\\\ast}\\$\\\\rightarrow\\$B\\$ ");
+		Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiPhenix\\b", "\\$S^{\\\\ast}\\$\\\\rightarrow\\$P^{\\\\ast}\\$ ");
+		Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiPhenixHLA\\b", "\\$S^{\\\\ast}\\$\\\\rightarrow\\$P\\$ ");
+		Table=Table.replaceAll("\\bShelxeWithTFlagPhenix\\b", "S\\\\rightarrow\\$P^{\\\\ast}\\$ ");
+		//Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiPhenixHLA\\b", "S^{\\ast}\\rightarrow$P$");
+		Table=Table.replaceAll("\\bShelxeWithTFlagPhenix\\b", "S\\$\\\\rightarrow\\$\\$P^{\\\\ast}\\$ ");
+		Table=Table.replaceAll("\\bShelxeWithTFlagPhenixHLA\\b", "S\\$\\\\rightarrow\\$\\$P\\$ ");
+	}
 		
+		if(latexSyntax==false) {
+		Table=Table.replaceAll("\\bArpPhenix\\b", "A→P* ");
+		Table=Table.replaceAll("\\bArpPhenixHLA\\b", "A→P ");
+		Table=Table.replaceAll("\\bArpWArpBuccaneeri1I5\\b", "A→B ");
+		Table=Table.replaceAll("\\bBuccaneeri1I5Phenix\\b", "B→P* ");
+		Table=Table.replaceAll("\\bBuccaneeri1I5PhenixHLA\\b", "B→P ");
+		Table=Table.replaceAll("\\bPhenixArp\\b", "P*→A ");
+		Table=Table.replaceAll("\\bPhenixBuccaneeri1I5\\b", "P*→B ");
+		Table=Table.replaceAll("\\bPhenixHLAArp\\b", "P→A ");
+		Table=Table.replaceAll("\\bPhenixHLABuccaneeri1I5\\b", "P→B ");
+		Table=Table.replaceAll("\\bShelxeWithTFlagArp\\b", "S→A ");
+		Table=Table.replaceAll("\\bShelxeWithTFlagBuccaneeri1I5\\b", "S→B ");
+		Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiArp\\b", "S*→A ");
+		Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiBuccaneeri1I5\\b", "S*→B ");
+		Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiPhenix\\b", "S*→P* ");
+		Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiPhenixHLA\\b", "S*→P ");
+		Table=Table.replaceAll("\\bShelxeWithTFlagPhenix\\b", "S→P* ");
+		//Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiPhenixHLA\\b", "S^{\\ast}\\rightarrow$P$");
+		Table=Table.replaceAll("\\bShelxeWithTFlagPhenix\\b", "S→P* ");
+		Table=Table.replaceAll("\\bShelxeWithTFlagPhenixHLA\\b", "S→P ");
+	}
 		
 		return Table;
 	}
@@ -2050,12 +2097,12 @@ for(int i=0; i < CurrentReading.size() ; ++i) {
 			}
 			}
 		}
-		CompletenessTable = new ComparisonMeasures().FormatingPipelinesNames(CompletenessTable, false);
-		RTable = new ComparisonMeasures().FormatingPipelinesNames(RTable, false);
+		CompletenessTable = new ComparisonMeasures().FormatingPipelinesNames(CompletenessTable, false,true);
+		RTable = new ComparisonMeasures().FormatingPipelinesNames(RTable, false,true);
 
 		//System.out.println(CompletenessTable);
 		//System.out.println(RTable);
-		Logs = new ComparisonMeasures().FormatingPipelinesNames(Logs, false);
+		Logs = new ComparisonMeasures().FormatingPipelinesNames(Logs, false,true);
 		new Preparer().WriteTxtFile(DM.getName()+"Logs.txt",Logs);
 		//new Preparer().WriteTxtFile(PathToLatexFolder+"/MatrixOfResults" + Folder.getName() + "Com0Equivalent.tex", TableCom0Equivalent);
 		new Preparer().WriteTxtFile(PathToLatexFolder+"/"+DM.getName() + "CompletenessByImprovementsLevel.tex", CompletenessTable);
