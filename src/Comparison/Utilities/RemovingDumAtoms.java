@@ -36,7 +36,7 @@ System.out.println(new RemovingDumAtoms().CheckingIfContainsDUMAtomsMR("/Users/e
 		return new File("./ModifiedPDBAfterRemovingDUMAtoms/"+new File(PDBPath).getName());
 	}
 	public void RemovingWithOverwrite(String PDBPath) throws IOException {
-		// Use for MR when input PDB to Csymmatch mainly use for ARP/wARP
+		// Use for MR when input PDB to Csymmatch
 		String  [] PDB=new MultiThreadedAnalyser().readFileAsString(PDBPath).split("\n");
 		String UpdatedPDB="";
 		
