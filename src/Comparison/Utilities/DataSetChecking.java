@@ -43,7 +43,7 @@ public class DataSetChecking {
 			ExcelContents DC = new ExcelContents();
 			DC.PDB_ID=ExFileName;
 			DC.PDBIDTXT=ExFileName.substring(0,4);
-			REFMACFactors F = new Refmac().RunRefmac(DataSetPath+"/"+ExFileName+".mtz", DataSetPath+"/"+ExFileName+".pdb", RunningParameter.RefmacPath, RunningParameter.ToolName, ExFileName,"");
+			REFMACFactors F = new Refmac().RunRefmac(DataSetPath+"/"+ExFileName+".mtz", DataSetPath+"/"+ExFileName+".pdb", RunningParameter.RefmacPath, RunningParameter.ToolName, ExFileName,"","0");
             DC.Resolution=F.Reso;
 			if(new File(RunningParameter.IntermediatePDBs+"/"+ExFileName+".pdb").exists()) {
 				PDB=new File(RunningParameter.IntermediatePDBs+"/"+ExFileName+".pdb");
