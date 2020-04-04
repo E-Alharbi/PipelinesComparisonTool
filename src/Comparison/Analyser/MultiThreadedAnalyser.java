@@ -31,6 +31,7 @@ import Comparison.ToolsExecation.SingleThread.MolProbity;
 import Comparison.ToolsExecation.SingleThread.Refmac;
 import Comparison.ToolsExecation.SingleThread.castat2;
 import Comparison.Utilities.DataSetChecking;
+import Comparison.Utilities.FilesManagements;
 import Comparison.Utilities.RemoveHeader;
 import Comparison.Utilities.RemovingDumAtoms;
 import Comparison.Utilities.RemovingWaterChainID;
@@ -395,7 +396,7 @@ DC.WarringLogFile="F";
 
 			
 			
-			REFMACFactors F = new Refmac().RunRefmac(RunningParameter.DataPath+"/"+DC.PDB_ID+".mtz", PDB.getAbsolutePath(), RunningParameter.RefmacPath, RunningParameter.ToolName, DC.PDB_ID,"");
+			REFMACFactors F = new Refmac().RunRefmac(RunningParameter.DataPath+"/"+DC.PDB_ID+".mtz", PDB.getAbsolutePath(), RunningParameter.RefmacPath, RunningParameter.ToolName, DC.PDB_ID,"",GetFREEFlagValue(Log.getAbsolutePath()));
 			
 			if(!F.RFactor.equals("None")) {
 			DC.R_factor0Cycle=df.format(BigDecimal.valueOf(Double.valueOf(F.RFactor)));
@@ -411,7 +412,7 @@ DC.WarringLogFile="F";
 			
 			
 			
-			new LogFile().Log(RunningParameter.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "Refmac 0 cycle ", F.RFactor +" "+F.FreeFactor,headersList);
+			new LogFile().Log(RunningParameter.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "Refmac 0 cycle ", F.RFactor +" "+F.FreeFactor+" FREE flag value "+GetFREEFlagValue(Log.getAbsolutePath()),headersList);
 
 			new LogFile().Log(RunningParameter.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "Refmac (deposited) ", "Running ...",headersList);
 
@@ -515,7 +516,7 @@ DC.WarringLogFile="F";
 		}
 		
 		if(DC.Resolution.equals("None")) { // it is rare to happen, but if might occurred when there is built PDB and refmac throw and error 
-		REFMACFactors F = new Refmac().RunRefmac(RunningParameter.DataPath+"/"+DC.PDB_ID+".mtz", RunningParameter.DataPath+"/"+DC.PDB_ID+".pdb", RunningParameter.RefmacPath, RunningParameter.ToolName, DC.PDB_ID,"");
+		REFMACFactors F = new Refmac().RunRefmac(RunningParameter.DataPath+"/"+DC.PDB_ID+".mtz", RunningParameter.DataPath+"/"+DC.PDB_ID+".pdb", RunningParameter.RefmacPath, RunningParameter.ToolName, DC.PDB_ID,"","0");
 		DC.Resolution=F.Reso;	
 		}
 		
@@ -569,5 +570,14 @@ DC.WarringLogFile="F";
 	      //System.out.println(pdb.getAbsolutePath());
 			
 	}
-	
+	String GetFREEFlagValue(String LogFile) throws IOException {
+		String Log= new FilesManagements().readFileAsString(LogFile);
+		String FREE="0";
+		if(Log.contains("Rfree value for free reflections:")) {
+			
+			 FREE= Log.split("Rfree value for free reflections:")[1].split("\n")[0];
+			
+		}
+		return FREE.trim();
+	}
 }
