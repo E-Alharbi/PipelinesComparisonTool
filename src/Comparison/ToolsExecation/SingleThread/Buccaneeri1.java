@@ -38,6 +38,7 @@ import Comparison.Runner.RunComparison;
 import Comparison.Runner.RunningParameter;
 import Comparison.Utilities.FilesManagements;
 import Comparison.Utilities.JSONReader;
+import Comparison.Utilities.RemovingDumAtoms;
 
 
 public class Buccaneeri1 {
@@ -227,7 +228,9 @@ public class Buccaneeri1 {
 			}
 			 else {
 				 
-				 BuccScript=BuccScript.replace("@7", "-buccaneer-keyword pdbin "+new FilesManagements().GetModelPath(FileName+".pdb")+" "); 
+					
+				 
+				 BuccScript=BuccScript.replace("@7", "-pdbin "+new FilesManagements().GetModelPath(FileName+".pdb")+" "); 
 			 }
 			
 		 }
