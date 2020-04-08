@@ -40,7 +40,7 @@ import Comparison.Analyser.PipelineLog;
 import Comparison.Runner.Preparer;
 import Comparison.Runner.RunComparison;
 import Comparison.Runner.RunningParameter;
-import Comparison.Utilities.FilesManagements;
+import Comparison.Utilities.FilesUtilities;
 import Comparison.Utilities.JSONReader;
 
 
@@ -78,7 +78,7 @@ public class Phenix {
     		 LogsFiles.addAll(Logs);
     		 String LogTxt="";
     		 for(int i=0 ; i < LogsFiles.size() ;++i) {
-    			 LogTxt+= new FilesManagements().readFileAsString(LogsFiles.get(i).getAbsolutePath())+"\n";  
+    			 LogTxt+= new FilesUtilities().readFileAsString(LogsFiles.get(i).getAbsolutePath())+"\n";  
     		 }
     		 double difference = new java.util.Date().getTime() - StartTime.getTime(); 
              DecimalFormat df = new DecimalFormat("#.##");
@@ -267,12 +267,13 @@ seqin=FilePathAndName+".seq";
 		 List<String> a = new ArrayList<String>();
 		 a.addAll(Arrays.asList(callAndArgs));
 		 a.add("model=");
-		 if(new FilesManagements().GetModelPath(FileName+".pdb").equals("")) {
+		 if(new FilesUtilities().GetModelPath(FileName+".pdb").equals("")) {
 				res.LogFile+="model not found!!";
+				 timer.cancel();
 				return res;
 		}
 		 else {
-			 a.add(new FilesManagements().GetModelPath(FileName+".pdb")); 
+			 a.add(new FilesUtilities().GetModelPath(FileName+".pdb")); 
 		 }
 		 String[] myArray = new String[a.size()];
 		 a.toArray(myArray);
@@ -484,7 +485,7 @@ seqin=FilePathAndName+".seq";
 		 if(RunningParameter.UseInitialModels.equals("T")&& res.LogFile.contains("This can be caused by 'TER' records separating parts of a chain")) {
 			 System.out.println("Now, try with removing TER and re-order chains ");
 			 FileUtils.deleteDirectory(new File (FileName));
-			 new  Coord_format().RunCoord_format(new FilesManagements().GetModelPath(FileName+".pdb"),true,false);// it will remove TER even it set to false. False here just to avoid infinite recursion
+			 new  Coord_format().RunCoord_format(new FilesUtilities().GetModelPath(FileName+".pdb"),true,false);// it will remove TER even it set to false. False here just to avoid infinite recursion
 			 RunningParameter.InitialModels="./ModifiedPDB"; // set the path to current folder because Coord_format will write the new PDB in main folder   
 			 return Run(FilePathAndName,FileName);
 		 }
@@ -514,7 +515,7 @@ seqin=FilePathAndName+".seq";
 	static Vector<String> AddFileNameToList( Vector<String> FilesNames) throws IOException{
 		File yourFile = new File("./ProcessedFilesNamesPhenix.txt");
 		yourFile.createNewFile();
-		 String FileNamesTxt=new FilesManagements().readFileAsString("./ProcessedFilesNamesPhenix.txt");
+		 String FileNamesTxt=new FilesUtilities().readFileAsString("./ProcessedFilesNamesPhenix.txt");
 		 FilesNames.addAll(Arrays.asList(FileNamesTxt.split("\n")));
 		 return FilesNames;
 		
