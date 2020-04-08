@@ -41,7 +41,7 @@ import Comparison.Analyser.PipelineLog;
 import Comparison.Runner.Preparer;
 import Comparison.Runner.RunComparison;
 import Comparison.Runner.RunningParameter;
-import Comparison.Utilities.FilesManagements;
+import Comparison.Utilities.FilesUtilities;
 import Comparison.Utilities.JSONReader;
 
 
@@ -268,7 +268,8 @@ if(RunningParameter.UseInitialModels.trim().equals("T")) {
 	}
 	
 	if(GetModelPath(FileName+".pdb").equals("")) {
-		res.LogFile+="Buccaneer model not found!!";
+		res.LogFile+=" model not found!!";
+		timer.cancel();
 		return res;
 	}
 }
@@ -459,7 +460,7 @@ new Preparer().WriteTxtFile("ParametersUsed/"+FileName+".txt", new Date().toStri
 	 Vector<String> AddFileNameToList( Vector<String> FilesNames) throws IOException{
 			File yourFile = new File("./ProcessedFilesNamesArp.txt");
 			yourFile.createNewFile();
-			 String FileNamesTxt=new FilesManagements().readFileAsString("./ProcessedFilesNamesArp.txt");
+			 String FileNamesTxt=new FilesUtilities().readFileAsString("./ProcessedFilesNamesArp.txt");
 			 FilesNames.addAll(Arrays.asList(FileNamesTxt.split("\n")));
 			 return FilesNames;
 			
