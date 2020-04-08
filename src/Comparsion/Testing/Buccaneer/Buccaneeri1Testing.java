@@ -34,7 +34,7 @@ import Comparison.Analyser.MultiThreadedAnalyser;
 import Comparison.Runner.Preparer;
 import Comparison.Runner.RunComparison;
 import Comparison.Runner.RunningParameter;
-import Comparison.Utilities.FilesManagements;
+import Comparison.Utilities.FilesUtilities;
 
 
 public class Buccaneeri1Testing {
@@ -293,7 +293,7 @@ public class Buccaneeri1Testing {
 	 Vector<String> AddFileNameToList( Vector<String> FilesNames) throws IOException{
 		File yourFile = new File("./ProcessedFilesNamesBuccaneer.txt");
 		yourFile.createNewFile();
-		 String FileNamesTxt=new  FilesManagements().readFileAsString("./ProcessedFilesNamesBuccaneer.txt");
+		 String FileNamesTxt=new  FilesUtilities().readFileAsString("./ProcessedFilesNamesBuccaneer.txt");
 		 FilesNames.addAll(Arrays.asList(FileNamesTxt.split("\n")));
 		 return FilesNames;
 		

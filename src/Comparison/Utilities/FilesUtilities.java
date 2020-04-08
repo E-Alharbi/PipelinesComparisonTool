@@ -16,7 +16,7 @@ import Comparison.Runner.RunComparison;
 import Comparison.Runner.RunningParameter;
 
 
-public class FilesManagements {
+public class FilesUtilities {
 
 	
 

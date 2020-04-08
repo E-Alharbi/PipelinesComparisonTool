@@ -13,7 +13,7 @@ import java.util.Vector;
 
 import Comparison.Analyser.REFMACFactors;
 import Comparison.Runner.RunComparison;
-import Comparison.Utilities.FilesManagements;
+import Comparison.Utilities.FilesUtilities;
 
 public class Refmac {
 

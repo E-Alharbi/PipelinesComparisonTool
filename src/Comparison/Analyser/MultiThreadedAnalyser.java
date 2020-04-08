@@ -31,7 +31,7 @@ import Comparison.ToolsExecation.SingleThread.MolProbity;
 import Comparison.ToolsExecation.SingleThread.Refmac;
 import Comparison.ToolsExecation.SingleThread.castat2;
 import Comparison.Utilities.DataSetChecking;
-import Comparison.Utilities.FilesManagements;
+import Comparison.Utilities.FilesUtilities;
 import Comparison.Utilities.RemoveHeader;
 import Comparison.Utilities.RemovingDumAtoms;
 import Comparison.Utilities.RemovingWaterChainID;
@@ -571,7 +571,7 @@ DC.WarringLogFile="F";
 			
 	}
 	String GetFREEFlagValue(String LogFile) throws IOException {
-		String Log= new FilesManagements().readFileAsString(LogFile);
+		String Log= new FilesUtilities().readFileAsString(LogFile);
 		String FREE="0";
 		if(Log.contains("Rfree value for free reflections:")) {
 			

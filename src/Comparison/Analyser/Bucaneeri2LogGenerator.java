@@ -18,7 +18,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.RegexFileFilter;
 
-import Comparison.Utilities.FilesManagements;
+import Comparison.Utilities.FilesUtilities;
 
 
 public class Bucaneeri2LogGenerator {
@@ -47,7 +47,7 @@ try(  PrintWriter out = new PrintWriter("" )  ){ //write log file name between "
 		 String LogTxt="";
 		 for(int i=0; i<LogsFiles.size();++i ) {
 			
-			 LogTxt+=new FilesManagements().readFileAsString(LogsFiles.get(i).getAbsolutePath())+"\n"; 
+			 LogTxt+=new FilesUtilities().readFileAsString(LogsFiles.get(i).getAbsolutePath())+"\n"; 
 			
 		 }
 		 

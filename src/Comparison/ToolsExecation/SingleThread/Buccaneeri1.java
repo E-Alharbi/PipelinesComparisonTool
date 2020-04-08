@@ -36,7 +36,7 @@ import Comparison.Analyser.REFMACFactors;
 import Comparison.Runner.Preparer;
 import Comparison.Runner.RunComparison;
 import Comparison.Runner.RunningParameter;
-import Comparison.Utilities.FilesManagements;
+import Comparison.Utilities.FilesUtilities;
 import Comparison.Utilities.JSONReader;
 import Comparison.Utilities.RemovingDumAtoms;
 
@@ -222,7 +222,7 @@ public class Buccaneeri1 {
 		 
 		 if(RunningParameter.UseInitialModels.equals("T")) {
 			
-			 if(new FilesManagements().GetModelPath(FileName+".pdb").equals("")) {
+			 if(new FilesUtilities().GetModelPath(FileName+".pdb").equals("")) {
 					res.LogFile+="model not found!!";
 					return res;
 			}
@@ -230,7 +230,7 @@ public class Buccaneeri1 {
 				 
 					
 				 
-				 BuccScript=BuccScript.replace("@7", "-pdbin "+new FilesManagements().GetModelPath(FileName+".pdb")+" "); 
+				 BuccScript=BuccScript.replace("@7", "-pdbin "+new FilesUtilities().GetModelPath(FileName+".pdb")+" "); 
 			 }
 			
 		 }
@@ -326,7 +326,7 @@ public class Buccaneeri1 {
 	 Vector<String> AddFileNameToList( Vector<String> FilesNames) throws IOException{
 		File yourFile = new File("./ProcessedFilesNamesBuccaneer.txt");
 		yourFile.createNewFile();
-		 String FileNamesTxt=new FilesManagements().readFileAsString("./ProcessedFilesNamesBuccaneer.txt");
+		 String FileNamesTxt=new FilesUtilities().readFileAsString("./ProcessedFilesNamesBuccaneer.txt");
 		 FilesNames.addAll(Arrays.asList(FileNamesTxt.split("\n")));
 		 return FilesNames;
 		

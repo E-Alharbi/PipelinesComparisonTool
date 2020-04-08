@@ -41,7 +41,7 @@ public class PhenixTempCleaner {
 String WorkingDirPath(String CaseName, String WorkingDirList) throws IOException {
 	File yourFile = new File(WorkingDirList);
 	yourFile.createNewFile();
-	 String FileNamesTxt=new FilesManagements().readFileAsString(WorkingDirList);
+	 String FileNamesTxt=new FilesUtilities().readFileAsString(WorkingDirList);
 	  String [] CasesAndPaths= FileNamesTxt.split("\n");
 	  for(int i=0 ; i <CasesAndPaths.length ; ++i )
 		  if(CasesAndPaths[i].equals(CaseName))

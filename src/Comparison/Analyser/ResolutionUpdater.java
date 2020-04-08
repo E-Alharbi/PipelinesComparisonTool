@@ -18,7 +18,9 @@ import Comparison.Runner.RunningParameter;
 public class ResolutionUpdater {
 
 public static void main(String[] args) throws Exception{
-		new ResolutionUpdater().Update("/Users/emadalharbi/Downloads/TestBinning");
+	RunningParameter.UpdateResolutionRefmac="T";
+	RunningParameter.LimitUpdateResolutionFromRefmac="3.1";
+		new ResolutionUpdater().Update("/Volumes/PhDHardDrive/PairwiseReRun/Excel/noncs/");
 	}
 	/*
 	 * This class  updates resolution based on the MTZ not refmac   
@@ -28,6 +30,7 @@ public static void main(String[] args) throws Exception{
 
 		System.out.println("*** Using resolution from Refmac "+RunningParameter.UpdateResolutionRefmac+" ***");
 		
+
 		File [] ExcelPath=new File(Path).listFiles();
 		
 		for(File Folder : ExcelPath) {

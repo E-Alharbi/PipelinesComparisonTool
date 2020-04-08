@@ -35,7 +35,7 @@ import Comparison.Analyser.PipelineLog;
 import Comparison.Runner.Preparer;
 import Comparison.Runner.RunComparison;
 import Comparison.Runner.RunningParameter;
-import Comparison.Utilities.FilesManagements;
+import Comparison.Utilities.FilesUtilities;
 
 
 public class Crank {
@@ -67,7 +67,7 @@ public class Crank {
 	         		
 	         		
 	         
-	         	String Log=new FilesManagements().readFileAsString(JobDirectory+"/0-comb_phdmmb/comb_phdmmb.log");
+	         	String Log=new FilesUtilities().readFileAsString(JobDirectory+"/0-comb_phdmmb/comb_phdmmb.log");
 	         	Log+="TimeTaking "+TimeTaking+"\n";
       		FileUtils.copyFile(new File(JobDirectory+"/0-comb_phdmmb/best.pdb"),  new File("./CrankResults/IntermediatePDBs/"+PDBID+".pdb"));
       		try(  PrintWriter out = new PrintWriter( "./CrankResults/IntermediateLogs/"+PDBID+".txt" )  ){
@@ -292,7 +292,7 @@ Process p = Runtime.getRuntime().exec(callAndArgs);
 	 Vector<String> AddFileNameToList( Vector<String> FilesNames) throws IOException{
 			File yourFile = new File("./ProcessedFilesNamesCrank.txt");
 			yourFile.createNewFile();
-			 String FileNamesTxt=new FilesManagements().readFileAsString("./ProcessedFilesNamesCrank.txt");
+			 String FileNamesTxt=new FilesUtilities().readFileAsString("./ProcessedFilesNamesCrank.txt");
 			 FilesNames.addAll(Arrays.asList(FileNamesTxt.split("\n")));
 			 return FilesNames;
 			

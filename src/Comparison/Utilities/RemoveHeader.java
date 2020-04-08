@@ -15,7 +15,7 @@ new RemoveHeader().RemoveHeaderFromRefPDB(new File("/Users/emadalharbi/Desktop/r
 
 	public File  RemoveHeaderFromRefPDB(File PDB) throws IOException {
 		new RunComparison().CheckDirAndFile("RefPDBAfterRemvingFirstLine");
-		 String [] PDBContents=new FilesManagements().readFileAsString(PDB.getAbsolutePath()).split("\n");
+		 String [] PDBContents=new FilesUtilities().readFileAsString(PDB.getAbsolutePath()).split("\n");
 		 String UpdatedPDB="";
 		 for(int i=1 ; i < PDBContents.length ;++i) {
 			 UpdatedPDB+=PDBContents[i]+"\n";
