@@ -26,7 +26,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import Comparison.Runner.Preparer;
 import Comparison.Runner.RunComparison;
 import Comparison.Runner.RunningParameter;
-
+import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 
 public class ComparisonMeasures {
 
@@ -36,7 +36,11 @@ String PathToLatexFolder="./Latex";
 boolean AvgInMatrices=false;
 
 public static void main(String[] args) throws FileNotFoundException, IOException {
-
+	//ComparisonMeasures r = new ComparisonMeasures();
+	//r.PathToLatexFolder="/Users/emadalharbi/Desktop/Test2/Latex";
+	//r.MatrixOfResults("/Users/emadalharbi/Desktop/Test2/OrginalBuccEx54ExFaliedCases copy");
+	//r.TableOfMeanAndSD("/Users/emadalharbi/Desktop/Test2/OrginalBuccEx54ExFaliedCases copy");
+	//r.OverallResults("/Users/emadalharbi/Desktop/Test2/OrginalBuccEx54ExFaliedCases copy",true);
 	//Reproducibility
 	//ComparisonMeasures cm = new ComparisonMeasures();
 	//cm.PathToLatexFolder="";
@@ -855,7 +859,45 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 		
 		return Reso;
 	}
+	
+void TableOfMeanAndSD(String ResultsDir) throws IOException {
+	File[] Folders = new File(ResultsDir).listFiles();
+	for (File Folder : Folders) {
+		if (Folder.isDirectory()) {
+			String Table="\\tiny Pipeline &  \\multicolumn{2}{c}{\\tiny Completeness} &  \\multicolumn{2}{c}{\\tiny R-free} \\\\  \n";
+			 Table+="& \\tiny mean & \\tiny SD & \\tiny mean & \\tiny SD \\\\ \\hline \n";
+			for(File excel : Folder.listFiles()) {
+				Vector<ExcelContents> Excel = new Vector<ExcelContents>();
+				ExcelLoader e = new ExcelLoader();
+				Excel=e.ReadExcel(excel.getAbsolutePath());
+				Table+="\\tiny "+excel.getName()+"&";
+				double Com=0;
+				double R=0;
+				double Rfree=0;
+				double [] ComInArr= new double [Excel.size()]; 
+				double [] RfreeInArr= new double [Excel.size()]; 
+				for(int i=0 ; i < Excel.size();++i) {
+					BigDecimal comDec= new BigDecimal(Excel.get(i).Completeness);
+					Com+=comDec.doubleValue();
+					ComInArr[i]=comDec.doubleValue();
+					BigDecimal RDec= new BigDecimal(Excel.get(i).R_factor0Cycle);
+					R+=RDec.doubleValue();
+					
+					BigDecimal RfreeDec= new BigDecimal(Excel.get(i).R_free0Cycle);
+					Rfree+=RfreeDec.doubleValue();
+					RfreeInArr[i]=RfreeDec.doubleValue();
+				}
+				
+				Table+="\\tiny "+new BigDecimal(Com/Excel.size()).setScale(0, RoundingMode.HALF_UP)+"& \\tiny"+new BigDecimal(new StandardDeviation().evaluate(ComInArr)).setScale(0, RoundingMode.HALF_UP)+"&";
+				Table+="\\tiny "+new BigDecimal(Rfree/Excel.size()).setScale(2, RoundingMode.HALF_UP)+"& \\tiny"+new BigDecimal(new StandardDeviation().evaluate(RfreeInArr)).setScale(2, RoundingMode.HALF_UP)+"\\\\ \n";
 
+			}
+			new Preparer().WriteTxtFile(PathToLatexFolder+"/"+Folder.getName()+"Mean.tex",FormatingPipelinesNames(Table,true,true));
+
+		}
+	}
+}
+	
 	void MatrixOfResults(String ResultsDir) throws IOException {
 		if(new File("MatricesLogs").exists()) {
 			FileUtils.deleteDirectory(new File("MatricesLogs"));
@@ -871,6 +913,7 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 				Comments += "% This table generated from \n % Folder :"+Folder.getName()+" \n";
 				Comments += "% Full folder path :"+Folder.getAbsolutePath()+" \n";
 				Comments += "% Excel used : \n ";
+				
 				File [] ThisFolder = Folder.listFiles();
 				Arrays.sort(ThisFolder, (f1, f2) -> f1.compareTo(f2)); // sorting pipelines 
 				for (File Excel : ThisFolder) {
@@ -926,7 +969,7 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 				String LogOfRFree5="";
 				
 				String LogOfRFree5Equivalent="";
-				
+				String CSVCompareTo="Pipeline,Percentage,CompareTo,StatisticalMeasure\n";
 				for (int i = 0; i < Container.size(); ++i) {
 					Col = "\\tiny Pipeline variant ";// avoiding repetition
 					
@@ -953,6 +996,7 @@ if(e.ToolsNames.get(i).contains("noncs") && NumberofConsideredCasesNoncs==0) {
 				
 					   RowRFree5Equivalent = "\\tiny " + e.ToolsNames.get(i)+" $_R{_{-free}}$";
 					   RowR5Equivalent += "\\tiny " + e.ToolsNames.get(i)+" $_{R-work}$";
+					   
 					for (int m = 0; m < Container.size(); ++m) {
 
 						if (Col.length() == 0) {
@@ -1169,8 +1213,13 @@ if(new BigDecimal(Container.get(i).get(model).R_free0Cycle).compareTo(new BigDec
 							  if(OverfittingR5!=0)
 							  RowR5Overfitting+=   " &  " + decim.format(((OverfittingR5 * 100) / CountModelR5)) ;
 
-							 
-							  
+							  CSVCompareTo+=e.ToolsNames.get(i)+","+decim.format(((CountModelCom5 * 100) / CountModel))+","+e.ToolsNames.get(m)+",Com5\n";
+							  CSVCompareTo+=e.ToolsNames.get(i)+","+decim.format(((CountModelCom0 * 100) / CountModel))+","+e.ToolsNames.get(m)+",Com0\n";
+							  CSVCompareTo+=e.ToolsNames.get(i)+","+decim.format(((CountModelR * 100) / CountModel))+","+e.ToolsNames.get(m)+",R0\n";
+							  CSVCompareTo+=e.ToolsNames.get(i)+","+decim.format(((CountModelR5 * 100) / CountModel))+","+e.ToolsNames.get(m)+",R5\n";
+							  CSVCompareTo+=e.ToolsNames.get(i)+","+decim.format(((CountRFree5 * 100) / CountModel))+","+e.ToolsNames.get(m)+",Free5\n";
+							  CSVCompareTo+=e.ToolsNames.get(i)+","+decim.format(((CountRFree0 * 100) / CountModel))+","+e.ToolsNames.get(m)+",Free0\n";
+
 						if(IsRFreeFlagUsed==true) {	
 					RowRFree0 += " &  " + decim.format(((CountRFree0 * 100) / CountModel))  ;
 								
@@ -1181,6 +1230,7 @@ if(new BigDecimal(Container.get(i).get(model).R_free0Cycle).compareTo(new BigDec
 					
 					
 					 RowRFree5Equivalent+=	" &  " + decim.format(((EquivalentRFree5 * 100) / CountModel)) ;
+					 
 						}
 						if(IsRFreeFlagUsed==false) {	
 							RowRFree0 += " & - " ;
@@ -1300,7 +1350,7 @@ LogOfR0Equivalent+="\n Number of models: "+EquivalentR+" \n";
 				TableRModelsEquivalent5 += RowR5Equivalent;
 				TableRModelsEquivalent5=ShadedTable(FormatingPipelinesNames(TableRModelsEquivalent5,true,true)) +" \n "+Comments;
 				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatrixOfResults" + Folder.getName() + "REquivalent5Models.tex", TableRModelsEquivalent5);
-				
+				new Preparer().WriteTxtFile(PathToLatexFolder+"/"+Folder.getName()+"CSVCompareTo.csv",FormatingPipelinesNames(CSVCompareTo,true,false));
 				
 				new RunComparison().CheckDirAndFile("MatricesLogs");
 				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfR5Equivalent.txt", FormatingPipelinesNames(LogOfR5Equivalent,false,true));
