@@ -9,29 +9,27 @@ public class RunningParameter {
 	//All the parameters that used by this scripts from the command line 
 	
 	public static String DataPath;//Data folder path 
-	public static String LogsDirBuccaneer;// logs files for Buccaneer
-	public static String PDBsDirBuccaneer;// PDBS files that built by Buccaneer
+	
 	public static String castat2Path;// castat2 path
 	public static String CphasesMatchScriptPath;//CphasesMatch Script Path in CCP4 folder
 	public static String RefmacPath; // path for refmac in bin folder 
-	public static String LogsDirwArp;// logs files for wArp
-	public static String PDBsDirwArp;// PDBS files that built by wArp
+	
 	public static String LogsDirPhenix;// logs files for Phenix
 	public static String PDBsDirPhenix;// PDBS files that built by Phenix
 	public static String PhenixAutobuild;// PhenixAutobuild path
 	public static String BuccaneerPipeLine;
 	public static String wArpAutotracing; // path for ARP/wARP auto_tracing.sh 
-	public static String ParrtoPhases; // columns parrot phases 
+	
 	
 	public static String LogsDir;// logs files for Analyser
 	public static String PDBsDir;// PDBS files for Analyser
 	public static String ToolName;// Tool name  for  Analyser
 	public static String NumberofThreads;// Tool name  for  Analyser
 	
-	//public static String UseBuccModels;// This option allows ARP starts from Bucc model as initial model
-	public static String UseInitialModels="F";// This option allows ARP starts from Bucc model as initial model
+	
+	public static String UseInitialModels="F";// start from initial model 
 
-	//public static String BuccModels;// path for BuccModels
+	
 	public static String InitialModels;// path for BuccModels
 	public static String Buccaneeri2PipeLine;// Buccaneeri2 PipeLine
 	
@@ -40,12 +38,12 @@ public class RunningParameter {
 	
 	public static String CrankPipeLine;// Number of times to run the script 
 	
-	public static String ZeroCycle;// Number of times to run the script 
+	
 	
 	public static String PhenixWorkingDirList; // the txt file which has the working dir lists 
 	public static String PhenixMolProbity;// Path for Mol Probity
 	public static String PDBs; // path for final PDB folder 
-	public static String ExcellPath; // path to folder that contains excel files 
+	public static String ExcellPath; // path to  excel file 
 	
 	public static String Pipelines; // which pipelines need to prepare to run 
 	
@@ -57,11 +55,11 @@ public class RunningParameter {
 	public static String IntermediateLogs; // path for intermediate logs folder 
 	
 	public static String CfakeAnom;
-	public static String UsingMolProbity="T"; // Using Mol Probity in the Analyser. Default is False
+	public static String UsingMolProbity="T"; // Using Mol Probity in the Analyser. 
 	public static String PhasesUsedCPhasesMatch="HLA,HLB,HLC,HLD";// Default is HL  phases.
 	
 	public static String ClusterServerGrid="Slurm"; //  grid engine  
-	public static String ExperimentType="Both";
+	
 	public static String UsingRFree="T"; // T to use R-free in building 
 	
 	public static String BuccaneerIterations="25"; // number of iterations for Buccaneer
