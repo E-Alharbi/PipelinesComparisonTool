@@ -218,6 +218,7 @@ if(Pipeline1Excel.get(i).R_free0Cycle.equals("None")){
 	//r.TimeTakingTable(ExcelPath+"/OrginalBuccEx54ExFaliedCases");
 	r.ImprovementsLevel(ExcelPath+"/OrginalBuccEx54ExFaliedCases");
 	r.TableOfMeanAndSD(ExcelPath+"/OrginalBuccEx54ExFaliedCases");
+	r.BestOfCombinedPipeline(ExcelPath+"/OrginalBuccEx54ExFaliedCases");
 		r.PathToLatexFolder=ExcelPath+"/SyntheticBuccEx54ExFaliedCaseslatex";
 		new RunComparison().CheckDirAndFile(r.PathToLatexFolder);
 		
@@ -227,6 +228,7 @@ if(Pipeline1Excel.get(i).R_free0Cycle.equals("None")){
     	//r.TimeTakingTable(ExcelPath+"/SyntheticBuccEx54ExFaliedCases");
     	r.ImprovementsLevel(ExcelPath+"/SyntheticBuccEx54ExFaliedCases");
     	r.TableOfMeanAndSD(ExcelPath+"/SyntheticBuccEx54ExFaliedCases");
+    	r.BestOfCombinedPipeline(ExcelPath+"/SyntheticBuccEx54ExFaliedCases");
     	new RunComparison().CheckDirAndFile(ExcelPath+"/All");
     	for(int i=0; i < DM.size() ; ++i) {
     		new RunComparison().CheckDirAndFile(ExcelPath+"/All/"+DM.get(i).getName());
@@ -259,8 +261,8 @@ if(Pipeline1Excel.get(i).R_free0Cycle.equals("None")){
 	    r.MatrixOfResults(ExcelPath+"/OrginalBuccInc54ExFaliedCases");
 	   // r.TimeTakingTable(ExcelPath+"/OrginalBuccInc54ExFaliedCases");
 	    r.ImprovementsLevel(ExcelPath+"/OrginalBuccInc54ExFaliedCases");
-	
-	    
+	r.TableOfMeanAndSD(ExcelPath+"/OrginalBuccInc54ExFaliedCases");
+	    r.BestOfCombinedPipeline(ExcelPath+"/OrginalBuccInc54ExFaliedCases");
 	    new LatexTablesCreater().RemoveFromFolder(ExcludeFromSynthetic,new File(ExcelPath+"/SyntheticBuccInc54"));
 	    new FailedDatasetsExcluder().Exclude(ExcelPath+"/SyntheticBuccInc54");
 	    r.PathToLatexFolder=ExcelPath+"/SyntheticBuccInc54ExFaliedCaseslatex";
@@ -270,7 +272,8 @@ if(Pipeline1Excel.get(i).R_free0Cycle.equals("None")){
 	    r.MatrixOfResults(ExcelPath+"/SyntheticBuccInc54ExFaliedCases");
 	   // r.TimeTakingTable(ExcelPath+"/OrginalBuccInc54ExFaliedCases");
 	    r.ImprovementsLevel(ExcelPath+"/SyntheticBuccInc54ExFaliedCases");
-	    
+	    r.TableOfMeanAndSD(ExcelPath+"/SyntheticBuccInc54ExFaliedCases");
+	    r.BestOfCombinedPipeline(ExcelPath+"/SyntheticBuccInc54ExFaliedCases");
 	    System.out.println("Use the fallowing csv to plot the results: ");
 	    System.out.println("1- csv file in "+ExcelPath+"/AllExFaliedCasesExcludedBuccaneerDevSet"+" for completness vs resolution, R-work vs resolution and R-free vs resolution ");
 	    System.out.println("2- csv file in "+ExcelPath+"/OrginalBuccEx54ExFaliedCases"+" for completness vs F-map Correlation ");
