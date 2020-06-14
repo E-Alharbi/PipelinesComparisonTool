@@ -20,6 +20,7 @@ import java.util.TreeSet;
 import java.util.Vector;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 //import  org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -36,15 +37,156 @@ String PathToLatexFolder="./Latex";
 boolean AvgInMatrices=false;
 
 public static void main(String[] args) throws FileNotFoundException, IOException {
-	//ComparisonMeasures r = new ComparisonMeasures();
+	ComparisonMeasures r = new ComparisonMeasures();
 	//r.PathToLatexFolder="/Users/emadalharbi/Desktop/Test2/Latex";
 	//r.MatrixOfResults("/Users/emadalharbi/Desktop/Test2/OrginalBuccEx54ExFaliedCases copy");
-	//r.TableOfMeanAndSD("/Users/emadalharbi/Desktop/Test2/OrginalBuccEx54ExFaliedCases copy");
+	//r.TableOfMeanAndSD("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingPairwiseRevision1/Excel/OrginalBuccEx54ExFaliedCases copy 2");
 	//r.OverallResults("/Users/emadalharbi/Desktop/Test2/OrginalBuccEx54ExFaliedCases copy",true);
 	//Reproducibility
 	//ComparisonMeasures cm = new ComparisonMeasures();
 	//cm.PathToLatexFolder="";
 	//cm.CompRTimeAvgTable("","");
+	//new ComparisonMeasures().BestOfCombinedPipeline("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingPairwiseRevision1/Excel/OrginalBuccEx54ExFaliedCases copy 2");
+}
+void BestOfCombinedPipeline(String ExcelDir) throws IOException {
+	
+	for (File Folder : new File(ExcelDir).listFiles()) {
+		if(Folder.isDirectory()) {
+			Vector<Vector<File>> CombinedPipelineAndInd= new Vector<Vector<File>>();
+			String TableCom="Pipeline variant& x\\rightarrow y & Best x & Best y \\\\"+"\n";
+			String TableFree="Pipeline variant& x\\rightarrow y & Best x & Best y \\\\"+"\n";
+			
+			for(File Excel : Folder.listFiles()) {
+				
+				String ExcelName=FilenameUtils.getBaseName(Excel.getName());
+				
+				for(File Excel2 : Folder.listFiles()) {
+					String ExcelName2=FilenameUtils.getBaseName(Excel2.getName());
+					if(!ExcelName2.equals(ExcelName) && ExcelName2.startsWith(ExcelName)) {
+						String ExcelName3=ExcelName2.replaceAll(ExcelName, "")+"."+FilenameUtils.getExtension(Excel2.getName());
+						
+						File FileChecking= new File(Folder.getAbsoluteFile()+"/"+ExcelName3);
+						if(FileChecking.exists() ) {
+							
+							Vector<File> Temp = new Vector<File>();
+							Temp.add(Excel);
+							Temp.add(Excel2);
+							Temp.add(FileChecking);
+							CombinedPipelineAndInd.add(Temp);
+							
+
+						}
+						
+					}
+				}
+			}
+			
+			//Check if all individual pipelines and their combination have identified 
+			for(File Excel : Folder.listFiles()) {
+				boolean Found=false;
+			for(int i=0 ; i < CombinedPipelineAndInd.size() ; i++) {
+				if(CombinedPipelineAndInd.get(i).get(0).getName().equals(Excel.getName()) || CombinedPipelineAndInd.get(i).get(1).getName().equals(Excel.getName()) || CombinedPipelineAndInd.get(i).get(2).getName().equals(Excel.getName()))
+					Found=true;
+				//break;
+				}
+			if(Found==false) {
+				System.out.println("Warning: this pipeline "+ Excel.getAbsolutePath() +" seems to be not run in pairwise. This will affect on (Best Of) comparison table. Please note that the excel name for combinded pipelines shoud be in this format (Ex: First pipeline: Buccaneeri1I5.xlsx Second Pipeline: Phenix.xlsx Combined pipeline: Buccaneeri1I5Phenix.xlsx ) ");
+			}
+			}
+			
+			// Now do comparison 
+			for(int i=0 ; i < CombinedPipelineAndInd.size() ; ++i) {
+				ExcelLoader f = new ExcelLoader();
+				Vector<ExcelContents> PipelineX = f.ReadExcel(CombinedPipelineAndInd.get(i).get(0).getAbsolutePath());
+				Vector<ExcelContents> PipelineXY = f.ReadExcel(CombinedPipelineAndInd.get(i).get(1).getAbsolutePath());
+				Vector<ExcelContents> PipelineY = f.ReadExcel(CombinedPipelineAndInd.get(i).get(2).getAbsolutePath());
+float BestXCom=0;
+float BestYCom=0;
+float BestXYCom=0;
+float BestXFree=0;
+float BestYFree=0;
+float BestXYFree=0;
+boolean IsRfreeUsed=true;
+				for(int x=0; x < PipelineX.size() ; ++x) {
+					ExcelContents PipelineDatasetX= PipelineX.get(x);
+					ExcelContents PipelineDatasetXY= new ExcelContents();
+					ExcelContents PipelineDatasetY= new ExcelContents();
+					for(int xy=0;xy<PipelineXY.size();++xy) {
+						if(PipelineXY.get(xy).PDB_ID.equals(PipelineDatasetX.PDB_ID)) {
+							PipelineDatasetXY=PipelineXY.get(xy);
+							break;
+						}
+					}
+					
+					for(int y=0;y<PipelineY.size();++y) {
+						if(PipelineY.get(y).PDB_ID.equals(PipelineDatasetX.PDB_ID)) {
+							PipelineDatasetY=PipelineY.get(y);
+							break;
+						}
+					}
+					
+					// compare and count 
+					if (  new BigDecimal(PipelineDatasetX.Completeness).setScale(0, RoundingMode.HALF_UP).subtract( 
+							new BigDecimal(PipelineDatasetXY.Completeness).setScale(0, RoundingMode.HALF_UP)).compareTo(new BigDecimal("5")) >=0 && new BigDecimal(PipelineDatasetX.Completeness).setScale(0, RoundingMode.HALF_UP).subtract( 
+									new BigDecimal(PipelineDatasetY.Completeness).setScale(0, RoundingMode.HALF_UP)).compareTo(new BigDecimal("5")) >=0)  {
+						BestXCom++;
+						
+			}
+					
+					if (  new BigDecimal(PipelineDatasetY.Completeness).setScale(0, RoundingMode.HALF_UP).subtract( 
+							new BigDecimal(PipelineDatasetXY.Completeness).setScale(0, RoundingMode.HALF_UP)).compareTo(new BigDecimal("5")) >=0 && new BigDecimal(PipelineDatasetY.Completeness).setScale(0, RoundingMode.HALF_UP).subtract( 
+									new BigDecimal(PipelineDatasetX.Completeness).setScale(0, RoundingMode.HALF_UP)).compareTo(new BigDecimal("5")) >=0)  {
+						BestYCom++;
+						
+			}
+					
+					if (  new BigDecimal(PipelineDatasetXY.Completeness).setScale(0, RoundingMode.HALF_UP).subtract( 
+							new BigDecimal(PipelineDatasetY.Completeness).setScale(0, RoundingMode.HALF_UP)).compareTo(new BigDecimal("5")) >=0 && new BigDecimal(PipelineDatasetXY.Completeness).setScale(0, RoundingMode.HALF_UP).subtract( 
+									new BigDecimal(PipelineDatasetX.Completeness).setScale(0, RoundingMode.HALF_UP)).compareTo(new BigDecimal("5")) >=0)  {
+						BestXYCom++;
+						
+			}
+					if(PipelineDatasetX.R_free.equals("0") || PipelineDatasetY.R_free.equals("0")) {
+					IsRfreeUsed=false;
+					}
+					if( new BigDecimal(PipelineDatasetX.R_free0Cycle).add(new BigDecimal("0.05")).compareTo(new BigDecimal(PipelineDatasetY.R_free0Cycle)) <= 0 &&new BigDecimal(PipelineDatasetX.R_free0Cycle).add(new BigDecimal("0.05")).compareTo(new BigDecimal(PipelineDatasetXY.R_free0Cycle)) <= 0  ) {
+
+						
+						BestXFree++;
+														
+				}
+					
+	if( new BigDecimal(PipelineDatasetY.R_free0Cycle).add(new BigDecimal("0.05")).compareTo(new BigDecimal(PipelineDatasetX.R_free0Cycle)) <= 0 &&new BigDecimal(PipelineDatasetY.R_free0Cycle).add(new BigDecimal("0.05")).compareTo(new BigDecimal(PipelineDatasetXY.R_free0Cycle)) <= 0  ) {
+
+						
+						BestYFree++;
+														
+				}
+	if( new BigDecimal(PipelineDatasetXY.R_free0Cycle).add(new BigDecimal("0.05")).compareTo(new BigDecimal(PipelineDatasetX.R_free0Cycle)) <= 0 &&new BigDecimal(PipelineDatasetXY.R_free0Cycle).add(new BigDecimal("0.05")).compareTo(new BigDecimal(PipelineDatasetY.R_free0Cycle)) <= 0  ) {
+
+		
+		BestXYFree++;
+									
+}
+}
+				
+				DecimalFormat decim = new DecimalFormat("#");
+				TableCom+=FilenameUtils.getBaseName(CombinedPipelineAndInd.get(i).get(1).getName())+"&"+decim.format(((BestXYCom * 100) / PipelineX.size()))+"&"+decim.format(((BestXCom * 100) / PipelineX.size()))+"&"+decim.format(((BestYCom * 100) / PipelineX.size()))+"\\\\ \n";
+				if(IsRfreeUsed==true)
+				TableFree+=FilenameUtils.getBaseName(CombinedPipelineAndInd.get(i).get(1).getName())+"&"+decim.format(((BestXYFree * 100) / PipelineX.size()))+"&"+decim.format(((BestXFree * 100) / PipelineX.size()))+"&"+decim.format(((BestYFree * 100) / PipelineX.size()))+"\\\\ \n";
+				
+			}
+			
+			 TableCom=ShadedTable(FormatingPipelinesNames(TableCom,true,true));
+			 TableFree=ShadedTable(FormatingPipelinesNames(TableFree,true,true));
+			 
+			
+			new Preparer().WriteTxtFile(PathToLatexFolder+"/BestOf" + Folder.getName() + "Com5.tex", TableCom);
+			new Preparer().WriteTxtFile(PathToLatexFolder+"/BestOf" + Folder.getName() + "Free5.tex", TableFree);
+
+		}
+	}
+	
 }
 	void CompRTimeAvgTable(String ExcelDir, String PathForOriginalExp) throws IOException {//Reproducibility tables. Run this method twice for original and synthetic   
 		
@@ -115,6 +257,7 @@ public static void main(String[] args) throws FileNotFoundException, IOException
 					
 					}
 				}
+				
 				new Preparer().WriteTxtFile(PathToLatexFolder+"/ReproducibilityTable" + Folder.getName() + ".tex", FormatingPipelinesNames(Table,true,true) + "\n"+Comments);
 				new Preparer().WriteTxtFile(PathToLatexFolder+"/ReproducibilityTableOriginal" + Folder.getName() + ".tex", FormatingPipelinesNames(TableOriginal,true,true) + "\n"+Comments);
 
@@ -1345,36 +1488,36 @@ LogOfR0Equivalent+="\n Number of models: "+EquivalentR+" \n";
 				TableR5Models=ShadedTable(FormatingPipelinesNames(TableR5Models,true,true)) +" \n "+Comments;
 				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatrixOfResults" + Folder.getName() + "R5Models.tex", TableR5Models);
 			
-			
+				
 				String TableRModelsEquivalent5 = Col + "\\\\ \\hline \n ";
 				TableRModelsEquivalent5 += RowR5Equivalent;
 				TableRModelsEquivalent5=ShadedTable(FormatingPipelinesNames(TableRModelsEquivalent5,true,true)) +" \n "+Comments;
 				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatrixOfResults" + Folder.getName() + "REquivalent5Models.tex", TableRModelsEquivalent5);
 				new Preparer().WriteTxtFile(PathToLatexFolder+"/"+Folder.getName()+"CSVCompareTo.csv",FormatingPipelinesNames(CSVCompareTo,true,false));
 				
-				new RunComparison().CheckDirAndFile("MatricesLogs");
-				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfR5Equivalent.txt", FormatingPipelinesNames(LogOfR5Equivalent,false,true));
+				new RunComparison().CheckDirAndFile(PathToLatexFolder+"/MatricesLogs");
+				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatricesLogs/" + Folder.getName() + "LogOfR5Equivalent.txt", FormatingPipelinesNames(LogOfR5Equivalent,false,true));
 				
-				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfCom0.txt", FormatingPipelinesNames(LogOfCom0,false,true));
+				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatricesLogs/" + Folder.getName() + "LogOfCom0.txt", FormatingPipelinesNames(LogOfCom0,false,true));
 
-				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfCom0Equivalent.txt", FormatingPipelinesNames(LogOfCom0Equivalent,false,true));
+				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatricesLogs/" + Folder.getName() + "LogOfCom0Equivalent.txt", FormatingPipelinesNames(LogOfCom0Equivalent,false,true));
 				
-				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfCom5.txt", FormatingPipelinesNames(LogOfCom5,false,true));
-				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfCom5Equivalent.txt", FormatingPipelinesNames(LogOfCom5Equivalent,false,true));
-				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfR0.txt", FormatingPipelinesNames(LogOfR0,false,true));
-				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfRFree0.txt", FormatingPipelinesNames(LogOfRFree0,false,true));
+				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatricesLogs/" + Folder.getName() + "LogOfCom5.txt", FormatingPipelinesNames(LogOfCom5,false,true));
+				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatricesLogs/" + Folder.getName() + "LogOfCom5Equivalent.txt", FormatingPipelinesNames(LogOfCom5Equivalent,false,true));
+				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatricesLogs/" + Folder.getName() + "LogOfR0.txt", FormatingPipelinesNames(LogOfR0,false,true));
+				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatricesLogs/" + Folder.getName() + "LogOfRFree0.txt", FormatingPipelinesNames(LogOfRFree0,false,true));
 
 					  
 				
-				new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfR0Equivalent.txt", FormatingPipelinesNames(LogOfR0Equivalent,false,true));
-						new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfRFree0Equivalent.txt", FormatingPipelinesNames(LogOfRFree0Equivalent,false,true));
+				new Preparer().WriteTxtFile(PathToLatexFolder+"/MatricesLogs/" + Folder.getName() + "LogOfR0Equivalent.txt", FormatingPipelinesNames(LogOfR0Equivalent,false,true));
+						new Preparer().WriteTxtFile(PathToLatexFolder+"/MatricesLogs/" + Folder.getName() + "LogOfRFree0Equivalent.txt", FormatingPipelinesNames(LogOfRFree0Equivalent,false,true));
 
-						new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfR5.txt", FormatingPipelinesNames(LogOfR5,false,true));
+						new Preparer().WriteTxtFile(PathToLatexFolder+"/MatricesLogs/" + Folder.getName() + "LogOfR5.txt", FormatingPipelinesNames(LogOfR5,false,true));
 	
 						
-						new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfRFree5.txt", FormatingPipelinesNames(LogOfRFree5,false,true));
+						new Preparer().WriteTxtFile(PathToLatexFolder+"/MatricesLogs/" + Folder.getName() + "LogOfRFree5.txt", FormatingPipelinesNames(LogOfRFree5,false,true));
 						
-						new Preparer().WriteTxtFile("MatricesLogs/" + Folder.getName() + "LogOfRFree5Equivalent.txt", FormatingPipelinesNames(LogOfRFree5Equivalent,false,true));
+						new Preparer().WriteTxtFile(PathToLatexFolder+"/MatricesLogs/" + Folder.getName() + "LogOfRFree5Equivalent.txt", FormatingPipelinesNames(LogOfRFree5Equivalent,false,true));
 
 			}
 
@@ -1504,8 +1647,10 @@ return FormattedTable;
 		Table=Table.replaceAll("\\bArpWArpAfterBuccaneeri1\\b", "ARP(B 25I)");
 		Table=Table.replaceAll("\\bArpWArpAfterBuccaneeri1I5\\b", "ARP(B 5I)");
 		Table=Table.replaceAll("\\bARPwARP\\b", "ARP");
+		Table=Table.replaceAll("\\bArp\\b", "ARP");
 		Table=Table.replaceAll("\\bPhenix\\b", "PHENIX/Parrot");
 		Table=Table.replaceAll("\\bPhenixHAL\\b", "PHENIX");
+		Table=Table.replaceAll("\\bPhenixHLA\\b", "PHENIX");
 		Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhi\\b", "SHELXE/Parrot");
 		Table=Table.replaceAll("\\bShelxeWithTFlag\\b", "SHELXE");
 		Table=Table.replaceAll("\\bBuccaneeri1\\b", "i1(25I)");
@@ -1517,8 +1662,9 @@ return FormattedTable;
 			Table=Table.replaceAll("\\bArpWArpAfterBuccaneeri1\\b", "A(B 25I)");
 			Table=Table.replaceAll("\\bArpWArpAfterBuccaneeri1I5\\b", "A(B 5I)");
 			Table=Table.replaceAll("\\bARPwARP\\b", "A");
-			
+			Table=Table.replaceAll("\\bArp\\b", "A");
 			Table=Table.replaceAll("\\bPhenixHAL\\b", "P");
+			Table=Table.replaceAll("\\bPhenixHLA\\b", "P");
 			
 			Table=Table.replaceAll("\\bShelxeWithTFlag\\b", "S");
 			Table=Table.replaceAll("\\bBuccaneeri1I5\\b", "B");
@@ -1557,6 +1703,8 @@ return FormattedTable;
 		Table=Table.replaceAll("\\bArpPhenix\\b", "A\\$\\\\rightarrow\\$\\$P^{\\\\ast}\\$ ");
 		Table=Table.replaceAll("\\bArpPhenixHLA\\b", "A\\$\\\\rightarrow\\$\\$P\\$ ");
 		Table=Table.replaceAll("\\bArpWArpBuccaneeri1I5\\b", "A\\$\\\\rightarrow\\$\\$B\\$ ");
+		Table=Table.replaceAll("\\bArpBuccaneeri1I5\\b", "A\\$\\\\rightarrow\\$\\$B\\$ ");
+
 		Table=Table.replaceAll("\\bBuccaneeri1I5Phenix\\b", "B\\$\\\\rightarrow\\$\\$P^{\\\\ast}\\$ ");
 		Table=Table.replaceAll("\\bBuccaneeri1I5PhenixHLA\\b", "B\\$\\\\rightarrow\\$\\$P\\$ ");
 		Table=Table.replaceAll("\\bPhenixArp\\b", "\\$P^{\\\\ast}\\$\\\\rightarrow\\$A\\$ ");
@@ -1579,6 +1727,7 @@ return FormattedTable;
 		Table=Table.replaceAll("\\bArpPhenix\\b", "A→P* ");
 		Table=Table.replaceAll("\\bArpPhenixHLA\\b", "A→P ");
 		Table=Table.replaceAll("\\bArpWArpBuccaneeri1I5\\b", "A→B ");
+		Table=Table.replaceAll("\\bArpBuccaneeri1I5\\b", "A→B ");
 		Table=Table.replaceAll("\\bBuccaneeri1I5Phenix\\b", "B→P* ");
 		Table=Table.replaceAll("\\bBuccaneeri1I5PhenixHLA\\b", "B→P ");
 		Table=Table.replaceAll("\\bPhenixArp\\b", "P*→A ");
