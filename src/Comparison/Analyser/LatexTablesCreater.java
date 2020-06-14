@@ -163,7 +163,7 @@ if(Pipeline1Excel.get(i).R_free0Cycle.equals("None")){
     	for(File excel : dm.listFiles()) {
     		
     		if(new LatexTablesCreater().CheckingIfRfreeIsUsed(new ExcelLoader().ReadExcel(excel.getAbsolutePath()))==false) {
-    			 System.out.println("R-free in this excel seems to be meaningless. If the tool did not use R-free, then fill R-free column with zero "+ excel.getAbsolutePath());
+    			 System.out.println("Warning: R-free in this excel seems to be meaningless. If the tool did not use R-free, then fill R-free column with zero "+ excel.getAbsolutePath()+". Ignore this warning if you sure R-free is correct");
     		}
     		
     	}
