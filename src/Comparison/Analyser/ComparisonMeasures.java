@@ -38,15 +38,79 @@ boolean AvgInMatrices=false;
 
 public static void main(String[] args) throws FileNotFoundException, IOException {
 	ComparisonMeasures r = new ComparisonMeasures();
-	//r.PathToLatexFolder="/Users/emadalharbi/Desktop/Test2/Latex";
-	//r.MatrixOfResults("/Users/emadalharbi/Desktop/Test2/OrginalBuccEx54ExFaliedCases copy");
-	//r.TableOfMeanAndSD("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingPairwiseRevision1/Excel/OrginalBuccEx54ExFaliedCases copy 2");
-	//r.OverallResults("/Users/emadalharbi/Desktop/Test2/OrginalBuccEx54ExFaliedCases copy",true);
+	r.BestOfAll("/Users/emadalharbi/Downloads/FrgNNModel/ExcelMRWithTrainingAllPipelines/OrginalBuccEx54ExFaliedCases/");
+	//r.PathToLatexFolder="Latex";
+	//r.MatrixOfResults("/OrginalBuccEx54ExFaliedCases");
+	//r.TableOfMeanAndSD("/OrginalBuccEx54ExFaliedCases");
+	//r.OverallResults("/OrginalBuccEx54ExFaliedCases",true);
 	//Reproducibility
 	//ComparisonMeasures cm = new ComparisonMeasures();
 	//cm.PathToLatexFolder="";
 	//cm.CompRTimeAvgTable("","");
-	//new ComparisonMeasures().BestOfCombinedPipeline("/Volumes/PhDHardDrive/jcsg1200Results/Fasta/VikingPairwiseRevision1/Excel/OrginalBuccEx54ExFaliedCases copy 2");
+	//new ComparisonMeasures().BestOfCombinedPipeline("/OrginalBuccEx54ExFaliedCases");
+}
+void BestOfAll(String ExcelDir) throws IOException {
+	ExcelLoader f = new ExcelLoader();
+	String CSV="PDB,Best,Pipeline,BestCompleteness,Completeness,MaxPipeline,MaxCompleteness\n";
+	for (File Folder : new File(ExcelDir).listFiles()) {
+		if(Folder.isDirectory()) {
+			for(File Excel : Folder.listFiles()) {
+			//	String CSV="PDB,Best,Pipeline,BestCompleteness,Completeness\n";
+			Vector<ExcelContents> PipelineX = f.ReadExcel(Excel.getAbsolutePath());
+			HashMap<String, Vector<ExcelContents>> Pipelines = new HashMap<String, Vector<ExcelContents>>();
+			for(File Excel2 : Folder.listFiles()) {
+				if(!Excel.getName().equals(Excel2.getName())) {
+				Vector<ExcelContents> PipelineY = f.ReadExcel(Excel2.getAbsolutePath());
+				Pipelines.put(Excel2.getName(),PipelineY);
+				}
+			}
+			for(int PDB=0; PDB<PipelineX.size();++PDB) {
+				BigDecimal com = new BigDecimal(PipelineX.get(PDB).Completeness);
+				String BestPipeline=Excel.getName();
+				
+				BigDecimal MaxCom = new BigDecimal("-1");
+				String MaxPipeline="";
+				
+					for(String Pipeline : Pipelines.keySet()) {
+						Vector<ExcelContents> PipelineY=Pipelines.get(Pipeline);
+						for(int PDB2=0; PDB2 < PipelineY.size();++PDB2) {
+							if(PipelineX.get(PDB).PDB_ID.equals(PipelineY.get(PDB2).PDB_ID)) {
+								if (  com.setScale(0, RoundingMode.HALF_UP).subtract( 
+										new BigDecimal(PipelineY.get(PDB2).Completeness).setScale(0, RoundingMode.HALF_UP)).compareTo(new BigDecimal("1")) ==-1)  { 
+								
+
+									com=new BigDecimal(PipelineY.get(PDB2).Completeness);
+									BestPipeline=Pipeline;
+										
+								}
+								
+								
+								if (  MaxCom.setScale(0, RoundingMode.HALF_UP).subtract( 
+										new BigDecimal(PipelineY.get(PDB2).Completeness).setScale(0, RoundingMode.HALF_UP)).compareTo(new BigDecimal("1")) ==-1)  { 
+								
+
+									MaxCom=new BigDecimal(PipelineY.get(PDB2).Completeness);
+									MaxPipeline=Pipeline;
+										
+								}
+								
+								break;
+							}
+						}
+					}
+					CSV+=PipelineX.get(PDB).PDB_ID+","+FilenameUtils.getBaseName(BestPipeline)+","+FilenameUtils.getBaseName(Excel.getName())+","+com+","+PipelineX.get(PDB).Completeness+","+MaxPipeline+","+MaxCom+"\n";
+					
+					
+			}
+			
+		//	new Preparer().WriteTxtFile(PathToLatexFolder+"/BestOfAll" + Excel.getName() + "Com.csv", CSV);
+
+			}
+			new Preparer().WriteTxtFile(PathToLatexFolder+"/BestOfAll"+Folder.getName() + "Com.csv", CSV);
+		}
+	}
+	
+
 }
 void BestOfCombinedPipeline(String ExcelDir) throws IOException {
 	
@@ -66,6 +130,7 @@ void BestOfCombinedPipeline(String ExcelDir) throws IOException {
 						String ExcelName3=ExcelName2.replaceAll(ExcelName, "")+"."+FilenameUtils.getExtension(Excel2.getName());
 						
 						File FileChecking= new File(Folder.getAbsoluteFile()+"/"+ExcelName3);
+						
 						if(FileChecking.exists() ) {
 							
 							Vector<File> Temp = new Vector<File>();
@@ -90,7 +155,7 @@ void BestOfCombinedPipeline(String ExcelDir) throws IOException {
 				//break;
 				}
 			if(Found==false) {
-				System.out.println("Warning: this pipeline "+ Excel.getAbsolutePath() +" seems to be not run in pairwise. This will affect on (Best Of) comparison table. Please note that the excel name for combinded pipelines shoud be in this format (Ex: First pipeline: Buccaneeri1I5.xlsx Second Pipeline: Phenix.xlsx Combined pipeline: Buccaneeri1I5Phenix.xlsx ) ");
+				System.out.println("Warning: this pipeline "+ Excel.getAbsolutePath() +" seems to be not run in pairwise. This will affect on (Best Of) comparison table. Please note that the excel name for combinded pipelines shoud be in this format (Ex: First pipeline: Buccaneeri1I5.xlsx Second Pipeline: Phenix.xlsx Combined pipeline: Buccaneeri1I5Phenix.xlsx ). Aslo,  both individual pipelines excel must be exists. ");
 			}
 			}
 			
@@ -1010,6 +1075,7 @@ void TableOfMeanAndSD(String ResultsDir) throws IOException {
 			String Table="\\tiny Pipeline &  \\multicolumn{2}{c}{\\tiny Completeness} &  \\multicolumn{2}{c}{\\tiny R-free} \\\\  \n";
 			 Table+="& \\tiny mean & \\tiny SD & \\tiny mean & \\tiny SD \\\\ \\hline \n";
 			for(File excel : Folder.listFiles()) {
+				
 				Vector<ExcelContents> Excel = new Vector<ExcelContents>();
 				ExcelLoader e = new ExcelLoader();
 				Excel=e.ReadExcel(excel.getAbsolutePath());
@@ -1020,6 +1086,7 @@ void TableOfMeanAndSD(String ResultsDir) throws IOException {
 				double [] ComInArr= new double [Excel.size()]; 
 				double [] RfreeInArr= new double [Excel.size()]; 
 				for(int i=0 ; i < Excel.size();++i) {
+					
 					BigDecimal comDec= new BigDecimal(Excel.get(i).Completeness);
 					Com+=comDec.doubleValue();
 					ComInArr[i]=comDec.doubleValue();
@@ -1035,6 +1102,7 @@ void TableOfMeanAndSD(String ResultsDir) throws IOException {
 				Table+="\\tiny "+new BigDecimal(Rfree/Excel.size()).setScale(2, RoundingMode.HALF_UP)+"& \\tiny"+new BigDecimal(new StandardDeviation().evaluate(RfreeInArr)).setScale(2, RoundingMode.HALF_UP)+"\\\\ \n";
 
 			}
+			
 			new Preparer().WriteTxtFile(PathToLatexFolder+"/"+Folder.getName()+"Mean.tex",FormatingPipelinesNames(Table,true,true));
 
 		}
@@ -1700,27 +1768,28 @@ return FormattedTable;
 		Table=Table.replaceAll("\\bBuccaneeri1I5GA\\b", "i1(I5GA)");
 		
 		if(latexSyntax==true) {
-		Table=Table.replaceAll("\\bArpPhenix\\b", "A\\$\\\\rightarrow\\$\\$P^{\\\\ast}\\$ ");
-		Table=Table.replaceAll("\\bArpPhenixHLA\\b", "A\\$\\\\rightarrow\\$\\$P\\$ ");
-		Table=Table.replaceAll("\\bArpWArpBuccaneeri1I5\\b", "A\\$\\\\rightarrow\\$\\$B\\$ ");
-		Table=Table.replaceAll("\\bArpBuccaneeri1I5\\b", "A\\$\\\\rightarrow\\$\\$B\\$ ");
+			Table=Table.replaceAll("\\bArpPhenix\\b", "A\\\\rightarrow\\$P^{\\\\ast}\\$ ");
+			Table=Table.replaceAll("\\bArpPhenixHLA\\b", "A\\\\rightarrow\\$P\\$ ");
+			Table=Table.replaceAll("\\bArpWArpBuccaneeri1I5\\b", "A\\\\rightarrow\\$B\\$ ");
+			Table=Table.replaceAll("\\bArpBuccaneeri1I5\\b", "A\\\\rightarrow\\$B\\$ ");
 
-		Table=Table.replaceAll("\\bBuccaneeri1I5Phenix\\b", "B\\$\\\\rightarrow\\$\\$P^{\\\\ast}\\$ ");
-		Table=Table.replaceAll("\\bBuccaneeri1I5PhenixHLA\\b", "B\\$\\\\rightarrow\\$\\$P\\$ ");
-		Table=Table.replaceAll("\\bPhenixArp\\b", "\\$P^{\\\\ast}\\$\\\\rightarrow\\$A\\$ ");
-		Table=Table.replaceAll("\\bPhenixBuccaneeri1I5\\b", "\\$P^{\\\\ast}\\$\\\\rightarrow\\$B\\$ ");
-		Table=Table.replaceAll("\\bPhenixHLAArp\\b", "P\\$\\\\rightarrow\\$\\$A\\$ ");
-		Table=Table.replaceAll("\\bPhenixHLABuccaneeri1I5\\b", "P\\$\\\\rightarrow\\$\\$B\\$ ");
-		Table=Table.replaceAll("\\bShelxeWithTFlagArp\\b", "S\\$\\\\rightarrow\\$\\$A\\$ ");
-		Table=Table.replaceAll("\\bShelxeWithTFlagBuccaneeri1I5\\b", "S\\$\\\\rightarrow\\$\\$B\\$ ");
-		Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiArp\\b", "\\$S^{\\\\ast}\\$\\\\rightarrow\\$A\\$ ");
-		Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiBuccaneeri1I5\\b", "\\$S^{\\\\ast}\\$\\\\rightarrow\\$B\\$ ");
-		Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiPhenix\\b", "\\$S^{\\\\ast}\\$\\\\rightarrow\\$P^{\\\\ast}\\$ ");
-		Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiPhenixHLA\\b", "\\$S^{\\\\ast}\\$\\\\rightarrow\\$P\\$ ");
-		Table=Table.replaceAll("\\bShelxeWithTFlagPhenix\\b", "S\\\\rightarrow\\$P^{\\\\ast}\\$ ");
-		//Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiPhenixHLA\\b", "S^{\\ast}\\rightarrow$P$");
-		Table=Table.replaceAll("\\bShelxeWithTFlagPhenix\\b", "S\\$\\\\rightarrow\\$\\$P^{\\\\ast}\\$ ");
-		Table=Table.replaceAll("\\bShelxeWithTFlagPhenixHLA\\b", "S\\$\\\\rightarrow\\$\\$P\\$ ");
+			Table=Table.replaceAll("\\bBuccaneeri1I5Phenix\\b", "B\\\\rightarrow\\$P^{\\\\ast}\\$ ");
+			Table=Table.replaceAll("\\bBuccaneeri1I5PhenixHLA\\b", "B\\\\rightarrow\\$P\\$ ");
+			Table=Table.replaceAll("\\bPhenixArp\\b", "\\$P^{\\\\ast}\\$\\\\rightarrow\\$A\\$ ");
+			Table=Table.replaceAll("\\bPhenixBuccaneeri1I5\\b", "\\$P^{\\\\ast}\\$\\\\rightarrow\\$B\\$ ");
+			Table=Table.replaceAll("\\bPhenixHLAArp\\b", "P\\\\rightarrow\\$A\\$ ");
+			Table=Table.replaceAll("\\bPhenixHLABuccaneeri1I5\\b", "P\\\\rightarrow\\$B\\$ ");
+			Table=Table.replaceAll("\\bShelxeWithTFlagArp\\b", "S\\\\rightarrow\\$A\\$ ");
+			Table=Table.replaceAll("\\bShelxeWithTFlagBuccaneeri1I5\\b", "S\\\\rightarrow\\$B\\$ ");
+			Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiArp\\b", "\\$S^{\\\\ast}\\$\\\\rightarrow\\$A\\$ ");
+			Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiBuccaneeri1I5\\b", "\\$S^{\\\\ast}\\$\\\\rightarrow\\$B\\$ ");
+			Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiPhenix\\b", "\\$S^{\\\\ast}\\$\\\\rightarrow\\$P^{\\\\ast}\\$ ");
+			Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiPhenixHLA\\b", "\\$S^{\\\\ast}\\$\\\\rightarrow\\$P\\$ ");
+			Table=Table.replaceAll("\\bShelxeWithTFlagPhenix\\b", "S\\\\rightarrow\\$P^{\\\\ast}\\$ ");
+			//Table=Table.replaceAll("\\bShelxeWithTFlagChFomPhiPhenixHLA\\b", "S^{\\ast}\\rightarrow$P$");
+			Table=Table.replaceAll("\\bShelxeWithTFlagPhenix\\b", "S\\\\rightarrow\\$P^{\\\\ast}\\$ ");
+			Table=Table.replaceAll("\\bShelxeWithTFlagPhenixHLA\\b", "S\\\\rightarrow\\$P\\$ ");
+			Table=Table.replaceAll("\\\\rightarrow", "\\$\\\\rightarrow\\$");
 	}
 		
 		if(latexSyntax==false) {
