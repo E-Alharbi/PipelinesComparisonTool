@@ -138,11 +138,11 @@ boolean PhenixPrepare(String Phases, String WorkFolder, boolean DensityModifiedP
 		 
 		if(files.size()==0) {
 			System.out.println("Unable to find phenix.autobuild. Be sure you have Phenix and you set the Phenix variables ");
-return false;
+			return false;
 		}
 		if(files.size()>1) {
 			System.out.println("There is more than two phenix.autobuild which is unusual");
-return false;
+			return false;
 		}
 		Vector<File> a = new Vector<File>();
 		a.addAll(files);
@@ -560,7 +560,8 @@ void WriteRefMacScriptForBucci1() throws IOException {
 
 public String ReadResourceAsString (String FileName) throws IOException {
 	String Txt="";
-InputStream res =Map.class.getResourceAsStream(FileName);
+//InputStream res =Map.class.getResourceAsStream(FileName);
+InputStream res =this.getClass().getResourceAsStream(FileName);
 BufferedReader reader = new BufferedReader(new InputStreamReader(res));
 String line = null;
 
