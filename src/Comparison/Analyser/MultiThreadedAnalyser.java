@@ -195,12 +195,12 @@ public class MultiThreadedAnalyser implements Runnable {
 				File PDB=null  ;
 				
 				
-				if(new File(PDBsDir+"/"+NameOfFile+".pdb").exists()) {
-					PDB=new File(PDBsDir+"/"+NameOfFile+".pdb");
+				if(new File(PDBsDir+"/"+NameOfFile+"."+RunningParameter.pipelineoutputtype).exists()) {
+					PDB=new File(PDBsDir+"/"+NameOfFile+"."+RunningParameter.pipelineoutputtype);
 				}
 				else {
-					if(new File(RunningParameter.IntermediatePDBs+"/"+NameOfFile+".pdb").exists()) {
-						PDB=new File(RunningParameter.IntermediatePDBs+"/"+NameOfFile+".pdb");
+					if(new File(RunningParameter.IntermediatePDBs+"/"+NameOfFile+"."+RunningParameter.pipelineoutputtype).exists()) {
+						PDB=new File(RunningParameter.IntermediatePDBs+"/"+NameOfFile+"."+RunningParameter.pipelineoutputtype);
 						DC.Intermediate="T";
 					}
 				}
@@ -366,6 +366,8 @@ DC.WarringLogFile="F";
 			RFactor = df.format(BigDecimal.valueOf(Double.valueOf(RFactor)));
 			RFree = df.format(BigDecimal.valueOf(Double.valueOf(RFree)));
 			
+			
+			
 			df.setRoundingMode(RoundingMode.HALF_UP);
 			if(Double.parseDouble(RFactor)>Double.parseDouble(RFree)){
 			
@@ -417,7 +419,7 @@ DC.WarringLogFile="F";
 			new LogFile().Log(RunningParameter.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "Refmac (deposited) ", "Running ...",headersList);
 
 			//F = new Refmac().RunRefmac(RunningPram.DataPath+"/"+DC.PDB_ID+".mtz",RunningPram.DataPath+"/"+DC.PDB_ID+".pdb", RunningPram.RefmacPath, RunningPram.ToolName, DC.PDB_ID,"");
-			ParsingRFromDepoistedPDB(new File(RunningParameter.DataPath+"/"+DC.PDB_ID+".pdb"),DC);
+			ParsingRFromDepoistedPDB(new File(RunningParameter.DataPath+"/"+DC.PDB_ID+".pdb"),DC);// not used pipelineoutputtype because ref model is in pdb type
 			DC.OptimalR_factor=df.format(BigDecimal.valueOf(Double.valueOf(DC.OptimalR_factor)));
 			
 			new LogFile().Log(RunningParameter.ToolName, Log.getName(), Thread.currentThread().getName()+" out of "+Files.size(), "Refmac (deposited) ", DC.OptimalR_factor,headersList);
