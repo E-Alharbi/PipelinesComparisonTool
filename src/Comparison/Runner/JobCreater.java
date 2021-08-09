@@ -16,9 +16,9 @@ public class JobCreater {
 String PathToWrite="./"; // default 
 public void CreateJobs (String ToolName , String Path) throws IOException{
 	PathToWrite=Path+"/";
-	CreateJobs(PathToWrite+ToolName);
+	CreateJobs(PathToWrite+ToolName,-1);
 }
-	public void CreateJobs (String ToolName) throws IOException {
+	public void CreateJobs (String ToolName, int JobsNumLimit) throws IOException {
 		// TODO Auto-generated method stub
 		
 		
@@ -48,10 +48,12 @@ Qsub+="#SBATCH --mail-user="+RunningParameter.SlurmEmail+"   \n" ;
 		if(RunningParameter.SlurmAccount.length()!=0)
 		Qsub+="#SBATCH --account="+RunningParameter.SlurmAccount+" \n";
 		
+int CountJobs=0;		
 for (File file : files) {
 	String CaseName=file.getName().replaceAll("."+FilenameUtils.getExtension(file.getName()),"");
 	
 	if(!FilesNames.contains(CaseName)) {
+		CountJobs++;
 		Script=Script.replaceAll(DataPath, DataPath+"/"+file.getName());
 		
 		FilesNames.add(CaseName);
@@ -63,6 +65,9 @@ for (File file : files) {
 		else
 			Qsub+="qsub J"+CaseName+".sh \n";
 		Script=ScriptAnotherCopy;
+		
+		if(CountJobs==JobsNumLimit)
+			break;
 	}
 }
 new Preparer().WriteTxtFile(PathToWrite+"Qsub.sh",Qsub);
