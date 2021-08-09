@@ -41,7 +41,7 @@ public class FailedDatasetsExcluder {
 					
 					Vector<ExcelContents> ModifiedExcel=e.CheckPDBexists(AllToolsData, e.ReadExcel(Excel.getAbsolutePath()));
 					if(ModifiedExcel.size()==0)
-					System.out.println("Warning: This file "+Excel.getAbsolutePath()+" is empty and will result in incorrect analysis. This might happen when a pipeline did not build any model.   ");
+					System.out.println("Warning: This file "+PathToWrite+"/"+Folder.getName()+"/"+Excel.getName()+" is empty and will result in incorrect analysis. This might happen when a pipeline did not build any model.   ");
 					new ExcelSheet().FillInExcel(ModifiedExcel, PathToWrite+"/"+Folder.getName()+"/"+Excel.getName());
 				}
 				
