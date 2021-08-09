@@ -34,15 +34,24 @@ public class chltofom {
 		         try {
 	String mtzin=DataPath+"/"+FileName+".mtz";
     String mtzoutpath=OutputFolder+"/";
-	 String Chltofom=System.getenv("CCP4")+"/share/python/CCP4Dispatchers/chltofom.py";
-	 String[]callAndArgs= {"python",
+	// String Chltofom=System.getenv("CCP4")+"/share/python/CCP4Dispatchers/chltofom.py";
+	 String Chltofom="chltofom";
+	// String[]callAndArgs= {"python",
+	//		 Chltofom,
+	//"-mtzin",mtzin,
+	//"-mtzout",mtzoutpath+FileName+".mtz",
+	//"-colin-hl","parrot.ABCD.A,parrot.ABCD.B,parrot.ABCD.C,parrot.ABCD.D",
+	//"-colout","hltofom",
+	//};
+	 String[]callAndArgs= {
 			 Chltofom,
 	"-mtzin",mtzin,
 	"-mtzout",mtzoutpath+FileName+".mtz",
-	"-colin-hl","parrot.ABCD.A,parrot.ABCD.B,parrot.ABCD.C,parrot.ABCD.D",
-	"-colout","hltofom",
+	//"-colin-hl","parrot.ABCD.A,parrot.ABCD.B,parrot.ABCD.C,parrot.ABCD.D",
+	"-colin-hl",RunningParameter.Phases,
+	"-colout",RunningParameter.chtofomcolname,
 	};
-
+	
 	Process p = Runtime.getRuntime().exec(callAndArgs);
 
 		             
@@ -68,7 +77,7 @@ public class chltofom {
 			                 System.out.println(st);
 
 			             }
-		             
+		             if(new File(DataPath+"/"+FileName+".pdb").exists())
 		             FileUtils.copyFile(new File(DataPath+"/"+FileName+".pdb"),  new File(mtzoutpath+FileName+".pdb"));
 		             if(new File(DataPath+"/"+FileName+".seq").exists())
 		             FileUtils.copyFile(new File(DataPath+"/"+FileName+".seq"),  new File(mtzoutpath+FileName+".seq"));

@@ -164,7 +164,7 @@ public class Buccaneeri1 {
 	FinshedBuilding=true;
 	break;
 	}
-	
+	FinshedBuilding=true;
 }
 		
 		
@@ -183,14 +183,23 @@ public class Buccaneeri1 {
 		if(RunningParameter.MR.equals("T")) {
 			BuccScript=new Preparer().ReadResourceAsString("/BuccaneerPipelineMR.sh");
 			BuccScript=BuccScript.replace("@8", FilePathAndName+".pdb");
-			String semet=new JSONReader().JSONToHashMap(FilePathAndName+".json").get("semet");
+			String semet="false";
+			if(new File(FilePathAndName+".json").exists())
+			 semet=new JSONReader().JSONToHashMap(FilePathAndName+".json").get("semet");
+			else {
+				if(RunningParameter.semet.equals("T"))
+					semet="true";
+			}
+			
 			if(semet.toLowerCase().equals("true"))
 				BuccScript=BuccScript.replace("@9", "-buccaneer-build-semet");
+			
 			if(semet.toLowerCase().equals("false"))
 				BuccScript=BuccScript.replace("@9", " ");
 		}
 		
-		String BuccPipeline=CCP4+"/share/python/CCP4Dispatchers/buccaneer_pipeline.py";
+		//String BuccPipeline=CCP4+"/share/python/CCP4Dispatchers/buccaneer_pipeline.py";
+		String BuccPipeline="buccaneer_pipeline";
 		String mtzin=FilePathAndName+".mtz";
 		String seqin="";
 		if(new File(FilePathAndName+".fasta").exists())	        	 
@@ -206,15 +215,23 @@ public class Buccaneeri1 {
 		BuccScript=BuccScript.replace("@3", seqin);
 		BuccScript=BuccScript.replace("@4", cycles);
 		BuccScript=BuccScript.replace("@5", FileName);
+		if(RunningParameter.MR.equals("F")) {
+		BuccScript=BuccScript.replace("@8", RunningParameter.Colinfo);
+		BuccScript=BuccScript.replace("@9", RunningParameter.Phases);
+		}
+		else {
+			BuccScript=BuccScript.replace("@10", RunningParameter.Colinfo);
+			BuccScript=BuccScript.replace("@11", RunningParameter.Phases);
+		}
 		// Do not change if blocks order 
 		if(RunningParameter.MR.equals("T") && RunningParameter.UsingRFree.equals("T")) {
-			 BuccScript=BuccScript.replace("@6", "-colin-free FREE"); 
+			 BuccScript=BuccScript.replace("@6", "-colin-free "+RunningParameter.Rfreeflag); 
 		}
 		if(RunningParameter.MR.equals("T") && RunningParameter.UsingRFree.equals("F")) {
 			 BuccScript=BuccScript.replace("@6", " "); 
 		}
 		 if(RunningParameter.UsingRFree.equals("T")) {
-			 BuccScript=BuccScript.replace("@6", "-colin-free FreeR_flag"); 
+			 BuccScript=BuccScript.replace("@6", "-colin-free "+RunningParameter.Rfreeflag); 
 		 }
 		 if(RunningParameter.UsingRFree.equals("F")) {
 			 BuccScript=BuccScript.replace("@6", " "); 

@@ -81,4 +81,13 @@ public class RunningParameter {
     public static String UpdateResolutionRefmac="F"; // to use resolution that read from Refmac instead of reading it from the file name (help when the file columns has different resolutions )
     public static String LimitUpdateResolutionFromRefmac="-1"; // use to limit the resolution from Refmac. Ex  LimitUpdateResolutionFromRefmac=3.1, meaning the resolutions lower than 3.1 read from Refmac and others take from file name
     public static String RemoveDummyAtomsFromInitialModel="F"; // remove ARP/wARP dummy atoms before use as initial model for others pipelines
+    public static String ModelCraft="F";
+    public static String pipelineoutputtype="pdb";
+    public static String Phases="parrot.ABCD.A,parrot.ABCD.B,parrot.ABCD.C,parrot.ABCD.D";
+    public static String Colinfo="FP,SIGFP";
+    public static String Rfreeflag="FreeR_flag";
+    public static String BestPhase="PHIB";
+    public static String FOM="FOM";
+    public static String chtofomcolname="hltofom";
+    public static String semet="F";
 }

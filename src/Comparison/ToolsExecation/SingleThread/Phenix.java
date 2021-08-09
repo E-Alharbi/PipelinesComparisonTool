@@ -224,10 +224,11 @@ seqin=FilePathAndName+".seq";
 			 RunningParameter.PhenixAutobuild,
 	"data=",mtzin,
 	"seq_file=",seqin,
-	"input_labels="," FP SIGFP PHIB FOM HLA HLB HLC HLD FreeR_flag", 
+	//"input_labels="," FP SIGFP PHIB FOM HLA HLB HLC HLD FreeR_flag", 
+	"input_labels="," "+RunningParameter.Colinfo.replaceAll(",", " ")+" "+RunningParameter.BestPhase+" "+RunningParameter.FOM+" "+RunningParameter.Phases.replaceAll(",", " ")+" "+RunningParameter.Rfreeflag, 
 	
 	
-
+	
 
 	"clean_up=","True"
 	 };
@@ -236,8 +237,9 @@ seqin=FilePathAndName+".seq";
 				 RunningParameter.PhenixAutobuild,
 		"data=",mtzin,
 		"seq_file=",seqin,
-		"input_labels="," FP SIGFP PHIB FOM HLA HLB HLC HLD", 
-		
+		//"input_labels="," FP SIGFP PHIB FOM HLA HLB HLC HLD", 
+		"input_labels="," "+RunningParameter.Colinfo.replaceAll(",", " ")+" "+RunningParameter.BestPhase+" "+RunningParameter.FOM+" "+RunningParameter.Phases.replaceAll(",", " "), 
+
 		
 		
 		"clean_up=","True"
@@ -255,7 +257,7 @@ seqin=FilePathAndName+".seq";
 		 a.add("True");
 		 
 		 a.add("input_map_labels=");
-		 a.add("FP hltofom.Phi_fom.phi hltofom.Phi_fom.fom");
+		 a.add(RunningParameter.Colinfo.split(",")[0]+" hltofom.Phi_fom.phi hltofom.Phi_fom.fom");
 		 
 		 
 		 String[] myArray = new String[a.size()];
@@ -296,8 +298,8 @@ seqin=FilePathAndName+".seq";
 				 RunningParameter.PhenixAutobuild,
 		"data=",mtzin,
 		"seq_file=",seqin,
-		"input_labels=","FP SIGFP None None None None None None FREE", 
-		
+		"input_labels="," "+RunningParameter.Colinfo.replaceAll(",", " ")+" None None None None None None "+RunningParameter.Rfreeflag, 
+
 		"model=",FilePathAndName+".pdb",
 		//"use_hl_if_present=","False",
 
@@ -310,8 +312,15 @@ seqin=FilePathAndName+".seq";
 		 
 		 callAndArgs=callAndArgs1;
 		 
-		 String semet=new JSONReader().JSONToHashMap(FilePathAndName+".json").get("semet");
-			if(semet.toLowerCase().equals("true"))
+		 //String semet=new JSONReader().JSONToHashMap(FilePathAndName+".json").get("semet");
+		 String semet="false";
+			if(new File(FilePathAndName+".json").exists())
+				 semet=new JSONReader().JSONToHashMap(FilePathAndName+".json").get("semet");
+				else {
+					if(RunningParameter.semet.equals("T"))
+						semet="true";
+				}	
+		 if(semet.toLowerCase().equals("true"))
 			{
 				List<String> a = new ArrayList<String>();
 				 a.addAll(Arrays.asList(callAndArgs));
@@ -360,7 +369,36 @@ seqin=FilePathAndName+".seq";
 				 callAndArgs=myArray;
 			}
 			
+			
 	 }
+	 /*
+	 if(RunningParameter.PhenixCluster.equals("T")) {
+			//"check_run_command=","True",
+			//"run_command=","sbatch",
+			//"nproc=","Auto",
+			//"background=","False",
+			//"queue_commands=","#SBATCH --time=48:00:00",
+			//"queue_commands=","#SBATCH --mem=5000",
+			//"queue_commands=","#SBATCH --account=CS-MPMSEDM-2018",
+			 List<String> a = new ArrayList<String>();
+			 a.addAll(Arrays.asList(callAndArgs));
+			 a.add("run_command=");
+			 a.add("sbatch");
+			 a.add("nproc=");
+			 a.add("Auto");
+			 a.add("background=");
+			 a.add("False");
+			 a.add("queue_commands=");
+			 a.add("#SBATCH --time=48:00:00");
+			 a.add("queue_commands=");
+			 a.add("#SBATCH --mem=20000");
+			 a.add("queue_commands=");
+			 a.add("#SBATCH --account=CS-MPMSEDM-2018");
+			 String[] myArray = new String[a.size()];
+			 a.toArray(myArray);
+			 callAndArgs=myArray;
+		}
+	 */
 	 new Preparer().WriteTxtFile("ParametersUsed/"+FileName+".txt", new Date().toString()+" \n "+ Arrays.toString(callAndArgs));
 	
 	

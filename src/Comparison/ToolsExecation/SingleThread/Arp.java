@@ -213,7 +213,8 @@ void timer(String JobDirectory , String PDBID,Timer t ) {
 		 Date ProStartTime = new java.util.Date();
 		  StartTime= new java.util.Date();
 		 PipelineLog res= new PipelineLog();
-		 
+		 String FP=RunningParameter.Colinfo.split(",")[0];
+		 String SIGFP=RunningParameter.Colinfo.split(",")[1];
 		         try {
 
 	
@@ -241,8 +242,8 @@ if(RunningParameter.UseInitialModels.trim().equals("T")) {
 		//"fom","FOM",
 		"fom","hltofom.Phi_fom.fom",
 		"freelabin","FreeR_flag",
-		"fp","FP",
-		"sigfp","SIGFP",
+		"fp",FP,
+		"sigfp",SIGFP,
 		"jobId",FileName,
 		"seqin",seqin,
 		"modelin",GetModelPath(FileName+".pdb")
@@ -258,8 +259,8 @@ if(RunningParameter.UseInitialModels.trim().equals("T")) {
 			"phibest","hltofom.Phi_fom.phi",
 			//"fom","FOM",
 			"fom","hltofom.Phi_fom.fom",
-			"fp","FP",
-			"sigfp","SIGFP",
+			"fp",FP,
+			"sigfp",SIGFP,
 			"jobId",FileName,
 			"seqin",seqin,
 			"modelin",GetModelPath(FileName+".pdb")
@@ -286,8 +287,8 @@ else {
 	//"fom","FOM",
 	"fom","hltofom.Phi_fom.fom",
 	"freelabin","FreeR_flag",
-	"fp","FP",
-	"sigfp","SIGFP",
+	"fp",FP,
+	"sigfp",SIGFP,
 	"jobId",FileName,
 	"seqin",seqin,
 	//"fakedata","0.33;0.75;1"
@@ -304,8 +305,8 @@ else {
 				"phibest","hltofom.Phi_fom.phi",
 				//"fom","FOM",
 				"fom","hltofom.Phi_fom.fom",
-				"fp","FP",
-				"sigfp","SIGFP",
+				"fp",FP,
+				"sigfp",SIGFP,
 				"jobId",FileName,
 				"seqin",seqin,
 				//"fakedata","0.33;0.75;1"
@@ -320,9 +321,9 @@ if(RunningParameter.MR.equals("T") && RunningParameter.UsingRFree.equals("T")) {
 			RunningParameter.wArpAutotracing,
 			"datafile",mtzin,
 			"workdir",System.getProperty("user.dir")+"/wArpResults/WorkingDir",
-			"fp","FP",
-			"sigfp","SIGFP",
-			"freelabin","FREE",
+			"fp",FP,
+			"sigfp",SIGFP,
+			"freelabin",RunningParameter.Rfreeflag,
 			"jobId",FileName,
 			"seqin",seqin,
 			"modelin",FilePathAndName+".pdb",
@@ -336,8 +337,8 @@ if(RunningParameter.MR.equals("T") && RunningParameter.UsingRFree.equals("F")) {
 			RunningParameter.wArpAutotracing,
 			"datafile",mtzin,
 			"workdir",System.getProperty("user.dir")+"/wArpResults/WorkingDir",
-			"fp","FP",
-			"sigfp","SIGFP",
+			"fp",FP,
+			"sigfp",SIGFP,
 			"jobId",FileName,
 			"seqin",seqin,
 			"modelin",FilePathAndName+".pdb",
@@ -346,7 +347,15 @@ if(RunningParameter.MR.equals("T") && RunningParameter.UsingRFree.equals("F")) {
 	 ArpParm=callAndArgsRFree;
 }
 if(RunningParameter.MR.equals("T")) {
-	String semet=new JSONReader().JSONToHashMap(FilePathAndName+".json").get("semet");
+	//String semet=new JSONReader().JSONToHashMap(FilePathAndName+".json").get("semet");
+	String semet="false";
+	if(new File(FilePathAndName+".json").exists())
+		 semet=new JSONReader().JSONToHashMap(FilePathAndName+".json").get("semet");
+		else {
+			if(RunningParameter.semet.equals("T"))
+				semet="true";
+		}
+	
 	if(semet.toLowerCase().equals("true"))
 	{
 		List<String> a = new ArrayList<String>();
