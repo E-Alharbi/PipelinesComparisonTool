@@ -28,6 +28,7 @@ import Comparison.ToolsExecation.SingleThread.chltofom;
 import Comparison.ToolsExecation.SingleThread.shelxe;
 import Comparison.Utilities.PhenixTempCleaner;
 import Comparison.Utilities.RemovingDumAtoms;
+import Comparsion.Testing.Buccaneer.Buccaneeri1Testing;
 
 
 public class RunComparison {
@@ -100,6 +101,17 @@ public class RunComparison {
 					DataPath=checkArg(Parm,"data");
 					
 				 }
+				
+					if(checkArg(Parm,"Phases")!=null){
+					 RunningParameter.Phases=checkArg(Parm,"Phases");
+					
+					}
+					if(checkArg(Parm,"chtofomcolname")!=null){
+						 RunningParameter.chtofomcolname=checkArg(Parm,"chtofomcolname");
+						
+						}
+					
+					
 					new chltofom().RunChltofom(DataPath);
 			 }
 			 
@@ -405,8 +417,9 @@ public class RunComparison {
 					System.out.println("One or more of the required parameters is missing! ");
 					System.out.println("The required parameters are : ");
 					System.out.println("ToolName= the path for tool script");
-					System.out.println("PDBDir= the path for tool PDBs. If not provided, will create scripts for the all files");
-					
+					System.out.println("PDBDir= The path for tool PDBs. If not provided, will create scripts for the all files");
+					System.out.println("JobsNumLimit= The limit number of jobs to be created. Use it when you want to run a sample of the data sets");
+
 						
 					System.exit(-1);
 				}
@@ -415,9 +428,12 @@ public class RunComparison {
 				if(checkArg(Parm,"PDBDir")==null)
 					RunningParameter.PDBsDir=null;
 				
+				int JobsNumLimit=-1;
+				if(checkArg(Parm,"JobsNumLimit")!=null)
+					JobsNumLimit=Integer.parseInt(checkArg(Parm,"JobsNumLimit"));
 				
 				
-				new JobCreater().CreateJobs(checkArg(Parm,"ToolName"));
+				new JobCreater().CreateJobs(checkArg(Parm,"ToolName"),JobsNumLimit);
 			 }
 			  
 			 else if(args[0].equals("Cleaner")){
@@ -492,6 +508,13 @@ public class RunComparison {
 						 RunningParameter.LimitUpdateResolutionFromRefmac=checkArg(Parm,"LimitUpdateResolutionRefmac");
 						
 					 }
+					 
+					 if(new File(checkArg(Parm,"ExcelDir")).getName().trim().equals("MR") )
+					 {
+						 System.out.println("ExcelDir name cannot be MR. Please change ExcelDir name to any other name.");
+						 System.exit(-1);
+					 }
+						 
 					 
 					 String [] p =  {checkArg(Parm,"ExcelDir"),checkArg(Parm,"UpdateCom"),checkArg(Parm,"FillInMissingData"),checkArg(Parm,"ExcludeFromOrginal"),checkArg(Parm,"ExcludeFromSynthetic"),checkArg(Parm,"SetRfreeToZero")};
 					 
@@ -570,6 +593,24 @@ public class RunComparison {
 						 RunningParameter.RemoveDummyAtomsFromInitialModel=checkArg(Parm,"RemoveDummyAtomsFromInitialModel");
 						
 					 }
+					 if(checkArg(Parm,"Phases")!=null){
+						 RunningParameter.Phases=checkArg(Parm,"Phases");
+						
+					 }
+					 if(checkArg(Parm,"Colinfo")!=null){
+						 RunningParameter.Colinfo=checkArg(Parm,"Colinfo");
+						
+					 }
+					 if(checkArg(Parm,"RfreeCol")!=null){
+						 RunningParameter.Rfreeflag=checkArg(Parm,"RfreeCol");
+						
+					 }
+					
+					 if(checkArg(Parm,"semet")!=null){
+						 RunningParameter.semet=checkArg(Parm,"semet");
+						
+					 }
+					 
 					 
 					 new Buccaneeri1().RunBuccaneerTool();
 			 }
@@ -601,9 +642,10 @@ public class RunComparison {
 						
 					 }
 					 
+					 
 					 new shelxe().RunshelxeTool();
 			 }
-			  /*
+			  
 			 else if(args[0].equals("Buccaneeri1TestMode")){
 					
 				 
@@ -630,13 +672,29 @@ public class RunComparison {
 						 RunningParameter.UsingRFree=checkArg(Parm,"UsingRFree");
 						
 					 }
+					 if(checkArg(Parm,"MR")!=null){
+						 RunningParameter.MR=checkArg(Parm,"MR");
+						
+					 }
+					 if(checkArg(Parm,"modelcraft")!=null){
+						 RunningParameter.ModelCraft=checkArg(Parm,"modelcraft");
+						
+					 }
+					 if(checkArg(Parm,"UseInitialModels")!=null) {
+						 RunningParameter.UseInitialModels=checkArg(Parm,"UseInitialModels"); 
+					 }
+					 if(checkArg(Parm,"InitialModels")!=null){
+						 RunningParameter.InitialModels=checkArg(Parm,"InitialModels");
+						
+					 }
+					 
 					//new RunCBuccaneer().RunBuccaneerTool(	new RunCBuccaneer().PickACase());
 					// new ThreadsRunner().Threads(new RunCBuccaneer());
 					 
 					// new RunCBuccaneer().RunBuccaneerTool();
 					 new Buccaneeri1Testing().RunBuccaneerTool();
 			 }
-			  */
+			  
 			  /*
 			 else if(args[0].equals("RunCBuccaneerTestingProupse")){
 					
@@ -704,7 +762,14 @@ public class RunComparison {
 						 RunningParameter.MR=checkArg(Parm,"MR");
 						
 					 }
-					
+					 if(checkArg(Parm,"Colinfo")!=null){
+						 RunningParameter.Colinfo=checkArg(Parm,"Colinfo");
+						
+					 }
+					 if(checkArg(Parm,"semet")!=null){
+						 RunningParameter.semet=checkArg(Parm,"semet");
+						
+					 }
 					 new Arp().RunwArpTool();
 			 }
 			  /*
@@ -815,7 +880,34 @@ public class RunComparison {
 						
 					 }
 					 
+					 if(checkArg(Parm,"NoDMPhases")!=null){
+						 RunningParameter.Phases=checkArg(Parm,"NoDMPhases");
+						
+					}
 					 
+					if(checkArg(Parm,"Colinfo")!=null){
+						 RunningParameter.Colinfo=checkArg(Parm,"Colinfo");
+						
+					}
+					
+					if(checkArg(Parm,"Rfreeflag")!=null){
+						 RunningParameter.Rfreeflag=checkArg(Parm,"Rfreeflag");
+						
+					}
+					
+					if(checkArg(Parm,"BestPhase")!=null){
+						 RunningParameter.BestPhase=checkArg(Parm,"BestPhase");
+						
+					}
+					
+					if(checkArg(Parm,"FigureOfMerit")!=null){
+						 RunningParameter.FOM=checkArg(Parm,"FigureOfMerit");
+						
+					}
+					 if(checkArg(Parm,"semet")!=null){
+						 RunningParameter.semet=checkArg(Parm,"semet");
+						
+					 } 
 					 
 					 RunningParameter.PhenixPhases= RunningParameter.PhenixPhases.replaceAll(",", " ");
 					 System.out.println("data = "+RunningParameter.DataPath);
@@ -976,6 +1068,10 @@ public class RunComparison {
 					 
 					 if(checkArg(Parm,"MR")!=null){
 						 RunningParameter.MR=checkArg(Parm,"MR");
+						
+					 }
+					 if(checkArg(Parm,"pipelineoutputtype")!=null){
+						 RunningParameter.pipelineoutputtype=checkArg(Parm,"pipelineoutputtype");
 						
 					 }
 					 if(new File("refmacscript.sh").exists())// in case if refmac.sh got updated and to replace the existing one 
