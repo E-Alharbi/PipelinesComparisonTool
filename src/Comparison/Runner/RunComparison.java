@@ -39,17 +39,8 @@ public class RunComparison {
 	
 	public static void main(String[] args) throws IOException, InterruptedException, InstantiationException, IllegalAccessException, ParseException {
 		// TODO Auto-generated method stub
-		if(System.getenv("PHENIX")==null) {
-			System.out.println("PHENIX installation cannot be found! if you instaled PHENIX, run the setup up script first. ");
-	
-			System.exit(-1);
-		}
 		
-		if(System.getenv("CCP4")==null){
-			System.out.println("CCP4 installation cannot be found! if you instaled ccp4, run the setup up script first. (setup script canbe found in ccp4/setup-scripts)");
-			System.exit(-1);
-		}
-		else{
+		//else{
 			String CCP4Dir=System.getenv("CCP4");
 			RunningParameter.BuccaneerPipeLine=CCP4Dir+"/share/python/CCP4Dispatchers/buccaneer_pipeline.py";
 			 //RunningPram.CphasesMatchScriptPath=System.getenv("CCP4")+"/share/python/CCP4Dispatchers/cphasematch.py";//CphasesMatch Script Path in CCP4 folder
@@ -57,9 +48,7 @@ public class RunComparison {
 
 			 RunningParameter.RefmacPath=System.getenv("CCP4")+"/bin/refmac5";
 			
-			 //System.out.println(" BuccaneerPipeLine "+RunningPram.BuccaneerPipeLine);
-			 //System.out.println(" CphasesMatchScriptPath "+RunningPram.CphasesMatchScriptPath);
-			// System.out.println(" RefmacPath "+RunningPram.RefmacPath);
+			
 			 if(args.length==0){
 				
 				 PrintInstructions();	
@@ -74,10 +63,25 @@ public class RunComparison {
 				 }
 				 
 			 }
+			 if(checkArg(Parm,"CheckCCP4AndPhenixEnvVar")!=null){
+				 RunningParameter.CheckCCP4AndPhenixEnvVar=checkArg(Parm,"CheckCCP4AndPhenixEnvVar");
+					
+				 }
+			 	if(System.getenv("PHENIX")==null && RunningParameter.CheckCCP4AndPhenixEnvVar.equals("T")) {
+					System.out.println("PHENIX installation cannot be found! if you instaled PHENIX, run the setup up script first. ");
+			
+					System.exit(-1);
+				}
+				
+				if(System.getenv("CCP4")==null && RunningParameter.CheckCCP4AndPhenixEnvVar.equals("T")){
+					System.out.println("CCP4 installation cannot be found! if you instaled ccp4, run the setup up script first. (setup script canbe found in ccp4/setup-scripts)");
+					System.exit(-1);
+				}
+			 
 			 System.out.println("Parameters read correctly: ");
- for (int i=0 ; i < Parm.size()-1 ; i=i+2){
+			 for (int i=0 ; i < Parm.size()-1 ; i=i+2){
 				 
-				System.out.println("Parm "+Parm.get(i) + " value "+ Parm.get(i+1));
+				System.out.println("Parameter: "+Parm.get(i) + " value: "+ Parm.get(i+1));
 					 
 					
 				 
@@ -1245,7 +1249,7 @@ public class RunComparison {
 				 PrintInstructions();			
 				 
 			 }
-		}
+		//}
 	}
 	static void PrintInstructions(){
 		
