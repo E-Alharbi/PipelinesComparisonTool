@@ -90,4 +90,6 @@ public class RunningParameter {
     public static String FOM="FOM";
     public static String chtofomcolname="hltofom";
     public static String semet="F";
+    public static String CheckCCP4AndPhenixEnvVar="T";
+   
 }

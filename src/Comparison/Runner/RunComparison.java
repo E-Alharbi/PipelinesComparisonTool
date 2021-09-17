@@ -116,6 +116,8 @@ public class RunComparison {
 						}
 					
 					
+					
+					
 					new chltofom().RunChltofom(DataPath);
 			 }
 			 
@@ -605,8 +607,8 @@ public class RunComparison {
 						 RunningParameter.Colinfo=checkArg(Parm,"Colinfo");
 						
 					 }
-					 if(checkArg(Parm,"RfreeCol")!=null){
-						 RunningParameter.Rfreeflag=checkArg(Parm,"RfreeCol");
+					 if(checkArg(Parm,"Rfreeflag")!=null){
+						 RunningParameter.Rfreeflag=checkArg(Parm,"Rfreeflag");
 						
 					 }
 					
@@ -774,6 +776,10 @@ public class RunComparison {
 						 RunningParameter.semet=checkArg(Parm,"semet");
 						
 					 }
+					 if(checkArg(Parm,"Rfreeflag")!=null){
+						 RunningParameter.Rfreeflag=checkArg(Parm,"Rfreeflag");
+						
+					}
 					 new Arp().RunwArpTool();
 			 }
 			  /*
@@ -899,8 +905,8 @@ public class RunComparison {
 						
 					}
 					
-					if(checkArg(Parm,"BestPhase")!=null){
-						 RunningParameter.BestPhase=checkArg(Parm,"BestPhase");
+					if(checkArg(Parm,"Phase")!=null){
+						 RunningParameter.BestPhase=checkArg(Parm,"Phase");
 						
 					}
 					
