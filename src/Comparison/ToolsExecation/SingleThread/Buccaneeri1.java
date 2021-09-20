@@ -177,12 +177,12 @@ public class Buccaneeri1 {
 		new RunComparison().CheckDirAndFile(FileName);
 		
 		
-		String CCP4=System.getenv("CCP4");
+		//String CCP4=System.getenv("CCP4");
 		String BuccScript=new Preparer().ReadResourceAsString("/BuccaneerPipeline.sh");
 		
 		if(RunningParameter.MR.equals("T")) {
 			BuccScript=new Preparer().ReadResourceAsString("/BuccaneerPipelineMR.sh");
-			BuccScript=BuccScript.replace("@8", FilePathAndName+".pdb");
+			BuccScript=BuccScript.replace("{@8}", FilePathAndName+".pdb");
 			String semet="false";
 			if(new File(FilePathAndName+".json").exists())
 			 semet=new JSONReader().JSONToHashMap(FilePathAndName+".json").get("semet");
@@ -192,10 +192,10 @@ public class Buccaneeri1 {
 			}
 			
 			if(semet.toLowerCase().equals("true"))
-				BuccScript=BuccScript.replace("@9", "-buccaneer-build-semet");
+				BuccScript=BuccScript.replace("{@9}", "-buccaneer-build-semet");
 			
 			if(semet.toLowerCase().equals("false"))
-				BuccScript=BuccScript.replace("@9", " ");
+				BuccScript=BuccScript.replace("{@9}", " ");
 		}
 		
 		//String BuccPipeline=CCP4+"/share/python/CCP4Dispatchers/buccaneer_pipeline.py";
@@ -210,31 +210,31 @@ public class Buccaneeri1 {
 		seqin=FilePathAndName+".seq";
 		String cycles=RunningParameter.BuccaneerIterations;
 		
-		BuccScript=BuccScript.replace("@1", BuccPipeline);
-		BuccScript=BuccScript.replace("@2", mtzin);
-		BuccScript=BuccScript.replace("@3", seqin);
-		BuccScript=BuccScript.replace("@4", cycles);
-		BuccScript=BuccScript.replace("@5", FileName);
+		BuccScript=BuccScript.replace("{@1}", BuccPipeline);
+		BuccScript=BuccScript.replace("{@2}", mtzin);
+		BuccScript=BuccScript.replace("{@3}", seqin);
+		BuccScript=BuccScript.replace("{@4}", cycles);
+		BuccScript=BuccScript.replace("{@5}", FileName);
 		if(RunningParameter.MR.equals("F")) {
-		BuccScript=BuccScript.replace("@8", RunningParameter.Colinfo);
-		BuccScript=BuccScript.replace("@9", RunningParameter.Phases);
+		BuccScript=BuccScript.replace("{@8}", RunningParameter.Colinfo);
+		BuccScript=BuccScript.replace("{@9}", RunningParameter.Phases);
 		}
 		else {
-			BuccScript=BuccScript.replace("@10", RunningParameter.Colinfo);
-			BuccScript=BuccScript.replace("@11", RunningParameter.Phases);
+			BuccScript=BuccScript.replace("{@10}", RunningParameter.Colinfo);
+			BuccScript=BuccScript.replace("{@11}", RunningParameter.Phases);
 		}
 		// Do not change if blocks order 
 		if(RunningParameter.MR.equals("T") && RunningParameter.UsingRFree.equals("T")) {
-			 BuccScript=BuccScript.replace("@6", "-colin-free "+RunningParameter.Rfreeflag); 
+			 BuccScript=BuccScript.replace("{@6}", "-colin-free "+RunningParameter.Rfreeflag); 
 		}
 		if(RunningParameter.MR.equals("T") && RunningParameter.UsingRFree.equals("F")) {
-			 BuccScript=BuccScript.replace("@6", " "); 
+			 BuccScript=BuccScript.replace("{@6}", " "); 
 		}
 		 if(RunningParameter.UsingRFree.equals("T")) {
-			 BuccScript=BuccScript.replace("@6", "-colin-free "+RunningParameter.Rfreeflag); 
+			 BuccScript=BuccScript.replace("{@6}", "-colin-free "+RunningParameter.Rfreeflag); 
 		 }
 		 if(RunningParameter.UsingRFree.equals("F")) {
-			 BuccScript=BuccScript.replace("@6", " "); 
+			 BuccScript=BuccScript.replace("{@6}", " "); 
 		 }
 		 
 		 if(RunningParameter.UseInitialModels.equals("T")) {
@@ -247,12 +247,12 @@ public class Buccaneeri1 {
 				 
 					
 				 
-				 BuccScript=BuccScript.replace("@7", "-pdbin "+new FilesUtilities().GetModelPath(FileName+".pdb")+" "); 
+				 BuccScript=BuccScript.replace("{@7}", "-pdbin "+new FilesUtilities().GetModelPath(FileName+".pdb")+" "); 
 			 }
 			
 		 }
 		 if(RunningParameter.UseInitialModels.equals("F")) {
-			 BuccScript=BuccScript.replace("@7", " "); 
+			 BuccScript=BuccScript.replace("{@7}", " "); 
 		 }
 		 
 		 
